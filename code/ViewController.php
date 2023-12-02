@@ -6,16 +6,19 @@ require_once('dao/UserDAO.php');
 require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
 
-class ViewController extends Controller {
+class ViewController extends Controller
+{
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!self::$instance) {
             self::$instance = new ViewController();
         }
         return self::$instance;
     }
 
-    public function handleGetRequest() {
+    public function handleGetRequest()
+    {
         //check request method
         if (($_SERVER['REQUEST_METHOD'] != 'GET') || (!isset($_REQUEST['action']))) {
             return;
@@ -26,12 +29,13 @@ class ViewController extends Controller {
         $this->$method();
     }
 
-    private function checkIfTeacherIsBooked($teacherId, $bookedSlots) {
+    private function checkIfTeacherIsBooked($teacherId, $bookedSlots)
+    {
         foreach ($bookedSlots as $slot) {
-  	   $help = $slot;
-	   unset($help['eventId']);  //remove eventId, because teacherId could be equal to eventId
-	   unset($help['id']);  //remove slotId , because teacherId could be equal to slotId
-	   if (in_array($teacherId, $help)) {
+            $help = $slot;
+            unset($help['eventId']);  //remove eventId, because teacherId could be equal to eventId
+            unset($help['id']);  //remove slotId , because teacherId could be equal to slotId
+            if (in_array($teacherId, $help)) {
                 return true;
             }
         }
@@ -39,7 +43,8 @@ class ViewController extends Controller {
         return false;
     }
 
-    public function action_getChangeEventForm() {
+    public function action_getChangeEventForm()
+    {
         $events = EventDAO::getEvents();
         if (count($events) > 0) {
             ?>
@@ -47,13 +52,13 @@ class ViewController extends Controller {
                 <div class='form-group'>
                     <?php
 
-                    foreach ($events as $event) :
+                    foreach ($events as $event):
                         $display = escape($event->getName() . ' am ' . toDate($event->getDateFrom(), 'd.m.Y'));
                         $isActive = $event->isActive() == 1 ? ' checked' : '';
                         $id = escape($event->getId());
-                    ?>
+                        ?>
                         <div class='radio'>
-                            <label id="event-label-<?php echo($id) ?>"><input type='radio' name='eventId' value="<?php echo($id . '"' . $isActive) ?>><?php echo($display) ?></label>
+                            <label id="event-label-<?php echo ($id) ?>"><input type='radio' name='eventId' value="<?php echo ($id . '"' . $isActive) ?>><?php echo ($display) ?></label>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -71,14 +76,15 @@ class ViewController extends Controller {
         }
     }
 
-    public function action_getTimeTable() {
+    public function action_getTimeTable()
+    {
         $teacher = UserDAO::getUserForId($_REQUEST['teacherId']);
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
 
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($teacher == null || $user == null || $activeEvent == null) {
-            echo($noSlotsFoundWarning);
+            echo ($noSlotsFoundWarning);
             return;
         }
 
@@ -88,15 +94,15 @@ class ViewController extends Controller {
         $room = RoomDAO::getRoomForTeacherId($teacher->getId());
 
         if (count($slots) <= 0) {
-            echo($noSlotsFoundWarning);
+            echo ($noSlotsFoundWarning);
             return;
         }
 
         ?>
-        <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
+        <h3>Termine für <?php echo (escape($teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
 
         <?php if ($room != null): ?>
-            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
+            <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
         <?php endif; ?>
 
         <table class='table table-hover es-time-table'>
@@ -120,18 +126,18 @@ class ViewController extends Controller {
 
                 <?php if ($slot->getType() == 2): ?>
                 <tr class='es-time-table-break'>
-                    <td><?php echo($timeTd) ?></td>
+                    <td><?php echo ($timeTd) ?></td>
                     <td colspan='3'>PAUSE</td>
                 </tr>
             <?php else: ?>
-                <tr class='<?php echo($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
-                    <td><?php echo($timeTd) ?></td>
-                    <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
-                    <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                <tr class='<?php echo ($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                    <td><?php echo ($timeTd) ?></td>
+                    <td><?php echo ($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                    <td><?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
                     <td>
                         <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
                             <button type='button' class='btn btn-primary btn-book'
-                                    id='btn-book-<?php echo($slot->getId()) ?>' value='<?php echo($bookJson) ?>'>buchen
+                                    id='btn-book-<?php echo ($slot->getId()) ?>' value='<?php echo ($bookJson) ?>'>buchen
                             </button>
                         <?php endif; ?>
                     </td
@@ -145,7 +151,8 @@ class ViewController extends Controller {
         <?php
     }
 
-    public function action_getMySlotsTable() {
+    public function action_getMySlotsTable()
+    {
         $typeId = $_REQUEST['typeId'];
         $isFullView = $typeId == 0;
 
@@ -154,13 +161,13 @@ class ViewController extends Controller {
 
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($user == null || $activeEvent == null) {
-            echo($noSlotsFoundWarning);
+            echo ($noSlotsFoundWarning);
             return;
         }
 
         $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
         if (count($bookedSlots) <= 0) {
-            echo($noSlotsFoundWarning);
+            echo ($noSlotsFoundWarning);
             return;
         }
 
@@ -168,72 +175,85 @@ class ViewController extends Controller {
         $rooms = RoomDAO::getAllRooms();
 
         ?>
-        <div id="printHeader">
-            <h3>Meine Termine für den <?php echo(toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?></h3>
-        </div>
+        <div id=" printHeader">
+                        <h3>Meine Termine für den
+                            <?php echo (toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?>
+                        </h3>
+                </div>
 
-        <table class='table table-hover es-time-table'>
-            <thead>
-            <tr>
-                <th width='25%'>Uhrzeit</th>
-                <th width='25%'>Raum</th>
-                <th width='35%'>Mein Zeitplan</th>
-                <th width='15%' class='no-print'>Aktion</th>
-            </tr>
-            </thead>
-            <tbody>
+                <table class='table table-hover es-time-table'>
+                    <thead>
+                        <tr>
+                            <th width='25%'>Uhrzeit</th>
+                            <th width='25%'>Raum</th>
+                            <th width='35%'>Mein Zeitplan</th>
+                            <th width='15%' class='no-print'>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-            <?php foreach ($slots as $slot):
-                $fromDate = $slot->getDateFrom();
-                $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
-                $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
+                        <?php foreach ($slots as $slot):
+                            $fromDate = $slot->getDateFrom();
+                            $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
+                            $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
 
-                $roomTd = "";
-                if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)) {
-                    $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
-                    $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
-                }
-                ?>
+                            $roomTd = "";
+                            if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)) {
+                                $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
+                                $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
+                            }
+                            ?>
 
-                <?php if ($isFullView || !$studentAvailable): ?>
-                <?php if ($slot->getType() == 2): ?>
-                    <tr class='es-time-table-break'>
-                        <td><?php echo($timeTd) ?></td>
-                        <td></td>
-                        <td>PAUSE</td>
-                        <td class='no-print'></td>
-                    </tr>
-                <?php else: ?>
-                    <tr class='<?php echo($studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
-                        <td><?php echo($timeTd); ?></td>
-                        <td><?php echo($roomTd) ?></td>
-                        <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
-                        <td class='no-print'>
-                            <?php if (!$studentAvailable):
-                                $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
-                                ?>
-                                <button type='button' class='btn btn-primary btn-delete'
-                                        id='btn-delete-<?php echo($bookedSlots[$fromDate]['id']) ?>'
-                                        value='<?php echo($deleteJson) ?>'>Termin löschen
-				</button>
-                                <?php if (!empty($activeEvent->getVideoLink())): 
-				      $getParam=escape('#userInfo.displayName=%22'.$user->getFirstName() . ' ' . $user->getLastName().'%22')?>
-			  	   <a class="btn btn-primary btn-delete" href="<?php echo ($activeEvent->getVideoLink().md5($bookedSlots[$fromDate]['id']).$getParam) ?>" target="_blank"> Zum Videomeeting</a> 
-                               <?php endif; ?>
+                            <?php if ($isFullView || !$studentAvailable): ?>
+                                <?php if ($slot->getType() == 2): ?>
+                                    <tr class='es-time-table-break'>
+                                        <td>
+                                            <?php echo ($timeTd) ?>
+                                        </td>
+                                        <td></td>
+                                        <td>PAUSE</td>
+                                        <td class='no-print'></td>
+                                    </tr>
+                                <?php else: ?>
+                                    <tr class='<?php echo ($studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                                        <td>
+                                            <?php echo ($timeTd); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo ($roomTd) ?>
+                                        </td>
+                                        <td>
+                                            <?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?>
+                                        </td>
+                                        <td class='no-print'>
+                                            <?php if (!$studentAvailable):
+                                                $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
+                                                ?>
+                                                <button type='button' class='btn btn-primary btn-delete'
+                                                    id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
+                                                    value='<?php echo ($deleteJson) ?>'>Termin löschen
+                                                </button>
+                                                <?php if (!empty($activeEvent->getVideoLink())):
+                                                    $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
+                                                    <a class="btn btn-primary btn-delete"
+                                                        href="<?php echo ($activeEvent->getVideoLink() . md5($bookedSlots[$fromDate]['id']) . $getParam) ?>"
+                                                        target="_blank"> Zum Videomeeting</a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            <?php endif; ?>
 
-            <?php endforeach; ?>
+                        <?php endforeach; ?>
 
-            </tbody>
-        </table>
-        <?php
+                    </tbody>
+                </table>
+                <?php
     }
 
-    public function action_getTeacherTimeTable() {
+    public function action_getTeacherTimeTable()
+    {
         $typeId = $_REQUEST['typeId'];
         $isFullView = $typeId == 2;
 
@@ -242,21 +262,23 @@ class ViewController extends Controller {
         $this->printTableForTeacher($teacher, $isFullView);
     }
 
-    public function action_getAdminTimeTable() {
+    public function action_getAdminTimeTable()
+    {
         $teachers = UserDAO::getUsersForRole('teacher');
         foreach ($teachers as $teacher) {
             $this->printTableForTeacher($teacher, true, true);
             ?>
-            <div class="pageBreak"></div>
-            <?php
+                    <div class="pageBreak"></div>
+                    <?php
         }
     }
 
-    private function printTableForTeacher($teacher, $isFullView, $adminPrint = false) {
+    private function printTableForTeacher($teacher, $isFullView, $adminPrint = false)
+    {
         $activeEvent = EventDAO::getActiveEvent();
         $headerText = "Meine Termine";
         if ($adminPrint) {
-            $headerText = "Termine für " . $teacher->getTitle(). " ". $teacher->getFirstName() . " " . $teacher->getLastName();
+            $headerText = "Termine für " . $teacher->getTitle() . " " . $teacher->getFirstName() . " " . $teacher->getLastName();
             $room = RoomDAO::getRoomForTeacherId($teacher->getId());
             if ($room != null) {
                 $headerText .= " (Raum: " . $room->getRoomNumber() . " | " . $room->getName() . ")";
@@ -264,268 +286,315 @@ class ViewController extends Controller {
         }
 
         ?>
-        <div id="printHeader">
-            <h3><?php echo escape($headerText); ?></h3>
-        </div>
-        <?php
+                <div id="printHeader">
+                    <h3>
+                        <?php echo escape($headerText); ?>
+                    </h3>
+                </div>
+                <?php
 
-        $noSlotsFoundWarning = '<div id="printHeader"><h3>Keine Termine vorhanden!</h3></div>';
-        if ($teacher == null || $activeEvent == null) {
-            echo($noSlotsFoundWarning);
-            return;
-        }
+                $noSlotsFoundWarning = '<div id="printHeader"><h3>Keine Termine vorhanden!</h3></div>';
+                if ($teacher == null || $activeEvent == null) {
+                    echo ($noSlotsFoundWarning);
+                    return;
+                }
 
-        $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $teacher->getId());
-        if (!$adminPrint && (count($bookedSlots) <= 0)) {
-            echo($noSlotsFoundWarning);
-            return;
-        }
+                $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $teacher->getId());
+                if (!$adminPrint && (count($bookedSlots) <= 0)) {
+                    echo ($noSlotsFoundWarning);
+                    return;
+                }
 
-        $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
+                $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
 
-        ?>
-        <table class='table table-hover es-time-table'>
-            <thead>
-            <tr>
-                <th class='col1'>Uhrzeit</th>
-                <th class='col2'>Schüler</th>
-                <?php if (!empty($activeEvent->getVideoLink())): ?>
-                   <th width='10%'>VideoLink</th>
-                <?php endif; ?>
-            </tr>
-            </thead>
-            <tbody>
-
-            <?php foreach ($slots as $slot):
-                $fromDate = $slot->getDateFrom();
-                $teacherAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
-                $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
                 ?>
-
-                <?php if ($isFullView || !$teacherAvailable): ?>
-                    <?php if ($slot->getType() == 2): ?>
-                        <tr class='es-time-table-break'>
-                            <td><?php echo($timeTd) ?></td>
-                            <td>PAUSE</td>
+                <table class='table table-hover es-time-table'>
+                    <thead>
+                        <tr>
+                            <th class='col1'>Uhrzeit</th>
+                            <th class='col2'>Schüler</th>
                             <?php if (!empty($activeEvent->getVideoLink())): ?>
-                               <td></td>
+                                <th width='10%'>VideoLink</th>
                             <?php endif; ?>
+                            <th class='col2'>Aktion</th>
                         </tr>
-                    <?php else: ?>
-                        <tr class='<?php echo($teacherAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
-                            <td><?php echo($timeTd) ?></td>
-                            <td><?php echo($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName']) ?></td>
-			    <?php if (!empty($activeEvent->getVideoLink())): 
-			       $getParam =  escape('#userInfo.displayName=%22'.$teacher->getFirstName() . " " . $teacher->getLastName()."%22"); ?>
-			      <td><a href="<?php echo($activeEvent->getVideoLink().md5($slot->getId()).$getParam) ?> "target=_blank">VideoLink</a></td>
+                    </thead>
+                    <tbody>
+
+                        <?php foreach ($slots as $slot):
+                            $fromDate = $slot->getDateFrom();
+                            $teacherAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
+                            $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
+                            ?>
+
+                            <?php if ($isFullView || !$teacherAvailable): ?>
+                                <?php if ($slot->getType() == 2): ?>
+                                    <tr class='es-time-table-break'>
+                                        <td>
+                                            <?php echo ($timeTd) ?>
+                                        </td>
+                                        <td>PAUSE</td>
+                                        <?php if (!empty($activeEvent->getVideoLink())): ?>
+                                            <td></td>
+                                        <?php endif; ?>
+                                    </tr>
+                                <?php else: ?>
+                                    <tr id='<?php echo "row_" . $slot->getId() ?>'
+                                        class='<?php echo ($teacherAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                                        <td>
+                                            <?php echo ($timeTd) ?>
+                                        </td>
+                                        <td>
+                                            <?php echo ($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName']) ?>
+                                        </td>
+                                        <?php if (!empty($activeEvent->getVideoLink())):
+                                            $getParam = escape('#userInfo.displayName=%22' . $teacher->getFirstName() . " " . $teacher->getLastName() . "%22"); ?>
+                                            <td><a href="<?php echo ($activeEvent->getVideoLink() . md5($slot->getId()) . $getParam) ?> "
+                                                    target=_blank">VideoLink</a></td>
+                                        <?php endif; ?>
+                                        <td>
+                                            <button class="btn btn-danger es-button-cancel" id="button_<?php echo $slot->getId() ?>"
+                                                data-teacherId="<?php echo $teacher->getId() ?>"
+                                                data-studentId="<?php echo $slot->getStudentId() ?>"
+                                                data-slotId="<?php echo $slot->getId() ?>"
+                                                data-eventId="<?php echo $activeEvent->getId() ?>">
+                                                Termin absagen
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+
                             <?php endif; ?>
-                        </tr>
-                    <?php endif; ?>
-                <?php endif; ?>
 
-            <?php endforeach; ?>
+                        <?php endforeach; ?>
 
-            </tbody>
-        </table>
-        <?php
+                    </tbody>
+                </table>
+                <?php
     }
 
-    public function action_createUser() {
+    public function action_createUser()
+    {
         ?>
 
-        <?php include_once('inc/userForm.php') ?>
+                <?php include_once('inc/userForm.php') ?>
 
-        <button type='submit' class='btn btn-primary' id='btn-create-user'>Benutzer erstellen</button>
+                <button type='submit' class='btn btn-primary' id='btn-create-user'>Benutzer erstellen</button>
 
-        <?php
+                <?php
     }
 
-    public function action_changeUser() {
+    public function action_changeUser()
+    {
         $users = UserDAO::getUsers();
         $rooms = RoomDAO::getAllRooms();
         ?>
 
-        <div class='form-group'>
-            <label for='selectUser'>Benutzer</label>
-            <select class='form-control' id='selectUser' name='type'>
-                <?php foreach ($users as $user) : ?>
-                    <?php
-                    $val = $user->__toString();
-                    if (array_key_exists($user->getId(), $rooms)) {
-                        $room = $rooms[$user->getId()];
-                        $val = json_decode($user->__toString(), true);
-                        $val['roomNumber'] = $room->getRoomNumber();
-                        $val['roomName'] = $room->getName();
-                        $val['absent'] = $user->isAbsent();
-                        $val = json_encode($val);
-                    }
-                    ?>
-                    <option value='<?php echo(escape($val)) ?>'>
-                        <?php echo(escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                <div class='form-group'>
+                    <label for='selectUser'>Benutzer</label>
+                    <select class='form-control' id='selectUser' name='type'>
+                        <?php foreach ($users as $user): ?>
+                            <?php
+                            $val = $user->__toString();
+                            if (array_key_exists($user->getId(), $rooms)) {
+                                $room = $rooms[$user->getId()];
+                                $val = json_decode($user->__toString(), true);
+                                $val['roomNumber'] = $room->getRoomNumber();
+                                $val['roomName'] = $room->getName();
+                                $val['absent'] = $user->isAbsent();
+                                $val = json_encode($val);
+                            }
+                            ?>
+                            <option value='<?php echo (escape($val)) ?>'>
+                                <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <hr>
+                <hr>
 
-        <?php include_once('inc/userForm.php') ?>
+                <?php include_once('inc/userForm.php') ?>
 
-        <button type='submit' class='btn btn-primary' id='btn-edit-user'>Benutzer ändern</button>
+                <button type='submit' class='btn btn-primary' id='btn-edit-user'>Benutzer ändern</button>
 
-        <button type='submit' class='btn btn-primary' id='btn-delete-user'>Benutzer löschen</button>
+                <button type='submit' class='btn btn-primary' id='btn-delete-user'>Benutzer löschen</button>
 
-        <?php
+                <?php
     }
 
-    public function action_stats() {
+    public function action_stats()
+    {
         $userId = $_REQUEST['userId'];
         $logs = LogDAO::getLogsForUser($userId);
 
         ?>
-        <br>
-        <form id='deleteStatisticsForm'>
-            <button type='button' class='btn btn-primary' id='btn-delete-whole-statistics'>
-                gesamte Statistik löschen
-            </button>
-            <button type='button' class='btn btn-primary' id='btn-delete-statistics-for-userId-<?php echo(escape($userId)) ?>'>
-                Statistik für ausgewählten Benutzer löschen
-            </button>
-        </form>
-        <br>
-
-        <?php if (count($logs) > 0): ?>
-        <table class='table table-hover'>
-            <thead>
-            <tr>
-                <th width='16%'>BenutzerID</th>
-                <th width='28%'>Aktion</th>
-                <th width='28%'>Info</th>
-                <th width='28%'>Uhrzeit</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <?php foreach ($logs as $log):
-                $logDate = escape(toDate($log->getDate(), 'd.m.Y H:i:s'));
-                $logInfo = json_decode($log->getInfo(), true);
-
-                $infoOutput = '';
-                if ($logInfo != null) {
-                    $event = EventDAO::getEventForId($logInfo['eventId']);
-                    if ($event != null) {
-                        if ($log->getAction() == LogDAO::LOG_ACTION_CHANGE_ATTENDANCE) {
-                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) .
-                                          '<br>anwesend von: ' . escape(toDate($logInfo['fromTime'], 'H:i')) .
-                                          '<br>anwesend bis: ' . escape(toDate($logInfo['toTime'], 'H:i'));
-                        } else {
-                            $slot = SlotDAO::getSlotForId($logInfo['slotId']);
-                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) . '<br>Termin: ' .
-                                          escape(toDate($slot->getDateFrom(), 'H:i'));
-                        }
-                    }
-                }
-                ?>
-
-                <tr>
-                    <td><?php echo(escape($log->getUserId())) ?></td>
-                    <td><?php echo(getActionString($log->getAction())) ?></td>
-                    <td><?php echo($infoOutput) ?></td>
-                    <td><?php echo($logDate) ?></td>
-                </tr>
-            <?php endforeach; ?>
-
-            </tbody>
-        </table>
-        <?php else: ?>
-            <p>Es sind keine Statistiken für den ausgewählten Benutzer vorhanden!</p>
-        <?php endif;
-    }
-
-    public function action_getNewsletterForm() {
-        ?>
-        <form id='newsletterForm'>
-            <?php
-            $checkAccessData = UserDAO::checkAccessData();
-            $activeEventExists = EventDAO::getActiveEvent() != null;
-            $filename = 'uploads/newsletter_filled.odt';
-            $fileExists = file_exists($filename);
-            if ($checkAccessData) {
-                if ($activeEventExists) { ?>
-                    <input type='hidden' id='newsletterExists' value='<?php echo(escape($fileExists)) ?>'>
-                    <button type='button' class='btn btn-primary' id='btn-create-newsletter'>
-                        Rundbrief erzeugen
+                <br>
+                <form id='deleteStatisticsForm'>
+                    <button type='button' class='btn btn-primary' id='btn-delete-whole-statistics'>
+                        gesamte Statistik löschen
                     </button>
-                <?php } else { ?>
-                    <div class='alert alert-info'>
-                        INFO: Es ist momentan kein Elternsprechtag als aktiv gesetzt!<br>
-                        Setze einen Elternsprechtag als aktiv um einen Rundbrief erzeugen zu können!
-                    </div>
-                <?php }
-            } elseif ($fileExists) { ?>
-                <div class='alert alert-info'>
-                    INFO: Um einen neuen Rundbrief zu erstellen, müssen zuerst wieder die Schüler importiert werden!<br>
-                    (Falls gewünscht kann zuvor auch eine neue Rundbrief-Vorlage hochgeladen werden.)
-                </div>
-            <?php } else { ?>
-                <div class='alert alert-danger'>
-                    Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!
-                </div>
-            <?php } ?>
+                    <button type='button' class='btn btn-primary'
+                        id='btn-delete-statistics-for-userId-<?php echo (escape($userId)) ?>'>
+                        Statistik für ausgewählten Benutzer löschen
+                    </button>
+                </form>
+                <br>
 
-            <?php if ($fileExists): ?>
-                <button type='button' class='btn btn-primary' id='btn-delete-newsletter'>
-                    Rundbrief löschen
-                </button>
-            <?php endif; ?>
+                <?php if (count($logs) > 0): ?>
+                    <table class='table table-hover'>
+                        <thead>
+                            <tr>
+                                <th width='16%'>BenutzerID</th>
+                                <th width='28%'>Aktion</th>
+                                <th width='28%'>Info</th>
+                                <th width='28%'>Uhrzeit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-            <?php if ($checkAccessData): ?>
-                <button type='button' class='btn btn-primary' id='btn-delete-access-data'>
-                    Schüler-Zugangsdaten löschen
-                </button>
-            <?php endif; ?>
+                            <?php foreach ($logs as $log):
+                                $logDate = escape(toDate($log->getDate(), 'd.m.Y H:i:s'));
+                                $logInfo = json_decode($log->getInfo(), true);
 
-            <div class='message' id='newsletterMessage'></div>
+                                $infoOutput = '';
+                                if ($logInfo != null) {
+                                    $event = EventDAO::getEventForId($logInfo['eventId']);
+                                    if ($event != null) {
+                                        if ($log->getAction() == LogDAO::LOG_ACTION_CHANGE_ATTENDANCE) {
+                                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) .
+                                                '<br>anwesend von: ' . escape(toDate($logInfo['fromTime'], 'H:i')) .
+                                                '<br>anwesend bis: ' . escape(toDate($logInfo['toTime'], 'H:i'));
+                                        } else {
+                                            $slot = SlotDAO::getSlotForId($logInfo['slotId']);
+                                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) . '<br>Termin: ' .
+                                                escape(toDate($slot->getDateFrom(), 'H:i'));
+                                        }
+                                    }
+                                }
+                                ?>
 
-            <?php if ($fileExists): ?>
-                <div class='newsletterDownload'>
-                        <p>Rundbrief herunterladen: </p>
-                        <a href='<?php echo($filename) ?>' type='application/vnd.oasis.opendocument.text' download>Rundbrief</a>
-                </div>
-            <?php endif; ?>
-        </form>
-        <?php
+                                <tr>
+                                    <td>
+                                        <?php echo (escape($log->getUserId())) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo (getActionString($log->getAction())) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo ($infoOutput) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo ($logDate) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p>Es sind keine Statistiken für den ausgewählten Benutzer vorhanden!</p>
+                <?php endif;
     }
 
-    public function action_csvPreview() {
+    public function action_getNewsletterForm()
+    {
+        ?>
+                <form id='newsletterForm'>
+                    <?php
+                    $checkAccessData = UserDAO::checkAccessData();
+                    $activeEventExists = EventDAO::getActiveEvent() != null;
+                    $filename = 'uploads/newsletter_filled.odt';
+                    $fileExists = file_exists($filename);
+                    if ($checkAccessData) {
+                        if ($activeEventExists) { ?>
+                            <input type='hidden' id='newsletterExists' value='<?php echo (escape($fileExists)) ?>'>
+                            <button type='button' class='btn btn-primary' id='btn-create-newsletter'>
+                                Rundbrief erzeugen
+                            </button>
+                        <?php } else { ?>
+                            <div class='alert alert-info'>
+                                INFO: Es ist momentan kein Elternsprechtag als aktiv gesetzt!<br>
+                                Setze einen Elternsprechtag als aktiv um einen Rundbrief erzeugen zu können!
+                            </div>
+                        <?php }
+                    } elseif ($fileExists) { ?>
+                        <div class='alert alert-info'>
+                            INFO: Um einen neuen Rundbrief zu erstellen, müssen zuerst wieder die Schüler importiert werden!<br>
+                            (Falls gewünscht kann zuvor auch eine neue Rundbrief-Vorlage hochgeladen werden.)
+                        </div>
+                    <?php } else { ?>
+                        <div class='alert alert-danger'>
+                            Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($fileExists): ?>
+                        <button type='button' class='btn btn-primary' id='btn-delete-newsletter'>
+                            Rundbrief löschen
+                        </button>
+                    <?php endif; ?>
+
+                    <?php if ($checkAccessData): ?>
+                        <button type='button' class='btn btn-primary' id='btn-delete-access-data'>
+                            Schüler-Zugangsdaten löschen
+                        </button>
+                    <?php endif; ?>
+
+                    <div class='message' id='newsletterMessage'></div>
+
+                    <?php if ($fileExists): ?>
+                        <div class='newsletterDownload'>
+                            <p>Rundbrief herunterladen: </p>
+                            <a href='<?php echo ($filename) ?>' type='application/vnd.oasis.opendocument.text'
+                                download>Rundbrief</a>
+                        </div>
+                    <?php endif; ?>
+                </form>
+                <?php
+    }
+
+    public function action_csvPreview()
+    {
         $role = $_REQUEST['role'];
         $germanRole = $role == 'student' ? 'Schüler' : 'Lehrer';
         $users = UserDAO::getUsersForRole($role, 10);
         ?>
-        <div>
-            <h4><br>Die ersten 10 Einträge der importierten <?php echo(escape($germanRole)) ?>:</h4>
-        </div>
+                <div>
+                    <h4><br>Die ersten 10 Einträge der importierten
+                        <?php echo (escape($germanRole)) ?>:
+                    </h4>
+                </div>
 
-        <table class='table table-striped'>
-            <tr>
-                <th>Benutzername</th>
-                <th>Vorname</th>
-                <th>Nachname</th>
-                <th>Klasse</th>
-            </tr>
-            <?php foreach ($users as $user): ?>
-                <tr>
-                    <td><?php echo escape($user->getUserName()); ?></td>
-                    <td><?php echo escape($user->getFirstName()); ?></td>
-                    <td><?php echo escape($user->getLastName()); ?></td>
-                    <td><?php echo escape($user->getClass()); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php
+                <table class='table table-striped'>
+                    <tr>
+                        <th>Benutzername</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Klasse</th>
+                    </tr>
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td>
+                                <?php echo escape($user->getUserName()); ?>
+                            </td>
+                            <td>
+                                <?php echo escape($user->getFirstName()); ?>
+                            </td>
+                            <td>
+                                <?php echo escape($user->getLastName()); ?>
+                            </td>
+                            <td>
+                                <?php echo escape($user->getClass()); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+                <?php
     }
 
-    public function action_templateDownloadAlert() {
+    public function action_templateDownloadAlert()
+    {
         switch ($_REQUEST['type']) {
             case 'student':
                 $typeText = 'Schüler Vorlage (CSV)';
@@ -591,24 +660,28 @@ class ViewController extends Controller {
         }
 
         ?>
-        <div class='alert alert-info'>
-            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            <h4>Tipp!</h4>
-            <p><b>Vorlage herunterladen:</b></p>
-            <a href='<?php echo($filePath) ?>' type='<?php echo($mimeType) ?>' download><?php echo escape($typeText); ?></a>
-            <?php echo($infos) ?>
-        </div>
-        <?php
+                <div class='alert alert-info'>
+                    <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                    <h4>Tipp!</h4>
+                    <p><b>Vorlage herunterladen:</b></p>
+                    <a href='<?php echo ($filePath) ?>' type='<?php echo ($mimeType) ?>' download>
+                        <?php echo escape($typeText); ?>
+                    </a>
+                    <?php echo ($infos) ?>
+                </div>
+                <?php
     }
 
-    public function action_attendance() {
+    public function action_attendance()
+    {
         $user = AuthenticationManager::getAuthenticatedUser();
         $event = EventDAO::getActiveEvent();
 
         return $this->getAttendance($user, $event);
     }
 
-    public function action_attendanceParametrized() {
+    public function action_attendanceParametrized()
+    {
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
         $user = UserDAO::getUserForId($userId);
@@ -617,7 +690,8 @@ class ViewController extends Controller {
         return $this->getAttendance($user, $event, true);
     }
 
-    private function getAttendance($user, $event, $named = false) {
+    private function getAttendance($user, $event, $named = false)
+    {
         $attendance = null;
         $salutation = 'Du bist am ';
 
@@ -642,58 +716,63 @@ class ViewController extends Controller {
         return $attendance;
     }
 
-    public function action_changeAttendance() {
+    public function action_changeAttendance()
+    {
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
         $user = UserDAO::getUserForId($userId);
         $event = EventDAO::getEventForId($eventId);
         ?>
-        <h4>
-        Aktuelle Anwesenheit
-        </h4>
-        <p id='attendance'>
-            <?php $attendance = $this->getAttendance($user, $event, true); ?>
-        </p>
+                <h4>
+                    Aktuelle Anwesenheit
+                </h4>
+                <p id='attendance'>
+                    <?php $attendance = $this->getAttendance($user, $event, true); ?>
+                </p>
 
-        <?php if ($attendance != null): ?>
-        <h4>
-            Anwesenheit ändern
-        </h4>
-        <form id='changeAttendanceForm'>
-            <input type='hidden' name='userId' value='<?php echo(escape($userId)) ?>'>
-            <input type='hidden' name='eventId' value='<?php echo(escape($attendance['eventId'])) ?>'>
-            <div class='form-group'>
-                <label for='inputFromTime'>Von</label>
-                <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
-                    <?php echo(getDateOptions($attendance, true)); ?>
-                </select>
-            </div>
+                <?php if ($attendance != null): ?>
+                    <h4>
+                        Anwesenheit ändern
+                    </h4>
+                    <form id='changeAttendanceForm'>
+                        <input type='hidden' name='userId' value='<?php echo (escape($userId)) ?>'>
+                        <input type='hidden' name='eventId' value='<?php echo (escape($attendance['eventId'])) ?>'>
+                        <div class='form-group'>
+                            <label for='inputFromTime'>Von</label>
+                            <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
+                                <?php echo (getDateOptions($attendance, true)); ?>
+                            </select>
+                        </div>
 
-            <div class='form-group'>
-                <label for='inputToTime'>Bis</label>
-                <select class='form-control' id='inputSlotDuration' name='inputToTime'>
-                    <?php echo(getDateOptions($attendance, false)); ?>
-                </select>
-            </div>
+                        <div class='form-group'>
+                            <label for='inputToTime'>Bis</label>
+                            <select class='form-control' id='inputSlotDuration' name='inputToTime'>
+                                <?php echo (getDateOptions($attendance, false)); ?>
+                            </select>
+                        </div>
 
-            <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
-                Anwesenheit für <?php echo escape($user->getFirstName() . ' ' . $user->getLastName()); ?> ändern
-            </button>
-        </form>
-        <?php endif;
+                        <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
+                            Anwesenheit für
+                            <?php echo escape($user->getFirstName() . ' ' . $user->getLastName()); ?> ändern
+                        </button>
+                    </form>
+                <?php endif;
     }
 
-    public function action_getActiveEventContainer() {
+    public function action_getActiveEventContainer()
+    {
         $event = EventDAO::getActiveEvent();
-        $displayText = "kein aktiver Elternsrpechtag vorhanden!";
+        $displayText = "kein aktiver Elternsprechtag vorhanden!";
         $activeEventId = -1;
         if ($event != null) {
             $displayText = $event->getName() . ' am ' . toDate($event->getDateFrom(), 'd.m.Y') . ' (mit ' . $event->getSlotTime() . '-Minuten-Intervallen)';
             $activeEventId = $event->getId();
         }
         ?>
-            <p id='activeSpeechdayText'><b>Aktiver Sprechtag:</b> <?php echo escape($displayText); ?></p>
-            <input type='hidden' id='activeEventId' value='<?php echo escape($activeEventId); ?>'>
-        <?php
+                <p id='activeSpeechdayText'><b>Aktiver Sprechtag:</b>
+                    <?php echo escape($displayText); ?>
+                </p>
+                <input type='hidden' id='activeEventId' value='<?php echo escape($activeEventId); ?>'>
+                <?php
     }
 }

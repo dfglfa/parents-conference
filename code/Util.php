@@ -18,7 +18,7 @@ class SessionContext {
 }
 
 function redirect($page = null) {
-	if ($page == null) {
+    if ($page == null) {
 		$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : $_SERVER['REQUEST_URI'];
 	}
 	header("Location: $page");

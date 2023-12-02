@@ -5,19 +5,23 @@ require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
+require_once('dao/MessageDAO.php');
 
-class Controller {
+class Controller
+{
     // request wide singleton
     protected static $instance = false;
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!self::$instance) {
             self::$instance = new Controller();
         }
         return self::$instance;
     }
 
-    public function handlePostRequest() {
+    public function handlePostRequest()
+    {
         //check request method
         if (($_SERVER['REQUEST_METHOD'] != 'POST') || (!isset($_REQUEST['action']))) {
             redirect('home.php');
@@ -28,7 +32,8 @@ class Controller {
         $this->$method();
     }
 
-    protected function forward($errors = null, $target = null) {
+    protected function forward($errors = null, $target = null)
+    {
         if ($target == null) {
             if (!isset($_REQUEST['page'])) {
                 throw new Exception('Missing target for forward!');
@@ -41,7 +46,8 @@ class Controller {
     }
 
     //=== USER ACTIONS ===
-    protected function action_createEvent() {
+    protected function action_createEvent()
+    {
         $name = $_REQUEST['name'];
         $date = $_REQUEST['date'];
         $beginTime = $_REQUEST['beginTime'];
@@ -66,7 +72,8 @@ class Controller {
         }
     }
 
-    protected function action_changeAttendance() {
+    protected function action_changeAttendance()
+    {
         $fromTime = $_REQUEST['inputFromTime'];
         $toTime = $_REQUEST['inputToTime'];
         $userId = $_REQUEST['userId'];
@@ -82,7 +89,8 @@ class Controller {
         echo 'success';
     }
 
-    protected function action_uploadFile() {
+    protected function action_uploadFile()
+    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         header('Content-Type: text/html; charset=UTF-8');
@@ -165,7 +173,8 @@ class Controller {
         }
     }
 
-    private function checkCSVHeader($type, $row) {
+    private function checkCSVHeader($type, $row)
+    {
         $constraints['teacher'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
         $constraints['student'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort');
         $constraints['subject'] = array('ToDo');
@@ -179,13 +188,15 @@ class Controller {
         }
     }
 
-    private function removeSpecials($string) {
-        $search  = array('ç', 'æ',  'œ',  'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ÿ', 'â', 'ê', 'î', 'ô', 'û', 'å', 'ø', 'ß', 'Ä', 'Ö', 'Ü');
+    private function removeSpecials($string)
+    {
+        $search = array('ç', 'æ', 'œ', 'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ÿ', 'â', 'ê', 'î', 'ô', 'û', 'å', 'ø', 'ß', 'Ä', 'Ö', 'Ü');
         $replace = array('c', 'ae', 'oe', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'ae', 'e', 'i', 'oe', 'ue', 'y', 'a', 'e', 'i', 'o', 'u', 'a', 'o', 'ss', 'Ae', 'Oe', 'Ue');
         return str_replace($search, $replace, $string);
     }
 
-    private function generateUserName($firstName, $lastName, $digits = 3) {
+    private function generateUserName($firstName, $lastName, $digits = 3)
+    {
         $randomDigit = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
         $firstName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $firstName)));
         $lastName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $lastName)));
@@ -193,13 +204,15 @@ class Controller {
         return substr($lastName, 0, 3) . substr($firstName, 0, 3) . $randomDigit;
     }
 
-    private function generateRandomPassword($length = 10) {
+    private function generateRandomPassword($length = 10)
+    {
         $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789!@#$%&*()_-=+,.?';
         $password = substr(str_shuffle($chars), 0, $length);
         return $password;
     }
 
-    protected function uploadFileAs($name, $tmpName) {
+    protected function uploadFileAs($name, $tmpName)
+    {
         $folder = 'uploads';
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
@@ -210,7 +223,8 @@ class Controller {
         return $targetPath;
     }
 
-    protected function importCSV($role, $targetPath) {
+    protected function importCSV($role, $targetPath)
+    {
         // import into database
         $filename = $targetPath;
         $fp = fopen($filename, 'r');
@@ -280,7 +294,7 @@ class Controller {
                         return $duplicateUserError;
                     }
                     $userNames[] = $userName;
-                    $title='';
+                    $title = '';
 
                     $password = trim($row[4]) == '' ? $this->generateRandomPassword() : trim($row[4]);
 
@@ -319,11 +333,13 @@ class Controller {
         );
     }
 
-    private function checkForUniqueUserName($userName, $userNames) {
+    private function checkForUniqueUserName($userName, $userNames)
+    {
         return !in_array($userName, $userNames);
     }
 
-    protected function validateFileExtension($ext, $allowed) {
+    protected function validateFileExtension($ext, $allowed)
+    {
         if (!in_array($ext, $allowed)) {
             return false;
         }
@@ -331,7 +347,8 @@ class Controller {
         return true;
     }
 
-    protected function action_changeSlot() {
+    protected function action_changeSlot()
+    {
         $slotId = $_REQUEST['slotId'];
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
@@ -342,16 +359,17 @@ class Controller {
         $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
         if ($result['success']) {
             if ($result['rowCount'] > 0) {
-                echo('success');
+                echo ('success');
             } else {
-                echo('dirtyRead');
+                echo ('dirtyRead');
             }
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_deleteSlot() {
+    protected function action_deleteSlot()
+    {
         $userId = $_REQUEST['userId'];
         $slotId = $_REQUEST['slotId'];
         $eventId = $_REQUEST['eventId'];
@@ -360,38 +378,42 @@ class Controller {
         LogDAO::log($userId, LogDAO::LOG_ACTION_DELETE_SLOT, $info);
 
         $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
+
         if ($success) {
-            echo('success');
+            echo ('success');
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_setActiveEvent() {
+    protected function action_setActiveEvent()
+    {
         $eventId = $_REQUEST['eventId'];
 
         $success = EventDAO::setActiveEvent($eventId);
 
         if ($success) {
-            echo('success');
+            echo ('success');
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_deleteEvent() {
+    protected function action_deleteEvent()
+    {
         $eventId = $_REQUEST['eventId'];
 
         $success = EventDAO::deleteEvent($eventId);
 
         if ($success) {
-            echo('success');
+            echo ('success');
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_createUser() {
+    protected function action_createUser()
+    {
         $userName = $_REQUEST['userName'];
         $password = $_REQUEST['password'];
         $firstName = $_REQUEST['firstName'];
@@ -408,15 +430,16 @@ class Controller {
         }
 
         if (($userId > 0) && $updateRoomResult) {
-            echo('success');
+            echo ('success');
         } else if ($userId == -1) {
-            echo('Der Benutzer existiert bereits!');
+            echo ('Der Benutzer existiert bereits!');
         } else {
-            echo('Das Passwort muss mindestens ' . UserDAO::MIN_PASSWORD_LENGTH . ' Zeichen lang sein!');
+            echo ('Das Passwort muss mindestens ' . UserDAO::MIN_PASSWORD_LENGTH . ' Zeichen lang sein!');
         }
     }
 
-    protected function action_editUser() {
+    protected function action_editUser()
+    {
         $userId = $_REQUEST['userId'];
         $userName = $_REQUEST['userName'];
         $password = $_REQUEST['password'];
@@ -433,29 +456,31 @@ class Controller {
             $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
         }
         if (isset($_REQUEST['absent'])) {
-           UserDAO::updateAbsent($userId,true);
+            UserDAO::updateAbsent($userId, true);
         }
 
         if ($updateUserResult && $updateRoomResult) {
-            echo('success');
+            echo ('success');
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_deleteUser() {
+    protected function action_deleteUser()
+    {
         $userId = $_REQUEST['userId'];
 
         $deleteUserResult = UserDAO::deleteUserById($userId);
 
         if ($deleteUserResult) {
-            echo('success');
+            echo ('success');
         } else {
-            echo('error');
+            echo ('error');
         }
     }
 
-    protected function action_createNewsletter() {
+    protected function action_createNewsletter()
+    {
         if (!UserDAO::checkAccessData()) {
             echo 'Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!';
             return false;
@@ -498,7 +523,8 @@ class Controller {
         }
     }
 
-    protected function action_deleteNewsletter() {
+    protected function action_deleteNewsletter()
+    {
         $newsletterPath = 'uploads/newsletter_filled.odt';
 
         if (!file_exists($newsletterPath)) {
@@ -513,7 +539,8 @@ class Controller {
         }
     }
 
-    protected function action_deleteAccessData() {
+    protected function action_deleteAccessData()
+    {
         $deleteSuccess = UserDAO::deleteAccessData();
 
         if ($deleteSuccess) {
@@ -523,7 +550,8 @@ class Controller {
         }
     }
 
-    private function createNewsletter($template) {
+    private function createNewsletter($template)
+    {
         $doc = new DOMDocument('1.0', 'utf-8');
         $doc->loadXML($template);
         $root = $doc->documentElement;
@@ -585,7 +613,8 @@ class Controller {
         return $newFile;
     }
 
-    protected function action_deleteStats() {
+    protected function action_deleteStats()
+    {
         $userId = $_REQUEST['userId'];
 
         if ($userId != -1) {
@@ -599,5 +628,52 @@ class Controller {
         } else {
             echo 'failure';
         }
+    }
+
+    protected function action_createCancellationMessage()
+    {
+        $teacherId = $_REQUEST['teacherId'];
+        $studentId = $_REQUEST['studentId'];
+        $slotId = $_REQUEST['slotId'];
+        $reasonText = $_REQUEST['reasonText'];
+
+        $slot = SlotDAO::getSlotForId($slotId);
+
+        if ($slot->getTeacherId() != $_SESSION['userId']) {
+            echo 'Unauthorized';
+            return;
+        }
+
+        $teacher = UserDAO::getUserForId($teacherId);
+        $messageText = "Ein Gesprächstermin mit " . $teacher->getFirstName() . " " . $teacher->getLastName() . " wurde seitens der Lehrkraft abgelehnt. ";
+
+        if (!empty($reasonText)) {
+            $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <i>" . $reasonText . "</i>";
+        } else {
+            $messageText .= " Es wurde keine Begründung angegeben.";
+        }
+
+        MessageDAO::createMessage($teacherId, $studentId, $messageText);
+
+        ?>
+
+        <td colspan="3">
+            Der Termin wurde mit der angegebenen Nachricht abgesagt. Der Schüler wird hier im System darüber informiert.
+        </td>
+
+        <?php
+    }
+
+    protected function action_dismissMessage()
+    {
+        $messageId = $_REQUEST['messageId'];
+        $receiverId = $_REQUEST['receiverId'];
+
+        if ($receiverId != $_SESSION['userId']) {
+            echo "Unauthorized";
+            return;
+        }
+
+        MessageDAO::deleteMessageForReceiverId($messageId, $receiverId);
     }
 }

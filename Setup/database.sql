@@ -98,6 +98,17 @@ CREATE TABLE `user` (
   `absent` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Tabellenstruktur für Tabelle `message`
+--
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `senderId` int(11) NOT NULL,
+  `receiverId` int(11) NOT NULL,
+  `content` varchar(2000) COLLATE utf8_bin NOT NULL,
+  `createdAt` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 -- --------------------------------------------------------
 
 --
@@ -230,3 +241,4 @@ ALTER TABLE `slot`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

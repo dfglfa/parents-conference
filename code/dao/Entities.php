@@ -1,18 +1,22 @@
 <?php
 
-abstract class Entity {
+abstract class Entity
+{
     private $id;
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         $this->id = $id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 }
 
-class User extends Entity {
+class User extends Entity
+{
     private $userName;
     private $passwordHash;
     private $firstName;
@@ -22,7 +26,8 @@ class User extends Entity {
     private $title;
     private $absent;
 
-    public function __construct($id, $userName, $passwordHash, $firstName, $lastName, $class, $role, $title, $absent = 0) {
+    public function __construct($id, $userName, $passwordHash, $firstName, $lastName, $class, $role, $title, $absent = 0)
+    {
         parent::__construct($id);
         $this->userName = $userName;
         $this->passwordHash = $passwordHash;
@@ -35,54 +40,66 @@ class User extends Entity {
     }
 
 
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->userName;
     }
 
-    public function getPasswordHash() {
+    public function getPasswordHash()
+    {
         return $this->passwordHash;
     }
 
-    public function getFirstName() {
+    public function getFirstName()
+    {
         return $this->firstName;
     }
 
-    public function getLastName() {
+    public function getLastName()
+    {
         return $this->lastName;
     }
 
-    public function getClass() {
+    public function getClass()
+    {
         return $this->class;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->role;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function isAbsent() {
+    public function isAbsent()
+    {
         return $this->absent;
     }
 
-    public function __toString() {
-        return json_encode(array(
-            'id' => $this->getId(),
-            'userName' => $this->userName,
-            'passwordHash' => $this->passwordHash,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-            'class' => $this->class,
-            'role' => $this->role,
-            'title' => $this->title,
-            'absent' => $this->absent
-        ));
+    public function __toString()
+    {
+        return json_encode(
+            array(
+                'id' => $this->getId(),
+                'userName' => $this->userName,
+                'passwordHash' => $this->passwordHash,
+                'firstName' => $this->firstName,
+                'lastName' => $this->lastName,
+                'class' => $this->class,
+                'role' => $this->role,
+                'title' => $this->title,
+                'absent' => $this->absent
+            )
+        );
     }
 }
 
-class Event extends Entity {
+class Event extends Entity
+{
     private $name;
     private $dateFrom;
     private $dateTo;
@@ -98,7 +115,8 @@ class Event extends Entity {
     const BREAKFOUR = 4;
     const BREAKFIVE = 5;
 
-    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $isActive, $finalPostDate, $videoLink, $breaks) {
+    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $isActive, $finalPostDate, $videoLink, $breaks)
+    {
         parent::__construct($id);
         $this->name = $name;
         $this->dateFrom = $dateFrom;
@@ -106,51 +124,60 @@ class Event extends Entity {
         $this->slotTime = $slotTime;
         $this->isActive = $isActive;
         $this->finalPostDate = $finalPostDate;
-	$this->videoLink = $videoLink;
-	$this->breaks = $breaks;
+        $this->videoLink = $videoLink;
+        $this->breaks = $breaks;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getDateFrom() {
+    public function getDateFrom()
+    {
         return $this->dateFrom;
     }
 
-    public function getDateTo() {
+    public function getDateTo()
+    {
         return $this->dateTo;
     }
 
-    public function getSlotTime() {
+    public function getSlotTime()
+    {
         return $this->slotTime;
     }
 
-    public function isActive() {
+    public function isActive()
+    {
         return $this->isActive;
     }
-    public function getfinalPostDate() {
+    public function getfinalPostDate()
+    {
         return $this->finalPostDate;
     }
-    public function getVideoLink() {
+    public function getVideoLink()
+    {
         if (strlen($this->videoLink) > 10) {
 
-           $lastchar = $this->videoLink[-1];
-           if (strcmp($lastchar,"/")===0) {
-              return $this->videoLink;
-           } else {
-              return $this->videoLink."/";
-           }
+            $lastchar = $this->videoLink[-1];
+            if (strcmp($lastchar, "/") === 0) {
+                return $this->videoLink;
+            } else {
+                return $this->videoLink . "/";
+            }
         } else {
-           return null;
+            return null;
         }
     }
-    public function getBreaks() {
-      return $this->breaks;
+    public function getBreaks()
+    {
+        return $this->breaks;
     }
 }
 
-class Slot extends Entity {
+class Slot extends Entity
+{
     private $eventId;
     private $teacherId;
     private $studentId;
@@ -159,7 +186,8 @@ class Slot extends Entity {
     private $type;
     private $available;
 
-    public function __construct($id, $eventId, $teacherId, $studentId, $dateFrom, $dateTo, $type, $available) {
+    public function __construct($id, $eventId, $teacherId, $studentId, $dateFrom, $dateTo, $type, $available)
+    {
         parent::__construct($id);
         $this->eventId = $eventId;
         $this->teacherId = $teacherId;
@@ -170,42 +198,51 @@ class Slot extends Entity {
         $this->available = $available;
     }
 
-    public function getEventId() {
+    public function getEventId()
+    {
         return $this->eventId;
     }
 
-    public function getTeacherId() {
+    public function getTeacherId()
+    {
         return $this->teacherId;
     }
 
-    public function getStudentId() {
+    public function getStudentId()
+    {
         return $this->studentId;
     }
 
-    public function getDateFrom() {
+    public function getDateFrom()
+    {
         return $this->dateFrom;
     }
 
-    public function getDateTo() {
+    public function getDateTo()
+    {
         return $this->dateTo;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    public function getAvailable() {
+    public function getAvailable()
+    {
         return $this->available;
     }
 }
 
-class Log extends Entity {
+class Log extends Entity
+{
     private $userId;
     private $action;
     private $info;
     private $date;
 
-    public function __construct($id, $userId, $action, $info, $date) {
+    public function __construct($id, $userId, $action, $info, $date)
+    {
         parent::__construct($id);
         $this->userId = $userId;
         $this->action = $action;
@@ -213,44 +250,91 @@ class Log extends Entity {
         $this->date = $date;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
-    public function getInfo() {
+    public function getInfo()
+    {
         return $this->info;
     }
 
-    public function getDate() {
+    public function getDate()
+    {
         return $this->date;
     }
 }
 
-class Room extends Entity {
+class Room extends Entity
+{
     private $roomNumber;
     private $name;
     private $teacherId;
 
-    public function __construct($id, $roomNumber, $name, $teacherId) {
+    public function __construct($id, $roomNumber, $name, $teacherId)
+    {
         parent::__construct($id);
         $this->roomNumber = $roomNumber;
         $this->name = $name;
         $this->teacherId = $teacherId;
     }
 
-    public function getRoomNumber() {
+    public function getRoomNumber()
+    {
         return $this->roomNumber;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getTeacherId() {
+    public function getTeacherId()
+    {
         return $this->teacherId;
+    }
+}
+
+class Message extends Entity
+{
+    private $senderId;
+    private $receiverId;
+    private $content;
+
+    private $createdAt;
+
+    public function __construct($id, $senderId, $receiverId, $content, $createdAt)
+    {
+        parent::__construct($id);
+        $this->senderId = $senderId;
+        $this->receiverId = $receiverId;
+        $this->content = $content;
+        $this->createdAt = $createdAt;
+    }
+
+    public function getSenderId()
+    {
+        return $this->senderId;
+    }
+
+    public function getReceiverId()
+    {
+        return $this->receiverId;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
