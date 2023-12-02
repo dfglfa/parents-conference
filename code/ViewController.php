@@ -176,7 +176,9 @@ class ViewController extends Controller
 
         ?>
         <div id=" printHeader">
-                        <h3>Meine Termine für den
+                        <h3>Termine von
+                            <?php echo ($user->getFirstName() . " " . $user->getLastName()) ?>
+                            am
                             <?php echo (toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?>
                         </h3>
                 </div>

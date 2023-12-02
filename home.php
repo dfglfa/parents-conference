@@ -21,7 +21,6 @@ include_once 'inc/header.php';
                     <button type="button" class="messageDismissal close" data-dismiss="alert" aria-label="Close"><span
                             id="dismiss_<?php echo $msg->getId() ?>" data-messageid="<?php echo $msg->getId() ?>"
                             data-receiverid="<?php echo $_SESSION['userId'] ?>" aria-hidden="true">&times;</span></button>
-                    <strong>HINWEIS:</strong>
                     <?php echo $msg->getContent(); ?>
                 </div>
 

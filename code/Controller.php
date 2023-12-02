@@ -648,7 +648,7 @@ class Controller
         $messageText = "Ein Gesprächstermin mit " . $teacher->getFirstName() . " " . $teacher->getLastName() . " wurde seitens der Lehrkraft abgelehnt. ";
 
         if (!empty($reasonText)) {
-            $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <i>" . $reasonText . "</i>";
+            $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <strong>\"" . $reasonText . "</strong>\"";
         } else {
             $messageText .= " Es wurde keine Begründung angegeben.";
         }
