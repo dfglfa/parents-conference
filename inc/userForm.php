@@ -21,6 +21,11 @@
 </div>
 
 <div class='form-group'>
+    <label for='email'>E-Mail-Adresse</label>
+    <input type='text' class='form-control' id='email' name='email' placeholder='E-Mail-Adresse'>
+</div>
+
+<div class='form-group'>
     <label for='inputClass'>Klasse</label>
     <input type='text' class='form-control' id='inputClass' name='class' placeholder='Klasse'>
 </div>

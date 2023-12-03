@@ -92,6 +92,7 @@ CREATE TABLE `user` (
   `passwordHash` varchar(255) COLLATE utf8_bin NOT NULL,
   `firstName` varchar(255) COLLATE utf8_bin NOT NULL,
   `lastName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `email` varchar(255) COLLATE utf8_bin NOT NULL,
   `class` varchar(20) COLLATE utf8_bin DEFAULT NULL,
   `role` enum('student','teacher','admin') COLLATE utf8_bin NOT NULL DEFAULT 'student',
   `title` varchar(20) COLLATE utf8_bin DEFAULT '',

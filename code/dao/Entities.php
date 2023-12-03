@@ -21,18 +21,20 @@ class User extends Entity
     private $passwordHash;
     private $firstName;
     private $lastName;
+    private $email;
     private $class;
     private $role;
     private $title;
     private $absent;
 
-    public function __construct($id, $userName, $passwordHash, $firstName, $lastName, $class, $role, $title, $absent = 0)
+    public function __construct($id, $userName, $passwordHash, $firstName, $lastName, $email, $class, $role, $title, $absent = 0)
     {
         parent::__construct($id);
         $this->userName = $userName;
         $this->passwordHash = $passwordHash;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->email = $email;
         $this->class = $class;
         $this->role = $role;
         $this->title = $title;
@@ -58,6 +60,11 @@ class User extends Entity
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getClass()
@@ -89,6 +96,7 @@ class User extends Entity
                 'passwordHash' => $this->passwordHash,
                 'firstName' => $this->firstName,
                 'lastName' => $this->lastName,
+                'email' => $this->email,
                 'class' => $this->class,
                 'role' => $this->role,
                 'title' => $this->title,

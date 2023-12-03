@@ -8,15 +8,7 @@ class MessageDAO extends AbstractDAO
     public static function initDB()
     {
         $con = self::getConnection();
-        self::query($con, "
-        CREATE TABLE `message` (
-            `id` int(11) NOT NULL,
-            `senderId` int(11) NOT NULL,
-            `receiverId` int(11) NOT NULL,
-            `content` varchar(2000) COLLATE utf8_bin NOT NULL,
-            `createdAt` int(11) NOT NULL
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-        ");
+        // Hack to alter database ... do not use in prod :)
     }
 
     public static function getAllMessages()
@@ -47,6 +39,7 @@ class MessageDAO extends AbstractDAO
     {
         $con = self::getConnection();
         $res = self::query($con, 'INSERT INTO message (senderId, receiverId, content, createdAt) values (?, ?, ?, now())', array($senderId, $receiverId, $content), true)["success"];
+
         return $res ? "OK" : "NOPE: '" . $res . "'";
     }
 
