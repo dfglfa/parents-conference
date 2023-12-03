@@ -145,7 +145,7 @@ class UserDAO extends AbstractDAO
         $isTeacherInsert = count($rooms) > 0;
 
         foreach ($users as $user) {
-            for ($i = 0; $i < 7; $i++) {
+            for ($i = 0; $i < 8; $i++) {
                 $userSth->bindValue($i + 1, $user[$i]);
             }
             $userSth->execute();

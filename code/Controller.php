@@ -176,8 +176,8 @@ class Controller
 
     private function checkCSVHeader($type, $row)
     {
-        $constraints['teacher'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
-        $constraints['student'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort');
+        $constraints['teacher'] = array('Vorname', 'Nachname', 'Email', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
+        $constraints['student'] = array('Vorname', 'Nachname', 'Email', 'Klasse', 'Benutzername', 'Passwort');
         $constraints['subject'] = array('ToDo');
 
         $constraintPart = implode('', $constraints[$type]);
@@ -302,7 +302,7 @@ class Controller
                     $accessData[] = array($userName, $password);
                 }
 
-                $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $class, $role, $title);
+                $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), trim($row[2]), $class, $role, $title);
             }
         }
 
