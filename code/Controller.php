@@ -379,10 +379,10 @@ class Controller
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_DELETE_SLOT, $info);
 
+        sendCancellationNotificationMail($slotId);
         $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
 
         if ($success) {
-
             echo ('success');
         } else {
             echo ('error');
@@ -662,7 +662,7 @@ class Controller
         ?>
 
         <td colspan="3">
-            Der Termin wurde mit der angegebenen Nachricht abgesagt. Der Schüler wird hier im System darüber informiert.
+            Der Termin wurde abgesagt. Der Schüler wird per E-Mail informiert.
         </td>
 
         <?php
