@@ -6,6 +6,7 @@ require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
 require_once('dao/MessageDAO.php');
+require_once('Notification.php');
 
 class Controller
 {
@@ -359,6 +360,7 @@ class Controller
         $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
         if ($result['success']) {
             if ($result['rowCount'] > 0) {
+                sendCreationNotificationMail($slotId);
                 echo ('success');
             } else {
                 echo ('dirtyRead');
@@ -380,6 +382,7 @@ class Controller
         $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
 
         if ($success) {
+
             echo ('success');
         } else {
             echo ('error');
