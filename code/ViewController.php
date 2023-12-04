@@ -607,14 +607,14 @@ class ViewController extends Controller
                     <p>
                     Ein Datensatz muss folgende Elemente besitzen:
                     <br>
-                    Vorname;Nachname;Klasse;Benutzername;Passwort
+                    Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort
                     <br><br>
                     Trennzeichen muss der Strichpunkt sein. Benutzername und Passwort sind optional.
                     <br><br>
                     Beispiele:
                     <ul>
-                        <li>Angelika;Albers;8B;;</li>
-                        <li>Britta;Bäcker;1D;baecker1;password1</li>
+                        <li>Angelika;Albers;angie@albers.net;8B;;</li>
+                        <li>Britta;Bäcker;britta@baecker.de;1D;baecker1;password1</li>
                     </ul>
                     </p>';
                 break;
@@ -628,14 +628,14 @@ class ViewController extends Controller
                     <p>
                     Ein Datensatz muss folgende Elemente besitzen:
                     <br>
-                    Vorname;Nachname;Klasse;Benutzername;Passwort;Titel;Raumnummer;Raumname
+                    Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort;Titel;Raumnummer;Raumname
                     <br><br>
                     Trennzeichen muss der Strichpunkt sein. Raumnummer und Raumname sind optional.
                     <br><br>
                     Beispiele:
                     <ul>
-                        <li>Otto;Normalverbraucher;1C;ottonormal;user987;Mag.;A001;Konferenzzimmer</li>
-                        <li>John;Doe;2E;johnny456;some_pw!;BEd.;;</li>
+                        <li>Otto;Normalverbraucher;otto@norm.com;1C;ottonormal;user987;Mag.;A001;Konferenzzimmer</li>
+                        <li>John;Doe;jd@foo.bar;2E;johnny456;some_pw!;BEd.;;</li>
                     </ul>
                     </p>';
                 break;

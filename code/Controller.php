@@ -176,8 +176,8 @@ class Controller
 
     private function checkCSVHeader($type, $row)
     {
-        $constraints['teacher'] = array('Vorname', 'Nachname', 'Email', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
-        $constraints['student'] = array('Vorname', 'Nachname', 'Email', 'Klasse', 'Benutzername', 'Passwort');
+        $constraints['teacher'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
+        $constraints['student'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort');
         $constraints['subject'] = array('ToDo');
 
         $constraintPart = implode('', $constraints[$type]);
@@ -185,6 +185,7 @@ class Controller
         if (substr(implode('', $row), 0 - $length) == substr($constraintPart, 0 - $length)) {
             return true;
         } else {
+            echo (substr(implode('', $row), 0 - $length) . " / " . substr($constraintPart, 0 - $length));
             return false;
         }
     }
@@ -233,6 +234,7 @@ class Controller
         //parse the csv file row by row
         $firstRow = true;
         $users = array();
+        $emails = array();
         $accessData = array();
         $rooms = array();
         $userNames = array();
@@ -262,26 +264,27 @@ class Controller
                 }
             } else {
                 //insert csv data into mysql table
-                $class = trim($row[2]) != '' ? trim($row[2]) : null;
+                $email = trim($row[2]);
+                $class = trim($row[3]) != '' ? trim($row[3]) : null;
 
                 if ($role == 'teacher') {
-                    $userName = trim($row[3]);
-                    $password = trim($row[4]);
+                    $userName = trim($row[4]);
+                    $password = trim($row[5]);
 
                     if (!$this->checkForUniqueUserName($userName, $userNames)) {
                         fclose($fp);
                         return $duplicateUserError;
                     }
                     $userNames[] = $userName;
-                    $title = trim($row[5]);
+                    $title = trim($row[6]);
 
-                    $roomNumber = trim($row[6]);
-                    $roomName = trim($row[7]);
+                    $roomNumber = trim($row[7]);
+                    $roomName = trim($row[8]);
                     if ($roomNumber != '' && $roomName != '') {
                         $rooms[$userName] = array($roomNumber, $roomName);
                     }
                 } else {
-                    $userName = trim($row[3]);
+                    $userName = trim($row[4]);
 
                     $tries = 0;
                     if ($userName == '') {
@@ -297,12 +300,12 @@ class Controller
                     $userNames[] = $userName;
                     $title = '';
 
-                    $password = trim($row[4]) == '' ? $this->generateRandomPassword() : trim($row[4]);
+                    $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
                     $accessData[] = array($userName, $password);
                 }
 
-                $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), trim($row[2]), $class, $role, $title);
+                $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $email, $class, $role, $title);
             }
         }
 

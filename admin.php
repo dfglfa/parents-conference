@@ -38,7 +38,7 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputName'>Name</label>
                             <input type='text' class='form-control' id='inputName' name='name'
-                                   placeholder='Tragen Sie hier den Namen des Elternsrpechtags ein'>
+                                placeholder='Tragen Sie hier den Namen des Elternsprechtags ein'>
                         </div>
 
                         <div class='form-group'>
@@ -66,13 +66,13 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputStartTime'>Beginn</label>
                             <input type='text' class='form-control' id='inputStartTime' name='beginTime'
-                                   placeholder='16:00'>
+                                placeholder='16:00'>
                         </div>
 
                         <div class='form-group'>
                             <label for='inputEndTime'>Ende</label>
                             <input type='text' class='form-control' id='inputEndTime' name='endTime'
-                                   placeholder='20:00'>
+                                placeholder='20:00'>
                         </div>
 
                         <div class='form-group'>
@@ -93,13 +93,13 @@ include_once 'inc/header.php';
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
-<script>
+                        <script>
                             $('#datePickerBooking').datetimepicker({
                                 format: 'dd.mm.yyyy hh:ii',
                                 language: 'de',
-});</script>
+                            });</script>
 
-                      <!--  <script>
+                        <!--  <script>
                             $('#datePickerBooking').datetimepicker({
     format: 'dd.mm.yyy hh:ii',
     defaultDate: new Date('2015-09-01 10:00'),
@@ -112,10 +112,10 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputVideoLink'>Videolink</label>
                             <input type='text' class='form-control' id='videoLink' name='videoLink'
-                                   placeholder='Falls der Termin nur online stattfindet, bitte Videolink eintragen'>
+                                placeholder='Falls der Termin nur online stattfindet, bitte Videolink eintragen'>
                         </div>
 
-                        <label >Pausen</label>
+                        <label>Pausen</label>
                         <div class='radio'>
                             <label><input type='radio' name='breaks' value='0' checked>
                                 keine Pausen
@@ -127,7 +127,7 @@ include_once 'inc/header.php';
                                 zu jeder vollen Stunde
                             </label>&nbsp;
                             <label><input type='radio' name='breaks' value='3'>
-                               jede 3. Einheit
+                                jede 3. Einheit
                             </label>&nbsp;
                             <label><input type='radio' name='breaks' value='4'>
                                 jede 4. Einheit
@@ -138,7 +138,8 @@ include_once 'inc/header.php';
                         </div>
 
                         <div class='form-group'>
-                            <label><input type='checkbox' name='setActive[]' checked>  als aktiven Elternsrpechtag setzen</label>
+                            <label><input type='checkbox' name='setActive[]' checked> als aktiven Elternsprechtag
+                                setzen</label>
                         </div>
 
                         <button type='submit' class='btn btn-primary' id='btn-create-event'>Anlegen</button>
@@ -173,7 +174,7 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label class='control-label'>Datei auswählen</label>
                             <input id='input-file' type='file' name='file' class='file' data-show-preview='false'
-                                   accept='.csv,.odt'>
+                                accept='.csv,.odt'>
                             <p id="allowed-file-types" class='help-block'>Es sind nur CSV Dateien erlaubt.</p>
 
                             <div id='templateDownloadAlertContainer'></div>
@@ -202,7 +203,7 @@ include_once 'inc/header.php';
 
                     <?php
                     $viewController = ViewController::getInstance();
-                    echo($viewController->action_getChangeEventForm());
+                    echo ($viewController->action_getChangeEventForm());
                     ?>
 
                     <div class='message' id='changeEventMessage'></div>
@@ -228,12 +229,12 @@ include_once 'inc/header.php';
                         <select class='form-control' id='selectTeacher'>
                             <?php
                             $teachers = UserDAO::getUsersForRole('teacher');
-                            foreach ($teachers as $teacher) : ?>
+                            foreach ($teachers as $teacher): ?>
                                 <?php
                                 $val = $teacher->__toString();
                                 ?>
-                                <option value='<?php echo(escape($val)) ?>'>
-                                    <?php echo(escape($teacher->getLastName() . ' ' . $teacher->getFirstName())) ?>
+                                <option value='<?php echo (escape($val)) ?>'>
+                                    <?php echo (escape($teacher->getLastName() . ' ' . $teacher->getFirstName())) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -317,9 +318,9 @@ include_once 'inc/header.php';
                             <select class='form-control' id='selectUserStats' name='type'>
                                 <option value="-1">Bitte wähle einen Benutzer ...</option>
                                 <?php $users = UserDAO::getUsers(); ?>
-                                <?php foreach ($users as $user) : ?>
-                                    <option value='<?php echo(escape($user->__toString())) ?>'>
-                                        <?php echo(escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                                <?php foreach ($users as $user): ?>
+                                    <option value='<?php echo (escape($user->__toString())) ?>'>
+                                        <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -343,7 +344,8 @@ include_once 'inc/header.php';
             </div>
             <div id='collapse7' class='panel-collapse collapse'>
                 <div class='panel-body'>
-                    <button class="btn btn-primary" onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
+                    <button class="btn btn-primary"
+                        onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne ausdrucken
                     </button>
 
@@ -356,4 +358,3 @@ include_once 'inc/header.php';
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
-
