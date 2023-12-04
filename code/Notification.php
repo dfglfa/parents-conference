@@ -23,9 +23,7 @@ function sendCreationNotificationMail($slotId)
         "<p>Es wurde ein Termin mit " . $teacherName . " am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr vereinbart.</p>" .
         "</div>" .
-        "<div>" .
-        "<a href='https://speechday.dfglfa.net/speechday2/home.php'>Zur Terminübersicht</a>" .
-        "</div><br>" .
+        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $emailTemplateTeacher = "<div> " .
@@ -33,8 +31,7 @@ function sendCreationNotificationMail($slotId)
         "<p>Soeben wurde von " . $studentName . " ein Termin am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr gebucht.</p>" .
         "<div>" .
-        "<a href='https://speechday.dfglfa.net/speechday2/teacher.php'>Zur Terminübersicht</a>" .
-        "</div><br>" .
+        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $headers[] = 'MIME-Version: 1.0';
@@ -72,8 +69,7 @@ function sendCancellationNotificationMail($slotId)
         " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
         "</div>" .
         "<div>" .
-        "<a href='https://speechday.dfglfa.net/speechday2/home.php'>Zur Terminübersicht</a>" .
-        "</div><br>" .
+        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $emailTemplateTeacher = "<div> " .
@@ -81,8 +77,7 @@ function sendCancellationNotificationMail($slotId)
         "<p>Ihr Termin mit " . $studentName . " am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
         "<div>" .
-        "<a href='https://speechday.dfglfa.net/speechday2/teacher.php'>Zur Terminübersicht</a>" .
-        "</div><br>" .
+        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $headers[] = 'MIME-Version: 1.0';
