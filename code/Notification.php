@@ -23,7 +23,6 @@ function sendCreationNotificationMail($slotId)
         "<p>Es wurde ein Termin mit " . $teacherName . " am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr vereinbart.</p>" .
         "</div>" .
-        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $emailTemplateTeacher = "<div> " .
@@ -31,11 +30,10 @@ function sendCreationNotificationMail($slotId)
         "<p>Soeben wurde von " . $studentName . " ein Termin am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr gebucht.</p>" .
         "<div>" .
-        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+    $headers[] = 'Content-type: text/html; charset=utf-8';
 
     if (!empty($studentEmail)) {
         mail($studentEmail, "Terminbestätigung " . $teacherName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent, implode("\r\n", $headers));
@@ -69,7 +67,6 @@ function sendCancellationNotificationMail($slotId)
         " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
         "</div>" .
         "<div>" .
-        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $emailTemplateTeacher = "<div> " .
@@ -77,11 +74,10 @@ function sendCancellationNotificationMail($slotId)
         "<p>Ihr Termin mit " . $studentName . " am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
         "<div>" .
-        "<br>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
     $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+    $headers[] = 'Content-type: text/html; charset=utf-8';
 
     if (!empty($studentEmail)) {
         mail($studentEmail, "Terminabsage " . $teacherName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent, implode("\r\n", $headers));
