@@ -41,7 +41,7 @@ class UserDAO extends AbstractDAO
         $orderPhrase = 'ORDER BY lastName';
         $query = sprintf('SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title, absent FROM user WHERE role = ? %s;', $orderPhrase);
         if ($limit > 0) {
-            $query = 'SELECT id, userName, passwordHash, firstName, lastName, class, role, title, absent FROM user WHERE role = ? ORDER BY lastName LIMIT 10';
+            $query = 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title, absent FROM user WHERE role = ? ORDER BY lastName LIMIT 10';
         }
         $res = self::query($con, $query, $params);
 

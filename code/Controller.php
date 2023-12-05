@@ -234,7 +234,6 @@ class Controller
         //parse the csv file row by row
         $firstRow = true;
         $users = array();
-        $emails = array();
         $accessData = array();
         $rooms = array();
         $userNames = array();

@@ -573,6 +573,7 @@ class ViewController extends Controller
                         <th>Benutzername</th>
                         <th>Vorname</th>
                         <th>Nachname</th>
+                        <th>E-Mail</th>
                         <th>Klasse</th>
                     </tr>
                     <?php foreach ($users as $user): ?>
@@ -585,6 +586,9 @@ class ViewController extends Controller
                             </td>
                             <td>
                                 <?php echo escape($user->getLastName()); ?>
+                            </td>
+                            <td>
+                                <?php echo escape($user->getEmail()); ?>
                             </td>
                             <td>
                                 <?php echo escape($user->getClass()); ?>
