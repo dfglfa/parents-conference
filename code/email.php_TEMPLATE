@@ -1,0 +1,11 @@
+<?php
+
+
+class SMTPConfig
+{
+    public static $SMTP_HOST = "";
+    public static $SMTP_LOGIN = "";
+    public static $SMTP_FROM = "";
+    public static $SMTP_PWD = "";
+}
+?>
