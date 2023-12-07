@@ -360,7 +360,7 @@ class ViewController extends Controller
                                                 data-studentId="<?php echo $slot->getStudentId() ?>"
                                                 data-slotId="<?php echo $slot->getId() ?>"
                                                 data-eventId="<?php echo $activeEvent->getId() ?>">
-                                                Termin absagen
+                                                Termin verschieben
                                             </button>
                                         </td>
                                     </tr>
