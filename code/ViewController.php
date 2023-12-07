@@ -355,13 +355,15 @@ class ViewController extends Controller
                                                     target=_blank">VideoLink</a></td>
                                         <?php endif; ?>
                                         <td class="colAction no-print">
-                                            <button class="btn btn-danger es-button-cancel" id="button_<?php echo $slot->getId() ?>"
-                                                data-teacherId="<?php echo $teacher->getId() ?>"
-                                                data-studentId="<?php echo $slot->getStudentId() ?>"
-                                                data-slotId="<?php echo $slot->getId() ?>"
-                                                data-eventId="<?php echo $activeEvent->getId() ?>">
-                                                Termin absagen
-                                            </button>
+                                            <?php if (!$teacherAvailable): ?>
+                                                <button class="btn btn-danger es-button-cancel" id="button_<?php echo $slot->getId() ?>"
+                                                    data-teacherId="<?php echo $teacher->getId() ?>"
+                                                    data-studentId="<?php echo $slot->getStudentId() ?>"
+                                                    data-slotId="<?php echo $slot->getId() ?>"
+                                                    data-eventId="<?php echo $activeEvent->getId() ?>">
+                                                    Termin absagen
+                                                </button>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endif; ?>

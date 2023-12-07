@@ -10,11 +10,7 @@ foreach ($messages as $msg) {
                     data-receiverid="<?php echo $_SESSION['userId'] ?>" aria-hidden="true">&times;</span></button>
             <?php echo $msg->getContent(); ?>
         </div>
-
-
     <?php endif; ?>
-
-    <?php
+<?php
 }
-
 ?>

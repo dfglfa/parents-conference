@@ -7,8 +7,7 @@ include_once 'inc/header.php';
 <p id='pageName' hidden>Home</p>
 <div class='container'>
     <div id='tabs-1'>
-        <h1>Meine gebuchten Termine</h1>
-        <h3>Hier können Sie Ihre gebuchten Termine einsehen und löschen!<br><br></h3>
+        <h1>Meine Termine</h1>
         <?php include_once 'inc/notifications.php'; ?>
     </div>
 </div>
