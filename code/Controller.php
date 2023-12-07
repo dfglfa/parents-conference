@@ -651,7 +651,7 @@ class Controller
         }
 
         $teacher = UserDAO::getUserForId($teacherId);
-        $messageText = $teacher->getFirstName() . " " . $teacher->getLastName() . " möchte lieber den Termin verschieben. ";
+        $messageText = $teacher->getFirstName() . " " . $teacher->getLastName() . " möchte den Termin mit Ihnen verschieben. ";
 
         if (!empty($reasonText)) {
             $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <strong>\"" . $reasonText . "</strong>\"";
