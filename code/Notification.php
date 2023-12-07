@@ -34,10 +34,10 @@ function sendCreationNotificationMail($slotId)
         " um " . toDate($date, "H:i") . " Uhr vereinbart.</p>" .
         "</div>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<hr />" . 
+        "<hr />" .
         "<div> " .
         "<p>Bonjour " . $studentName . ", </p> " .
-        "<p>ULe rendez-vous avec " . $teacherName . " le " . toDate($date, "d.m.Y") .
+        "<p>Le rendez-vous avec " . $teacherName . " le " . toDate($date, "d.m.Y") .
         " à " . toDate($date, "H:i") . " a bien été réservé.</p>" .
         "</div>" .
         "<div>Cordialement, <br> Les admins</div>";
@@ -48,16 +48,13 @@ function sendCreationNotificationMail($slotId)
         " um " . toDate($date, "H:i") . " Uhr gebucht.</p>" .
         "<div>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<hr />" . 
+        "<hr />" .
         "<div> " .
         "<p>Bonjour " . $teacherName . ", </p> " .
         "<p>" . $studentName . " a réservé un rendez-vous le " . toDate($date, "d.m.Y") .
         " à " . toDate($date, "H:i") . ".</p>" .
         "<div>" .
         "<div>Cordialement, <br> Les admins</div>";
-
-    $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=utf-8';
 
     if (!empty($studentEmail)) {
         sendMail($studentEmail, "Terminbestätigung / Confirmation de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
