@@ -33,20 +33,34 @@ function sendCreationNotificationMail($slotId)
         "<p>Es wurde ein Termin mit " . $teacherName . " am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr vereinbart.</p>" .
         "</div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
+        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
+        "<hr />" . 
+        "<div> " .
+        "<p>Bonjour " . $studentName . ", </p> " .
+        "<p>ULe rendez-vous avec " . $teacherName . " le " . toDate($date, "d.m.Y") .
+        " à " . toDate($date, "H:i") . " a bien été réservé.</p>" .
+        "</div>" .
+        "<div>Cordialement, <br> Les admins</div>";
 
     $emailTemplateTeacher = "<div> " .
         "<p>Guten Tag " . $teacherName . ", </p> " .
         "<p>Soeben wurde von " . $studentName . " ein Termin am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr gebucht.</p>" .
         "<div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
+        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
+        "<hr />" . 
+        "<div> " .
+        "<p>Bonjour " . $teacherName . ", </p> " .
+        "<p>" . $studentName . " a réservé un rendez-vous le " . toDate($date, "d.m.Y") .
+        " à " . toDate($date, "H:i") . ".</p>" .
+        "<div>" .
+        "<div>Cordialement, <br> Les admins</div>";
 
     $headers[] = 'MIME-Version: 1.0';
     $headers[] = 'Content-type: text/html; charset=utf-8';
 
     if (!empty($studentEmail)) {
-        sendMail($studentEmail, "Terminbestätigung " . $teacherName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
+        sendMail($studentEmail, "Terminbestätigung / Confirmation de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
     }
 
     if (!empty($teacherEmail)) {
@@ -73,26 +87,34 @@ function sendCancellationNotificationMail($slotId)
 
     $emailTemplateStudent = "<div> " .
         "<p>Guten Tag " . $studentName . ", </p> " .
-        "<p>Der Termin mit " . $teacherName . " am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
+        "<p>" . $teacherName . " möchte den geplanten Termin am " . toDate($date, "d.m.Y") .
+        " um " . toDate($date, "H:i") . " Uhr verschieben.</p>" .
         "</div>" .
         "<div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
+        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
+        "<hr />" .
+        "<div> " .
+        "<p>Bonjour " . $studentName . ", </p> " .
+        "<p>" . $teacherName . " préférerait déplacer le rendez-vous prévu le " . toDate($date, "d.m.Y") .
+        " à " . toDate($date, "H:i") . ".</p>" .
+        "</div>" .
+        "<div>" .
+        "<div>Cordialement, <br> Les admins</div>";
 
     $emailTemplateTeacher = "<div> " .
         "<p>Guten Tag " . $teacherName . ", </p> " .
         "<p>Ihr Termin mit " . $studentName . " am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr wurde abgesagt.</p>" .
+        " um " . toDate($date, "H:i") . " Uhr wurde verschoben.</p>" .
         "<div>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
 
 
     if (!empty($studentEmail)) {
-        sendMail($studentEmail, "Terminabsage " . $teacherName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
+        sendMail($studentEmail, "Terminverschiebung / Déplacement de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
     }
 
     if (!empty($teacherEmail)) {
-        sendMail($teacherEmail, "Terminabsage von " . $studentName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateTeacher);
+        sendMail($teacherEmail, "Terminverschiebung von " . $studentName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateTeacher);
     }
 }
 
