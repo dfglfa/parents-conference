@@ -318,7 +318,7 @@ class ViewController extends Controller
                             <?php if (!empty($activeEvent->getVideoLink())): ?>
                                 <th width='10%'>VideoLink</th>
                             <?php endif; ?>
-                            <th class='col2'>Aktion</th>
+                            <th class='colAction no-print'>Aktion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -354,7 +354,7 @@ class ViewController extends Controller
                                             <td><a href="<?php echo ($activeEvent->getVideoLink() . md5($slot->getId()) . $getParam) ?> "
                                                     target=_blank">VideoLink</a></td>
                                         <?php endif; ?>
-                                        <td>
+                                        <td class="colAction no-print">
                                             <button class="btn btn-danger es-button-cancel" id="button_<?php echo $slot->getId() ?>"
                                                 data-teacherId="<?php echo $teacher->getId() ?>"
                                                 data-studentId="<?php echo $slot->getStudentId() ?>"

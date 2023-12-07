@@ -105,6 +105,9 @@ body {
 .col2 {
   width: 65%;
 }
+.colAction {
+  width: 65%;
+}
 
 .only-print {
   display: none;

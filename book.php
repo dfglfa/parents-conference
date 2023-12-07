@@ -11,6 +11,7 @@ include_once 'inc/header.php';
     <div id='tabs-1'>
         <h1>Zeitübersicht</h1>
         <h3>Hier können Sie Termine beim gewünschten Lehrer/Lehrerin buchen!<br><br></h3>
+        <?php include_once 'inc/notifications.php'; ?>
     </div>
 </div>
 
@@ -20,20 +21,20 @@ include_once 'inc/header.php';
     <div>
         <?php if ($activeEvent != null): ?>
             <?php if ($activeEvent->getFinalPostDate() > time()): ?>
-               <form id='chooseTeacherForm'>
-                   <div class='form-group'>
-                       <label for='selectTeacher'>Lehrer / Lehrerin</label>
-                       <select class='form-control' id='selectTeacher' name='teacher'>
-                           <?php echo(getTeacherOptions()); ?>
-                       </select>
-                   </div>
-               </form>
+                <form id='chooseTeacherForm'>
+                    <div class='form-group'>
+                        <label for='selectTeacher'>Lehrer / Lehrerin</label>
+                        <select class='form-control' id='selectTeacher' name='teacher'>
+                            <?php echo (getTeacherOptions()); ?>
+                        </select>
+                    </div>
+                </form>
 
-               <div id='timeTable'></div>
-           <?php else: ?>
-            <h3>Buchungen sind nicht mehr möglich!</h3>
-           <?php endif; ?>
-            
+                <div id='timeTable'></div>
+            <?php else: ?>
+                <h3>Buchungen sind nicht mehr möglich!</h3>
+            <?php endif; ?>
+
         <?php else: ?>
             <h3>Es gibt momentan keinen Elternsprechtag!</h3>
         <?php endif; ?>
@@ -42,4 +43,3 @@ include_once 'inc/header.php';
 
 
 <?php include_once 'inc/footer.php'; ?>
-
