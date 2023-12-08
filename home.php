@@ -18,8 +18,8 @@ include_once 'inc/header.php';
             <div class='form-group'>
                 <label for='selectType'>Darstellungstyp</label>
                 <select class='form-control' id='selectType' name='type'>
-                    <option value='1' selected>Kompakt</option>
-                    <option value='0'>Vollständig</option>
+                    <option value='1'>Kompakt</option>
+                    <option value='0' selected>Vollständig</option>
                 </select>
             </div>
         </form>

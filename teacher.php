@@ -32,12 +32,12 @@ include_once 'inc/header.php';
                             <label for='selectType'>Darstellungstyp</label>
                             <select class='form-control' id='selectType' name='type'>
                                 <option value='1'>Kompakt</option>
-                                <option value='2'>Vollständig</option>
+                                <option value='2' selected>Vollständig</option>
                             </select>
                         </div>
                     </form>
 
-                    <button class="btn btn-primary" onclick="window.print()">   
+                    <button class="btn btn-primary" onclick="window.print()">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
                     </button>
                     <div id='timeTable' class="section-to-print"></div>
@@ -67,32 +67,32 @@ include_once 'inc/header.php';
                     </p>
 
                     <?php if ($attendance != null): ?>
-                    <h4>
-                        Anwesenheit ändern
-                    </h4>
-                    <form id='changeAttendanceForm'>
-                        <input type='hidden' name='userId' value='<?php echo(escape($user->getId())) ?>'>
-                        <input type='hidden' name='eventId' value='<?php echo(escape($attendance['eventId'])) ?>'>
-                        <div class='form-group'>
-                            <label for='inputFromTime'>Von</label>
-                            <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
-                                <?php echo(getDateOptions($attendance, true)); ?>
-                            </select>
-                        </div>
-
-                        <div class='form-group'>
-                            <label for='inputToTime'>Bis</label>
-                            <select class='form-control' id='inputSlotDuration' name='inputToTime'>
-                                <?php echo(getDateOptions($attendance, false)); ?>
-                            </select>
-                        </div>
-
-                        <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
+                        <h4>
                             Anwesenheit ändern
-                        </button>
-                    </form>
+                        </h4>
+                        <form id='changeAttendanceForm'>
+                            <input type='hidden' name='userId' value='<?php echo (escape($user->getId())) ?>'>
+                            <input type='hidden' name='eventId' value='<?php echo (escape($attendance['eventId'])) ?>'>
+                            <div class='form-group'>
+                                <label for='inputFromTime'>Von</label>
+                                <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
+                                    <?php echo (getDateOptions($attendance, true)); ?>
+                                </select>
+                            </div>
 
-                    <div class='message' id='message'></div>
+                            <div class='form-group'>
+                                <label for='inputToTime'>Bis</label>
+                                <select class='form-control' id='inputSlotDuration' name='inputToTime'>
+                                    <?php echo (getDateOptions($attendance, false)); ?>
+                                </select>
+                            </div>
+
+                            <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
+                                Anwesenheit ändern
+                            </button>
+                        </form>
+
+                        <div class='message' id='message'></div>
 
                     <?php endif; ?>
                 </div>
@@ -103,4 +103,3 @@ include_once 'inc/header.php';
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
-

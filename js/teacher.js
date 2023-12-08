@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  loadTimeTable(1);
+  loadTimeTable(2);
 
   $("#selectType").change(function () {
     var typeSelect = $("#selectType").find("option:selected");
