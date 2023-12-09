@@ -423,12 +423,13 @@ class Controller
         $password = $_REQUEST['password'];
         $firstName = $_REQUEST['firstName'];
         $lastName = $_REQUEST['lastName'];
+        $email = $_REQUEST['email'];
         $class = $_REQUEST['class'];
         $type = $_REQUEST['type'];
         $roomNumber = $_REQUEST['roomNumber'];
         $roomName = $_REQUEST['roomName'];
 
-        $userId = UserDAO::register($userName, $password, $firstName, $lastName, $class, $type);
+        $userId = UserDAO::register($userName, $password, $firstName, $lastName, $email, $class, $type);
         $updateRoomResult = true;
         if ($roomNumber != '' && $roomName != '') {
             $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
