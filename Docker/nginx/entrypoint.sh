@@ -5,7 +5,7 @@ if [ ! -d "/var/www1" ]; then
 fi
 cd /var/www1
 if [ ! -d "sprechtag" ]; then
-   echo "CREATING SPREACHTAG"
+   echo "CREATING SPRECHTAG"
    wget https://codeload.github.com/gymdb/speechday/zip/master -O /var/www1/master.zip
    unzip /var/www1/master.zip
    mv /var/www1/speechday-master /var/www1/sprechtag
