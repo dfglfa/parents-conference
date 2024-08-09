@@ -1,7 +1,7 @@
 Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort
-Angelika;Albers;aa@foo.de;8B;;
-Britta;Bäcker;bb@foo.de;1D;baecker1;password1
-Charlotte;cc@foo.de;Correns;1C;;
-Dennis;Decker;dd@foo.de;8A;;
-Eric;Ellinger;ee@foo.de;4A;;
-Franziska;Fürst;ff@foo.de;6A;;
+Angelika;Albers;aa@foo.de;8B;albersa;password
+Britta;Bäcker;bb@foo.de;1D;baeckerb;password
+Charlotte;Correns;cc@foo.de;1C;corrensc;password
+Dennis;Decker;dd@foo.de;8A;deckerd;password
+Eric;Ellinger;ee@foo.de;4A;ellingere;password
+Franziska;Fürst;ff@foo.de;6A;fuerstf;password
