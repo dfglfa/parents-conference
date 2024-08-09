@@ -43,7 +43,9 @@ CREATE TABLE `event` (
   `dateTo` int(11) NOT NULL,
   `slotTimeMin` int(11) NOT NULL DEFAULT '5',
   `isActive` int(11) NOT NULL DEFAULT '0',
-  `finalPostDate` int(11)
+  `finalPostDate` int(11),
+  `videoLink` varchar(250) COLLATE utf8_bin DEFAULT NULL,
+  `breaks` int(1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -90,10 +92,22 @@ CREATE TABLE `user` (
   `passwordHash` varchar(255) COLLATE utf8_bin NOT NULL,
   `firstName` varchar(255) COLLATE utf8_bin NOT NULL,
   `lastName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `class` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_bin NOT NULL,
+  `class` varchar(20) COLLATE utf8_bin DEFAULT NULL,
   `role` enum('student','teacher','admin') COLLATE utf8_bin NOT NULL DEFAULT 'student',
-  `title` varchar(255) COLLATE utf8_bin DEFAULT '',
+  `title` varchar(20) COLLATE utf8_bin DEFAULT '',
   `absent` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Tabellenstruktur für Tabelle `message`
+--
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `senderId` int(11) NOT NULL,
+  `receiverId` int(11) NOT NULL,
+  `content` varchar(2000) COLLATE utf8_bin NOT NULL,
+  `createdAt` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -228,3 +242,4 @@ ALTER TABLE `slot`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

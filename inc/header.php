@@ -4,6 +4,8 @@ require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 require_once('code/AuthenticationManager.php');
 
+error_reporting(E_ALL);
+
 SessionContext::create();
 
 if (!isset($_SESSION['userId'])) {

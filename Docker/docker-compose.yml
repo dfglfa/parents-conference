@@ -1,18 +1,17 @@
-version: '3'
+version: "3"
 
 services:
   php-fpm:
     build:
       context: ./php-fpm
     volumes:
-      - ../src:/var/www1
-
+      - ..:/var/www1
 
   nginx:
     build:
       context: ./nginx
     volumes:
-      - ../src/:/var/www1
+      - ..:/var/www1
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/sites/:/etc/nginx/sites-available
       - ./nginx/conf.d/:/etc/nginx/conf.d
@@ -35,17 +34,16 @@ services:
     volumes:
       - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
 
-
   myadmin:
-      image: phpmyadmin/phpmyadmin
-      container_name: phpmyadmin
-      ports:
-        - "8080:80"
-      environment:
-        - PMA_HOST=database
-        - PMA_PORT=3306
-        - MYSQL_USER=root
-        - MYSQL_PASSWORD=docker
-      restart: always
-      links:
-        - database
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=docker
+    restart: always
+    links:
+      - database

@@ -11,7 +11,7 @@ class ViewController extends Controller
 
     public static function getInstance()
     {
-        if (!self::$instance) {
+        if (!self::$instance || get_class(self::$instance) != "ViewController") {
             self::$instance = new ViewController();
         }
         return self::$instance;

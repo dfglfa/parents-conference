@@ -1,8 +1,10 @@
 <?php return; ?>
-; database settings for speechday database
+; Database settings for speechday database
+; By default, these are the creds for the docker-based setup.
+; Replace with the actual creds for production.
 
 [SQL]
-host = localhost
-user = DBUSER
-password = 'DBPASSWORD'
-dbname = DBNAME
+host = database
+user = root
+password = docker
+dbname = speechday

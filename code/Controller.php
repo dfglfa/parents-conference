@@ -15,7 +15,9 @@ class Controller
 
     public static function getInstance()
     {
+        error_log("Getting CONTROLLER instance");        
         if (!self::$instance) {
+            error_log("Creating CONTROLLER instance");        
             self::$instance = new Controller();
         }
         return self::$instance;
@@ -25,7 +27,7 @@ class Controller
     {
         //check request method
         if (($_SERVER['REQUEST_METHOD'] != 'POST') || (!isset($_REQUEST['action']))) {
-            redirect('home.php');
+            return;
         }
 
         //execute action
