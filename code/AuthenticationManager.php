@@ -41,7 +41,7 @@ class AuthenticationManager {
 
 	public static function checkPrivilege($role) {
 	    if ((!self::isAuthenticated()) || (self::getAuthenticatedUser()->getRole() != $role)) {
-            //redirect('home.php');
+            redirect('home.php');
         }
     }
 }
