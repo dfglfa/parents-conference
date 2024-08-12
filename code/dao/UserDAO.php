@@ -105,12 +105,30 @@ class UserDAO extends AbstractDAO
     {
         $users = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title, absent 
-                                  FROM user WHERE id != ? and id in (
-                                    SELECT userId1 FROM userconnection WHERE userId2 = ? 
-                                    UNION
-                                    SELECT userId2 FROM userconnection WHERE userId1 = ? 
-                                  );', [$userId, $userId, $userId]);
+
+        // We need to build the transitive closure over the userconnection relation in order
+        // to find all connections for the given user id.
+        $res = self::query(
+            $con,
+            'WITH RECURSIVE reachable_ids AS (
+                SELECT userId1 AS id
+                FROM userconnection
+                WHERE userId1 = ?
+                
+                UNION
+
+                -- Recursive step: Find new IDs reachable from the already found IDs
+                SELECT c.userId2
+                FROM userconnection c
+                INNER JOIN reachable_ids r ON c.userId1 = r.id
+            )
+                                
+            SELECT u.id, userName, passwordHash, firstName, lastName, email, class, role, title, absent 
+                FROM user u 
+                JOIN reachable_ids r ON r.id = u.id
+                WHERE u.id != ?',
+            [$userId, $userId]
+        );
 
         while ($u = self::fetchObject($res)) {
             $users[] = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);
