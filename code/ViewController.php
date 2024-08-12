@@ -1,10 +1,10 @@
 <?php
-require_once('AuthenticationManager.php');
-require_once('Controller.php');
-require_once('dao/Entities.php');
-require_once('dao/UserDAO.php');
-require_once('dao/EventDAO.php');
-require_once('dao/SlotDAO.php');
+require_once ('AuthenticationManager.php');
+require_once ('Controller.php');
+require_once ('dao/Entities.php');
+require_once ('dao/UserDAO.php');
+require_once ('dao/EventDAO.php');
+require_once ('dao/SlotDAO.php');
 
 class ViewController extends Controller
 {
@@ -98,8 +98,17 @@ class ViewController extends Controller
             return;
         }
 
+        // Fetch user data and booked slots for connected accounts, if any
+        $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
+        $bookedSlotsForConnectedUser = [];
+        foreach ($connectedUsers as $cUser) {
+            $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
+        }
+
+        $teacherFullName = escape($teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName());
+
         ?>
-        <h3>Termine für <?php echo (escape($teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
+        <h3>Termine für <?php echo $teacherFullName ?></h3>
 
         <?php if ($room != null): ?>
             <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
@@ -108,10 +117,13 @@ class ViewController extends Controller
         <table class='table table-hover es-time-table'>
             <thead>
             <tr>
-                <th width='15%'>Uhrzeit</th>
-                <th width='30%'>Zeitplan Lehrer/in</th>
-                <th width='40%'>Mein Zeitplan</th>
-                <th width='15%'>Aktion</th>
+                <th width='5%'>Uhrzeit</th>
+                <th width='15%'><?php echo $teacherFullName ?></th>
+                <th width='15%'><?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
+                <?php foreach ($connectedUsers as $cu): ?>
+                    <th width='8%'><?php echo $cu->getFirstName() ?></th>
+                <?php endforeach; ?>    
+                <th width='5%'>Aktion</th>
             </tr>
             </thead>
             <tbody>
@@ -120,6 +132,21 @@ class ViewController extends Controller
                 $fromDate = $slot->getDateFrom();
                 $teacherAvailable = $slot->getStudentId() == '';
                 $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
+                $timeAlreadyBooked = false;
+
+                $connectedUserStatus = [];
+                foreach ($connectedUsers as $cu) {
+                    $connectedUserStatus[$cu->getId()] = "frei";
+                    $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
+                    foreach ($connUserSlots as $cus) {
+                        if ($cus["dateFrom"] == $fromDate) {
+                            $connectedUserStatus[$cu->getId()] = $cus["teacherName"];
+                            $timeAlreadyBooked = true;
+                            break;
+                        }
+                    }
+                }
+
                 $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
                 $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
                 ?>
@@ -130,12 +157,17 @@ class ViewController extends Controller
                     <td colspan='3'>PAUSE</td>
                 </tr>
             <?php else: ?>
-                <tr class='<?php echo ($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                <tr class='<?php echo ($teacherAvailable && $studentAvailable && !$timeAlreadyBooked ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                     <td><?php echo ($timeTd) ?></td>
                     <td><?php echo ($teacherAvailable ? 'frei' : 'belegt') ?></td>
                     <td><?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+
+                    <?php foreach ($connectedUsers as $connUser): ?>
+                        <td class='shadow-cell'><?php echo $connectedUserStatus[$connUser->getId()] ?></td>
+                    <?php endforeach ?>
+
                     <td>
-                        <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
+                        <?php if ($teacherAvailable && $studentAvailable && $canBook && !$timeAlreadyBooked): ?>
                             <button type='button' class='btn btn-primary btn-book'
                                     id='btn-book-<?php echo ($slot->getId()) ?>' value='<?php echo ($bookJson) ?>'>buchen
                             </button>
@@ -174,7 +206,15 @@ class ViewController extends Controller
         $slots = SlotDAO::calculateSlots($activeEvent, true);
         $rooms = RoomDAO::getAllRooms();
 
+        // Fetch user data and booked slots for connected accounts, if any
+        $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
+        $bookedSlotsForConnectedUser = [];
+        foreach ($connectedUsers as $cUser) {
+            $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
+        }
+
         ?>
+        
         <div id=" printHeader">
                         <h3>Termine von
                             <?php echo ($user->getFirstName() . " " . $user->getLastName()) ?>
@@ -186,10 +226,14 @@ class ViewController extends Controller
                 <table class='table table-hover es-time-table'>
                     <thead>
                         <tr>
-                            <th width='25%'>Uhrzeit</th>
-                            <th width='25%'>Raum</th>
-                            <th width='35%'>Mein Zeitplan</th>
-                            <th width='15%' class='no-print'>Aktion</th>
+                            <th width='5%'>Uhrzeit</th>
+                            <th width='15%'>Raum</th>
+                            <th width='10%'><?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
+                            </th>
+                            <?php foreach ($connectedUsers as $cu): ?>
+                                <th width='10%'><?php echo $cu->getFirstName() ?></th>
+                            <?php endforeach; ?>
+                            <th width='5%' class='no-print'>Aktion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -204,6 +248,25 @@ class ViewController extends Controller
                                 $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
                                 $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
                             }
+
+                            $connectedUserSlotInfo = [];
+                            foreach ($connectedUsers as $cu) {
+                                $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
+                                foreach ($connUserSlots as $cus) {
+                                    if ($cus["dateFrom"] == $fromDate) {
+                                        $connectedUserSlotInfo[$cu->getId()] = $cus;
+
+                                        if ($roomTd == "") {
+                                            $room = $rooms[$cus['teacherId']];
+                                            $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
+                                        } else {
+                                            $roomTd = "Mehrfachbuchung, bitte ändern!";
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
                             ?>
 
                             <?php if ($isFullView || !$studentAvailable): ?>
@@ -227,6 +290,11 @@ class ViewController extends Controller
                                         <td>
                                             <?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?>
                                         </td>
+                                        <?php foreach ($connectedUsers as $connUser): ?>
+                                            <td><?php echo !isset($connectedUserSlotInfo[$connUser->getId()]) ? "frei" : $connectedUserSlotInfo[$connUser->getId()]["teacherName"] ?>
+                                            </td>
+                                        <?php endforeach ?>
+
                                         <td class='no-print'>
                                             <?php if (!$studentAvailable):
                                                 $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
@@ -381,7 +449,7 @@ class ViewController extends Controller
     {
         ?>
 
-                <?php include_once('inc/userForm.php') ?>
+                <?php include_once ('inc/userForm.php') ?>
 
                 <button type='submit' class='btn btn-primary' id='btn-create-user'>Benutzer erstellen</button>
 
@@ -418,7 +486,7 @@ class ViewController extends Controller
 
                 <hr>
 
-                <?php include_once('inc/userForm.php') ?>
+                <?php include_once ('inc/userForm.php') ?>
 
                 <button type='submit' class='btn btn-primary' id='btn-edit-user'>Benutzer ändern</button>
 

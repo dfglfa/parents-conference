@@ -1,6 +1,6 @@
 <?php
 
-require_once('AbstractDAO.php');
+require_once ('AbstractDAO.php');
 
 class UserDAO extends AbstractDAO
 {
@@ -93,6 +93,24 @@ class UserDAO extends AbstractDAO
         $users = array();
         $con = self::getConnection();
         $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title, absent FROM user ORDER BY LOWER(lastName), LOWER(firstName);', array());
+
+        while ($u = self::fetchObject($res)) {
+            $users[] = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);
+        }
+        self::close($res);
+        return $users;
+    }
+
+    public static function getConnectedUsersForUserId($userId)
+    {
+        $users = array();
+        $con = self::getConnection();
+        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title, absent 
+                                  FROM user WHERE id != ? and id in (
+                                    SELECT userId1 FROM userconnection WHERE userId2 = ? 
+                                    UNION
+                                    SELECT userId2 FROM userconnection WHERE userId1 = ? 
+                                  );', [$userId, $userId, $userId]);
 
         while ($u = self::fetchObject($res)) {
             $users[] = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);

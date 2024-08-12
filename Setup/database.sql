@@ -110,6 +110,16 @@ CREATE TABLE `message` (
   `createdAt` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Tabellenstruktur für Tabelle `userconnections`
+--
+CREATE TABLE `userconnection` (
+  `userId1` int(11) NOT NULL,
+  `userId2` int(11) NOT NULL,
+  `activationToken` varchar(2000) COLLATE utf8_bin NOT NULL,
+  `createdAt` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 -- --------------------------------------------------------
 
 --
@@ -239,6 +249,14 @@ ALTER TABLE `slot`
   ADD CONSTRAINT `fk_slot_student` FOREIGN KEY (`studentId`) REFERENCES `user` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_slot_teacher` FOREIGN KEY (`teacherId`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
+
+--
+-- Constraints der Tabelle `userconnection`
+--
+ALTER TABLE `userconnection`
+  ADD CONSTRAINT `fk_userconnection_user1` FOREIGN KEY (`userId1`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_userconnection_user2` FOREIGN KEY (`userId2`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
