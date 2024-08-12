@@ -2,8 +2,6 @@
 include_once 'inc/header.php';
 ?>
 
-<script type='text/javascript' src='js/mySlots.js'></script>
-
 <p id='pageName' hidden>Home</p>
 <div class='container'>
     <div id='tabs-1'>

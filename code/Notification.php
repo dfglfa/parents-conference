@@ -1,6 +1,6 @@
 <?php
-require_once('Util.php');
-require_once('email.php');
+require_once ('Util.php');
+require_once ('email.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -16,7 +16,7 @@ function sendCreationNotificationMail($slotId)
     $slotData = SlotDAO::getNamesAndEmailAddressesForSlotId($slotId);
 
     if ($slotData == null) {
-        echo ("No slot found for ID " . $slotId);
+        error_log("No slot found for ID " . $slotId);
         return;
     }
 
@@ -70,7 +70,7 @@ function sendCancellationNotificationMail($slotId)
     $slotData = SlotDAO::getNamesAndEmailAddressesForSlotId($slotId);
 
     if ($slotData == null) {
-        echo ("No slot found for ID " . $slotId);
+        error_log("No slot found for ID " . $slotId);
         return;
     }
 
@@ -108,10 +108,14 @@ function sendCancellationNotificationMail($slotId)
 
     if (!empty($studentEmail)) {
         sendMail($studentEmail, "Terminverschiebung / Déplacement de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
+    } else {
+        error_log("No email address found for student");
     }
 
     if (!empty($teacherEmail)) {
         sendMail($teacherEmail, "Terminverschiebung von " . $studentName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateTeacher);
+    } else {
+        error_log("No email address found for teacher");
     }
 }
 
@@ -123,12 +127,15 @@ function sendMail($to, $subject, $body)
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->Host = SMTPConfig::$SMTP_HOST;
-        $mail->SMTPAuth = true;
         $mail->Username = SMTPConfig::$SMTP_LOGIN;
         $mail->Password = SMTPConfig::$SMTP_PWD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port = 465;
+        $mail->Port = SMTPConfig::$SMTP_PORT;
         $mail->CharSet = "UTF-8";
+
+        if (SMTPConfig::$SMTP_AUTH) {
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        }
 
         //Recipients
         $mail->setFrom(SMTPConfig::$SMTP_FROM);
@@ -140,9 +147,9 @@ function sendMail($to, $subject, $body)
         $mail->Body = $body;
 
         $mail->send();
-        echo 'Message has been sent';
+        error_log('Message has been sent');
     } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
     }
 
 }

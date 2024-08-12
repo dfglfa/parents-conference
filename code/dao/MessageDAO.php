@@ -1,6 +1,6 @@
 <?php
 
-require_once('AbstractDAO.php');
+require_once ('AbstractDAO.php');
 
 class MessageDAO extends AbstractDAO
 {
@@ -38,7 +38,7 @@ class MessageDAO extends AbstractDAO
     public static function createMessage($senderId, $receiverId, $content)
     {
         $con = self::getConnection();
-        $res = self::query($con, 'INSERT INTO message (senderId, receiverId, content, createdAt) values (?, ?, ?, now())', array($senderId, $receiverId, $content), true)["success"];
+        $res = self::query($con, 'INSERT INTO message (senderId, receiverId, content, createdAt) values (?, ?, ?, unix_timestamp())', array($senderId, $receiverId, $content), true)["success"];
 
         return $res ? "OK" : "NOPE: '" . $res . "'";
     }

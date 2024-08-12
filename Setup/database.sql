@@ -180,6 +180,12 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `userName` (`userName`);
 
+--
+-- Indizes für die Tabelle `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`);
+
 -- --------------------------------------------------------
 	
 --
@@ -216,6 +222,12 @@ ALTER TABLE `slot`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT für Tabelle `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 	
 -- --------------------------------------------------------
 

@@ -1,12 +1,12 @@
 <?php
-require_once('AuthenticationManager.php');
-require_once('dao/UserDAO.php');
-require_once('dao/EventDAO.php');
-require_once('dao/SlotDAO.php');
-require_once('dao/LogDAO.php');
-require_once('dao/RoomDAO.php');
-require_once('dao/MessageDAO.php');
-require_once('Notification.php');
+require_once ('AuthenticationManager.php');
+require_once ('dao/UserDAO.php');
+require_once ('dao/EventDAO.php');
+require_once ('dao/SlotDAO.php');
+require_once ('dao/LogDAO.php');
+require_once ('dao/RoomDAO.php');
+require_once ('dao/MessageDAO.php');
+require_once ('Notification.php');
 
 class Controller
 {
@@ -15,9 +15,7 @@ class Controller
 
     public static function getInstance()
     {
-        error_log("Getting CONTROLLER instance");        
         if (!self::$instance) {
-            error_log("Creating CONTROLLER instance");        
             self::$instance = new Controller();
         }
         return self::$instance;
@@ -44,7 +42,7 @@ class Controller
             $target = strtok($_REQUEST['page'], '?');
         }
         // forward request to target
-        require($_SERVER['DOCUMENT_ROOT'] . $target);
+        require ($_SERVER['DOCUMENT_ROOT'] . $target);
         exit(0); // --> successful termination of script
     }
 
