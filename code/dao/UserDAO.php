@@ -52,6 +52,7 @@ class UserDAO extends AbstractDAO
         return $users;
     }
 
+
     public static function checkAccessData()
     {
         $con = self::getConnection();
@@ -99,6 +100,32 @@ class UserDAO extends AbstractDAO
         }
         self::close($res);
         return $users;
+    }
+
+    public static function getPossibleSiblings($userId, $lastname)
+    {
+        $users = array();
+        $con = self::getConnection();
+
+        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title  FROM user WHERE id != ? AND lastname = ?;', [$userId, $lastname]);
+
+        while ($u = self::fetchObject($res)) {
+            $users[] = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);
+        }
+        self::close($res);
+        return $users;
+    }
+
+    public static function connectUsers($userId1, $userId2)
+    {
+        $con = self::getConnection();
+        $res = self::query($con, "
+            INSERT INTO userconnection (userId1, userId2, activationToken, createdAt) 
+            VALUES 
+                (?, ?, '', UNIX_TIMESTAMP()),
+                (?, ?, '', UNIX_TIMESTAMP())", [$userId1, $userId2, $userId2, $userId1]);
+
+        self::close($res);
     }
 
     public static function getConnectedUsersForUserId($userId)

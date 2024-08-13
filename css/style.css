@@ -138,6 +138,16 @@ h1 {
   margin: 0 0 30px 0;
 }
 
+.siblingsForm {
+  margin: 20px 0;
+  max-width: 400px;
+}
+
+.siblingsForm td {
+  vertical-align: middle !important;
+  border: none !important;
+}
+
 /* ------- print ------- */
 
 @media print {

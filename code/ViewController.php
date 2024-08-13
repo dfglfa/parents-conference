@@ -851,4 +851,49 @@ class ViewController extends Controller
                 <input type='hidden' id='activeEventId' value='<?php echo escape($activeEventId); ?>'>
                 <?php
     }
+
+    public function action_getSiblingsForm()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $alreadyLinkedUserIds = array_map(function ($user) {
+            return $user->getId();
+        }, UserDAO::getConnectedUsersForUserId($user->getId()));
+        $sameLastName = UserDAO::getPossibleSiblings($user->getId(), $user->getLastName());
+        ?>
+                <div>Hier kannst Du die Konten Deiner Geschwister verknüpfen, um Dir die Planung einfacher zu machen.</div>
+                <div>Da die Vorschläge nur über den Nachnamen laufen, kann es vorkommen, dass hier Personen gelistet werden, die
+                    gar nicht mit Dir verwandt sind.</div>
+                <br />
+                <div class="mt-3">
+                    <strong>
+                        Die andere Person wird per E-Mail informiert, dass Du sie verknüpft hast.
+                    </strong>
+                </div>
+                <?php if (count($sameLastName) == 0 && count($alreadyLinkedUserIds) == 0): ?>
+                    <h4>Es wurden keine anderen Personen mit Deinem Nachnamen gefunden.</h4>
+                <?php else: ?>
+                    <div class="siblingsForm">
+                        <table class="table">
+                            <?php foreach ($sameLastName as $sln): ?>
+                                <tr>
+                                    <td>
+                                        <strong><?php echo $sln->getFirstName() . " " . $sln->getLastName() ?></strong>
+                                    </td>
+                                    <td>
+                                        <?php if (in_array($sln->getId(), $alreadyLinkedUserIds)): ?>
+                                            <strong class="text-success"><span class="glyphicon glyphicon-check"></span> bereits
+                                                verknüpft</strong>
+                                        <?php else: ?>
+                                            <button id="link_<?php echo $sln->getId() ?>" data-studentid="<?php echo $sln->getId() ?>"
+                                                class="btn btn-primary linkStudentBtn"><span class="glyphicon glyphicon-link"></span>
+                                                verknüpfen</button>
+                                        <?php endif ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        </table>
+                    </div>
+                <?php endif ?>
+                <?php
+    }
 }

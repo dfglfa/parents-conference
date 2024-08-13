@@ -1,0 +1,3 @@
+- Bei Verlinkung: Mail schicken an
+- Bei Absage: Absagetext per Mail schicken
+- Pausen

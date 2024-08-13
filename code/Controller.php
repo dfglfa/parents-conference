@@ -683,4 +683,25 @@ class Controller
 
         MessageDAO::deleteMessageForReceiverId($messageId, $receiverId);
     }
+
+    protected function action_linkStudent()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $studentId = $_REQUEST['studentId'];
+
+        // Security check: Lastnames must be identical.
+        $student = UserDAO::getUserForId($studentId);
+        if ($student->getLastName() != $user->getLastName()) {
+            echo "Linking denied, differing last names.";
+            return;
+        }
+
+        UserDAO::connectUsers($user->getId(), $studentId);
+
+        // TODO: Send email to linked user
+
+        ?>
+        Erfolgreich verbunden: <?php echo $user->getId() . " und " . $studentId ?>
+        <?php
+    }
 }
