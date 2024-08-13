@@ -102,7 +102,7 @@ function addButtonInteractivity() {
         data: postData,
         success: function (data, textStatus, jqXHR) {
           $("#" + reasonRowId).html(data);
-          executeDelete(teacherId, slotId, eventId, rowId);
+          executeDelete(teacherId, slotId, eventId, rowId, reasonText);
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $("#timeTable").html(errorText);
@@ -112,8 +112,8 @@ function addButtonInteractivity() {
   });
 }
 
-function executeDelete(userId, slotId, eventId, rowId) {
-  const postData = { action: "deleteSlot", slotId, eventId, userId };
+function executeDelete(userId, slotId, eventId, rowId, reasonText) {
+  const postData = { action: "deleteSlot", slotId, eventId, userId, reasonText };
   $.ajax({
     url: "controller.php",
     type: "POST",

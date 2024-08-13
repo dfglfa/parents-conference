@@ -377,11 +377,12 @@ class Controller
         $userId = $_REQUEST['userId'];
         $slotId = $_REQUEST['slotId'];
         $eventId = $_REQUEST['eventId'];
+        $reasonText = $_REQUEST['reasonText'];
 
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_DELETE_SLOT, $info);
 
-        sendCancellationNotificationMail($slotId);
+        sendCancellationNotificationMail($slotId, $reasonText);
         $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
 
         if ($success) {

@@ -65,7 +65,7 @@ function sendCreationNotificationMail($slotId)
     }
 }
 
-function sendCancellationNotificationMail($slotId)
+function sendCancellationNotificationMail($slotId, $reasonText)
 {
     $slotData = SlotDAO::getNamesAndEmailAddressesForSlotId($slotId);
 
@@ -87,6 +87,7 @@ function sendCancellationNotificationMail($slotId)
         "<p>" . $teacherName . " möchte den geplanten Termin am " . toDate($date, "d.m.Y") .
         " um " . toDate($date, "H:i") . " Uhr verschieben.</p>" .
         "</div>" .
+        ($reasonText != null ? "<div>Kommentar der Lehrkraft: <br/><strong>" . $reasonText . "</strong></div><br/>" : "") .
         "<div>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
         "<hr />" .
