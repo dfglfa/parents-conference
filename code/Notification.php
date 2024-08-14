@@ -120,6 +120,31 @@ function sendCancellationNotificationMail($slotId, $reasonText)
     }
 }
 
+function sendUserConnectionInfo($userId1, $userId2)
+{
+    $user1 = UserDAO::getUserForId($userId1);
+    $user2 = UserDAO::getUserForId($userId2);
+
+    if ($user1 == null || $user2 == null) {
+        error_log("Not all users found for IDs " . $userId1 . " and " . $userId2);
+        return;
+    }
+
+    $emailTemplate = "<div> " .
+        "<p>Guten Tag " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
+        "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . " hat Dich beim Elternsprechtag als Bruder/Schwester angegeben.<p>" .
+        "<p>Eure Benutzer sind ab jetzt verknüpft. Falls das nicht korrekt ist, melde Dich bitte bei <a href='mailto:admin@dfglfa.net'>admin@dfglfa.net</a>" .
+        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
+        "<br/>---------------------------------<br/>" .
+        "<p>Bonjour " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
+        "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . "  t'a déclaré comme frère/sœur lors de la réunion parents-professeurs.<p>" .
+        "<p>Vos comptes utilisateurs sont maintenant liés. Si cela n'est pas correct, merci de contacter <a href='mailto:admin@dfglfa.net'>admin@dfglfa.net</a>" .
+        "<div>Cordialement, <br> Les admins</div>";
+
+    sendMail($user2->getEmail(), "Elternsprechtag: Konten verknüpft / Liens des comptes", $emailTemplate);
+}
+
+
 function sendMail($to, $subject, $body)
 {
     $mail = new PHPMailer(true);

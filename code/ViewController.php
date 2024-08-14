@@ -198,10 +198,6 @@ class ViewController extends Controller
         }
 
         $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
-        if (count($bookedSlots) <= 0) {
-            echo ($noSlotsFoundWarning);
-            return;
-        }
 
         $slots = SlotDAO::calculateSlots($activeEvent, true);
         $rooms = RoomDAO::getAllRooms();
@@ -211,6 +207,11 @@ class ViewController extends Controller
         $bookedSlotsForConnectedUser = [];
         foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
+        }
+
+        if (count($bookedSlots) == 0 && count($bookedSlotsForConnectedUser) == 0) {
+            echo ($noSlotsFoundWarning);
+            return;
         }
 
         ?>
@@ -250,11 +251,13 @@ class ViewController extends Controller
                             }
 
                             $connectedUserSlotInfo = [];
+                            $siblingAppointmentInSlot = false;
                             foreach ($connectedUsers as $cu) {
                                 $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
                                 foreach ($connUserSlots as $cus) {
                                     if ($cus["dateFrom"] == $fromDate) {
                                         $connectedUserSlotInfo[$cu->getId()] = $cus;
+                                        $siblingAppointmentInSlot = true;
 
                                         if ($roomTd == "") {
                                             $room = $rooms[$cus['teacherId']];
@@ -269,7 +272,7 @@ class ViewController extends Controller
 
                             ?>
 
-                            <?php if ($isFullView || !$studentAvailable): ?>
+                            <?php if ($isFullView || !$studentAvailable || $siblingAppointmentInSlot): ?>
                                 <?php if ($slot->getType() == 2): ?>
                                     <tr class='es-time-table-break'>
                                         <td>
@@ -861,8 +864,10 @@ class ViewController extends Controller
         $sameLastName = UserDAO::getPossibleSiblings($user->getId(), $user->getLastName());
         ?>
                 <div>Hier kannst Du die Konten Deiner Geschwister verknüpfen, um Dir die Planung einfacher zu machen.</div>
+                <br />
                 <div>Da die Vorschläge nur über den Nachnamen laufen, kann es vorkommen, dass hier Personen gelistet werden, die
-                    gar nicht mit Dir verwandt sind.</div>
+                    gar nicht mit Dir verwandt sind. <br />Mit nicht verwandten Personen sollst Du natürlich keine Verknüpfung
+                    herstellen.</div>
                 <br />
                 <div class="mt-3">
                     <strong>
@@ -894,6 +899,9 @@ class ViewController extends Controller
                         </table>
                     </div>
                 <?php endif ?>
+
+                <div>Falls Du Schwierigkeiten bei der Verknüpfung hast oder Deine Geschwister hier nicht findest, melde Dich
+                    gerne per Mail an <a href="mailto:admin@dfglfa.net">admin@dfglfa.net</a></div>
                 <?php
     }
 }

@@ -692,14 +692,14 @@ class Controller
 
         // Security check: Lastnames must be identical.
         $student = UserDAO::getUserForId($studentId);
-        if ($student->getLastName() != $user->getLastName()) {
-            echo "Linking denied, differing last names.";
+        if (strtolower($student->getLastName()) != strtolower($user->getLastName())) {
+            error_log("Linking denied, differing last names: " . $student->getLastName() . " / " . $user->getLastName());
             return;
         }
 
         UserDAO::connectUsers($user->getId(), $studentId);
 
-        // TODO: Send email to linked user
+        sendUserConnectionInfo($user->getId(), $studentId);
 
         ?>
         Erfolgreich verbunden: <?php echo $user->getId() . " und " . $studentId ?>
