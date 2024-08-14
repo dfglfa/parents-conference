@@ -267,7 +267,7 @@ ALTER TABLE `slot`
 --
 ALTER TABLE `userconnection`
   ADD CONSTRAINT `fk_userconnection_user1` FOREIGN KEY (`userId1`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_userconnection_user2` FOREIGN KEY (`userId2`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_userconnection_user2` FOREIGN KEY (`userId2`) REFERENCES `user` (`id`) ON DELETE,
   ADD UNIQUE KEY `connectionUnique` (`userId1`, `userId2`);  
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
