@@ -154,7 +154,7 @@ class ViewController extends Controller
                 <?php if ($slot->getType() == 2): ?>
                 <tr class='es-time-table-break'>
                     <td><?php echo ($timeTd) ?></td>
-                    <td colspan='3'>PAUSE</td>
+                    <td colspan='<?php echo 3 + count($connectedUsers) ?>'>PAUSE</td>
                 </tr>
             <?php else: ?>
                 <tr class='<?php echo ($teacherAvailable && $studentAvailable && !$timeAlreadyBooked ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
@@ -279,7 +279,7 @@ class ViewController extends Controller
                                             <?php echo ($timeTd) ?>
                                         </td>
                                         <td></td>
-                                        <td>PAUSE</td>
+                                        <td colspan='<?php echo 1 + count($connectedUsers) ?>'>PAUSE</td>
                                         <td class='no-print'></td>
                                     </tr>
                                 <?php else: ?>
