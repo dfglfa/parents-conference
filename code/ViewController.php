@@ -84,7 +84,6 @@ class ViewController extends Controller
 
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($teacher == null || $user == null || $activeEvent == null) {
-            echo ($noSlotsFoundWarning);
             return;
         }
 
@@ -191,9 +190,7 @@ class ViewController extends Controller
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
 
-        $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
-        if ($user == null || $activeEvent == null) {
-            echo ($noSlotsFoundWarning);
+        if ($user == null || $activeEvent == null || $user->getRole() == "admin") {
             return;
         }
 
@@ -207,11 +204,6 @@ class ViewController extends Controller
         $bookedSlotsForConnectedUser = [];
         foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
-        }
-
-        if (count($bookedSlots) == 0 && count($bookedSlotsForConnectedUser) == 0) {
-            echo ($noSlotsFoundWarning);
-            return;
         }
 
         ?>
@@ -366,16 +358,15 @@ class ViewController extends Controller
                 </div>
                 <?php
 
-                $noSlotsFoundWarning = '<div id="printHeader"><h3>Keine Termine vorhanden!</h3></div>';
                 if ($teacher == null || $activeEvent == null) {
-                    echo ($noSlotsFoundWarning);
                     return;
                 }
 
                 $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $teacher->getId());
+
                 if (!$adminPrint && (count($bookedSlots) <= 0)) {
-                    echo ($noSlotsFoundWarning);
-                    return;
+                    echo "<div>Noch keine Termine vorhanden</div>";
+                    //   return;
                 }
 
                 $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
@@ -407,6 +398,7 @@ class ViewController extends Controller
                                             <?php echo ($timeTd) ?>
                                         </td>
                                         <td>PAUSE</td>
+                                        <td class="no-print"></td>
                                         <?php if (!empty($activeEvent->getVideoLink())): ?>
                                             <td></td>
                                         <?php endif; ?>
