@@ -96,6 +96,7 @@ function sendCancellationNotificationMail($slotId, $reasonText)
         "<p>" . $teacherName . " préférerait déplacer le rendez-vous prévu le " . toDate($date, "d.m.Y") .
         " à " . toDate($date, "H:i") . ".</p>" .
         "</div>" .
+        ($reasonText != null ? "<div>Commentaire de l'enseignant(e): <br/><strong>" . $reasonText . "</strong></div><br/>" : "") .
         "<div>" .
         "<div>Cordialement, <br> Les admins</div>";
 
