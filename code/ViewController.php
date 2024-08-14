@@ -427,8 +427,8 @@ class ViewController extends Controller
                                         <?php endif; ?>
                                         <td class="colAction no-print">
                                             <?php if (!$teacherAvailable): ?>
-                                                <button class="btn btn-danger es-button-cancel" id="button_<?php echo $slot->getId() ?>"
-                                                    data-teacherId="<?php echo $teacher->getId() ?>"
+                                                <button class="btn btn-danger es-button-cancel no-print"
+                                                    id="button_<?php echo $slot->getId() ?>" data-teacherId="<?php echo $teacher->getId() ?>"
                                                     data-studentId="<?php echo $slot->getStudentId() ?>"
                                                     data-slotId="<?php echo $slot->getId() ?>"
                                                     data-eventId="<?php echo $activeEvent->getId() ?>">

@@ -1,6 +1,6 @@
 <?php
-require_once('code/AuthenticationManager.php');
-require_once('code/ViewController.php');
+require_once ('code/AuthenticationManager.php');
+require_once ('code/ViewController.php');
 AuthenticationManager::checkPrivilege('admin');
 
 include_once 'inc/header.php';
@@ -354,6 +354,20 @@ include_once 'inc/header.php';
             </div>
         </div>
 
+        <div id="user-connection" class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse8'>
+                        Verknüpfte Konten
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse8' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <div id='adminUserConnection' class="section-to-print only-print"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
