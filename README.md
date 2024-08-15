@@ -42,6 +42,10 @@ Teachers and students will find an individal link for each booked slot, where th
 You need to have Docker and Docker Compose installed. Then, run the commands
 
 ```
+# Copy SMTP config
+cp code/email.php_TEMPLATE code/email.php
+
+# Create (first time only) and run docker containers
 cd Docker
 docker-compose up -d
 ```
