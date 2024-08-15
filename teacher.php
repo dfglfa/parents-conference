@@ -17,33 +17,6 @@ include_once 'inc/header.php';
 
     <div class='panel-group' id='accordion'>
 
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse1'>
-                        Mein Terminplan
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse1' class='panel-collapse collapse in'>
-                <div class='panel-body'>
-                    <form id='chooseMySlotsForm'>
-                        <div class='form-group'>
-                            <label for='selectType'>Darstellungstyp</label>
-                            <select class='form-control' id='selectType' name='type'>
-                                <option value='1'>Kompakt</option>
-                                <option value='2' selected>Vollständig</option>
-                            </select>
-                        </div>
-                    </form>
-
-                    <button class="btn btn-primary" onclick="window.print()">
-                        <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
-                    </button>
-                    <div id='timeTable' class="section-to-print"></div>
-                </div>
-            </div>
-        </div>
 
         <div class='panel panel-default'>
             <div class='panel-heading'>
@@ -99,6 +72,33 @@ include_once 'inc/header.php';
             </div>
         </div>
 
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse1'>
+                        Mein Terminplan
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse1' class='panel-collapse collapse in'>
+                <div class='panel-body'>
+                    <form id='chooseMySlotsForm'>
+                        <div class='form-group'>
+                            <label for='selectType'>Darstellungstyp</label>
+                            <select class='form-control' id='selectType' name='type'>
+                                <option value='1'>Kompakt</option>
+                                <option value='2' selected>Vollständig</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
+                    </button>
+                    <div id='timeTable' class="section-to-print"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

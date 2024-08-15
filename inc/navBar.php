@@ -8,7 +8,7 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' href='home.php'>
+            <a class='navbar-brand' href='redirectUser.php'>
                 <img src="img/dfgLogo.png" style="display:inline-block"> Elternsprechtag DFG</a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
