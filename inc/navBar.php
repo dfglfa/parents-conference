@@ -14,16 +14,14 @@
         <div id='navbar' class='navbar-collapse collapse'>
 
             <ul class='nav navbar-nav'>
-                <?php if ($user->getRole() !== 'admin'): ?>
+                <?php if ($user->getRole() == 'student'): ?>
                     <li id='navTabHome'><a href='home.php'>Meine Termine</a></li>
-                <?php endif ?>
-                <?php if ($user->getRole() === 'student'): ?>
                     <li id='navTabBook'><a href='book.php'>Termine buchen</a></li>
                 <?php endif ?>
-                <?php if ($user->getRole() === 'teacher') { ?>
+                <?php if ($user->getRole() == 'teacher') { ?>
                     <li id='navTabTeacher'><a href='teacher.php'>Übersicht</a></li>
                 <?php } ?>
-                <?php if ($user->getRole() === 'admin') { ?>
+                <?php if ($user->getRole() == 'admin') { ?>
                     <li id='navTabAdmin'><a href='admin.php'>Administration</a></li>
                 <?php } ?>
             </ul>

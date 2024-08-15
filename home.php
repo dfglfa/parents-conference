@@ -2,6 +2,7 @@
 include_once 'inc/header.php';
 ?>
 
+<script type='text/javascript' src='js/mySlots.js'></script>
 
 <p id='pageName' hidden>Home</p>
 <div class='container'>
@@ -15,19 +16,16 @@ include_once 'inc/header.php';
 
 
     <div>
-        <form id='chooseMySlotsForm'>
-            <div class='form-group'>
-                <label for='selectType'>Darstellungstyp</label>
-                <select class='form-control' id='selectType' name='type'>
-                    <option value='1'>Kompakt</option>
-                    <option value='0' selected>Vollständig</option>
-                </select>
-            </div>
-        </form>
-
         <button class="btn btn-primary" onclick="window.print()">
             <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
         </button>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="showempty">
+                Leere Zeiträume ausblenden
+            </label>
+        </div>
 
         <div id='timeTable' class="section-to-print"></div>
     </div>

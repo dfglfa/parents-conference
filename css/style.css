@@ -148,6 +148,10 @@ h1 {
   border: none !important;
 }
 
+#chooseMySlotsForm .form-control {
+  max-width: 300px;
+}
+
 /* ------- print ------- */
 
 @media print {

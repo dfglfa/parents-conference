@@ -1,10 +1,10 @@
 <?php
-require_once ('AuthenticationManager.php');
-require_once ('Controller.php');
-require_once ('dao/Entities.php');
-require_once ('dao/UserDAO.php');
-require_once ('dao/EventDAO.php');
-require_once ('dao/SlotDAO.php');
+require_once('AuthenticationManager.php');
+require_once('Controller.php');
+require_once('dao/Entities.php');
+require_once('dao/UserDAO.php');
+require_once('dao/EventDAO.php');
+require_once('dao/SlotDAO.php');
 
 class ViewController extends Controller
 {
@@ -364,11 +364,6 @@ class ViewController extends Controller
 
                 $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $teacher->getId());
 
-                if (!$adminPrint && (count($bookedSlots) <= 0)) {
-                    echo "<div>Noch keine Termine vorhanden</div>";
-                    return;
-                }
-
                 $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
 
                 ?>
@@ -444,7 +439,7 @@ class ViewController extends Controller
     {
         ?>
 
-                <?php include_once ('inc/userForm.php') ?>
+                <?php include_once('inc/userForm.php') ?>
 
                 <button type='submit' class='btn btn-primary' id='btn-create-user'>Benutzer erstellen</button>
 
@@ -481,7 +476,7 @@ class ViewController extends Controller
 
                 <hr>
 
-                <?php include_once ('inc/userForm.php') ?>
+                <?php include_once('inc/userForm.php') ?>
 
                 <button type='submit' class='btn btn-primary' id='btn-edit-user'>Benutzer ändern</button>
 

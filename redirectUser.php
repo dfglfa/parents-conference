@@ -10,6 +10,8 @@ $role = AuthenticationManager::getAuthenticatedUser()->getRole();
 
 if ($role == "admin") {
     redirect("admin.php");
+} elseif ($role == "teacher") {
+    redirect("teacher.php");
 } else {
     redirect("home.php");
 }

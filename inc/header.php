@@ -1,8 +1,8 @@
 <?php
 
-require_once ('code/Util.php');
-require_once ('code/dao/AbstractDAO.php');
-require_once ('code/AuthenticationManager.php');
+require_once('code/Util.php');
+require_once('code/dao/AbstractDAO.php');
+require_once('code/AuthenticationManager.php');
 
 error_reporting(E_ALL);
 
@@ -30,10 +30,9 @@ $user = AuthenticationManager::getAuthenticatedUser();
     <link href='css/style.css' rel='stylesheet'>
 
     <script type='text/javascript' src='js/jquery-1.11.3-jquery.min.js'></script>
-    <script type='text/javascript' src='js/mySlots.js'></script>
 
     <!-- favicon -->
-    <?php include_once ('inc/favicons.php') ?>
+    <?php include_once('inc/favicons.php') ?>
 </head>
 
 <body>

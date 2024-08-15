@@ -1,11 +1,9 @@
 $(document).ready(function () {
   loadTimeTable(0);
 
-  $("#selectType").change(function () {
-    var typeSelect = $("#selectType").find("option:selected");
-    var typeId = typeSelect.val();
-
-    loadTimeTable(typeId);
+  $("#showempty").change(() => {
+    const val = $("#showempty").is(":checked");
+    loadTimeTable(val ? 1 : 0);
   });
 
   $(".messageDismissal").on("click", (e) => {
