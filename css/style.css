@@ -97,19 +97,19 @@ body {
 }
 
 .es-time-table-break {
-  background-color: #cbcbcc;
+  background-color: #95e3ef;
 }
 
 .es-time-table-break:hover {
-  background-color: #cbcbcc !important;
+  background-color: #95e3ef !important;
 }
 
 .es-time-table-occupied {
-  background-color: #f0be6b;
+  background-color: #77c869;
 }
 
 .es-time-table-occupied:hover {
-  background-color: #f0be6b !important;
+  background-color: #77c869 !important;
 }
 
 .es-time-table-selected-teacher {
@@ -150,6 +150,10 @@ h1 {
 
 #chooseMySlotsForm .form-control {
   max-width: 300px;
+}
+
+td.selectedTeacher {
+  background-color: gold;
 }
 
 /* ------- print ------- */

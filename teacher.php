@@ -22,7 +22,7 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse2'>
-                        Anwesenheit
+                        Meine Anwesenheit
                     </a>
                 </h4>
             </div>

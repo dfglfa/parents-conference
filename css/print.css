@@ -1,84 +1,85 @@
 * {
-    transition: none !important;
-    -webkit-print-color-adjust: exact !important;
-    font-family: Tahoma, Geneva, sans-serif;
+  transition: none !important;
+  -webkit-print-color-adjust: exact !important;
+  font-family: Tahoma, Geneva, sans-serif;
 }
 
 @page {
-    size: 210mm 297mm;
-    margin: 40px;
-    width: 100%;
+  size: 210mm 297mm;
+  margin: 40px;
+  width: 100%;
 }
 
 body {
-    margin: 0;
+  margin: 0;
 }
 
 h3 {
-    margin: 0 0 15px;
+  margin: 0 0 15px;
 }
 
 table {
-    page-break-inside: auto;
-    width: 100%;
+  page-break-inside: auto;
+  width: 100%;
 }
 
 table td {
-    page-break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 thead {
-    display: table-header-group
+  display: table-header-group;
 }
 
 tfoot {
-    display: table-footer-group
+  display: table-footer-group;
 }
 
 .no-print {
-    display: none
+  display: none;
 }
 
 #timeTable {
-    width: 100%;
+  width: 100%;
 }
 
 td {
-    border-top: 1px #000 solid;
-    border-bottom: 1px #000 solid;
+  border-top: 1px #000 solid;
+  border-bottom: 1px #000 solid;
 }
 
 .es-time-table th {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .es-time-table td {
-    font-weight: normal;
+  font-weight: normal;
 }
 
-.es-time-table th, .es-time-table td {
-    font-size: 10pt;
-    height: 25px;
-    text-align: center;
-    vertical-align: middle !important;
+.es-time-table th,
+.es-time-table td {
+  font-size: 10pt;
+  height: 25px;
+  text-align: center;
+  vertical-align: middle !important;
 }
 
 .es-time-table-available {
-    background-color: #A4E4A0;
+  background-color: #a4e4a0;
 }
 
 .es-time-table-break {
-    background-color: #CBCBCC;
+  background-color: #cbcbcc;
 }
 
 .es-time-table-occupied {
-    background-color: #D4999F;
+  background-color: #77c869;
 }
 
 .pagebreak {
-    page-break-before: always;
+  page-break-before: always;
 }
 
 #printHeader {
-    text-align: center;
+  text-align: center;
 }
