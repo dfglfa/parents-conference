@@ -366,7 +366,7 @@ class ViewController extends Controller
 
                 if (!$adminPrint && (count($bookedSlots) <= 0)) {
                     echo "<div>Noch keine Termine vorhanden</div>";
-                    //   return;
+                    return;
                 }
 
                 $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
