@@ -136,7 +136,7 @@ class ViewController extends Controller
 
                 $connectedUserSlotData = [];
                 foreach ($connectedUsers as $cu) {
-                    $connectedUserSlotData[$cu->getId()] = "frei";
+                    $connectedUserSlotData[$cu->getId()] = "";
                     $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
                     foreach ($connUserSlots as $cus) {
                         if ($cus["dateFrom"] == $fromDate) {
@@ -159,9 +159,9 @@ class ViewController extends Controller
             <?php else: ?>
                 <tr class='<?php echo ($teacherAvailable && $studentAvailable && !$timeAlreadyBooked ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                     <td><?php echo ($timeTd) ?></td>
-                    <td><?php echo ($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                    <td><?php echo ($teacherAvailable ? '' : 'belegt') ?></td>
                     <td <?php echo !$studentAvailable && $bookedSlots[$fromDate]['teacherName'] == $teacherFullName ? 'class="selectedTeacher"' : '' ?>">
-                                <?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?>
+                                <?php echo ($studentAvailable ? '' : $bookedSlots[$fromDate]['teacherName']) ?>
                                 </td>
 
                                 <?php foreach ($connectedUsers as $connUser): ?>
@@ -290,10 +290,11 @@ class ViewController extends Controller
                                                     <?php echo ($roomTd) ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo ($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?>
+                                                    <?php echo ($studentAvailable ? '' : $bookedSlots[$fromDate]['teacherName']) ?>
                                                 </td>
                                                 <?php foreach ($connectedUsers as $connUser): ?>
-                                                    <td><?php echo !isset($connectedUserSlotInfo[$connUser->getId()]) ? "frei" : $connectedUserSlotInfo[$connUser->getId()]["teacherName"] ?>
+                                                    <td>
+                                                        <?php echo !isset($connectedUserSlotInfo[$connUser->getId()]) ? "" : $connectedUserSlotInfo[$connUser->getId()]["teacherName"] ?>
                                                     </td>
                                                 <?php endforeach ?>
 
@@ -412,7 +413,7 @@ class ViewController extends Controller
                                                     <?php echo ($timeTd) ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo ($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName']) ?>
+                                                    <?php echo ($teacherAvailable ? '' : $bookedSlots[$fromDate]['studentName']) ?>
                                                 </td>
                                                 <?php if (!empty($activeEvent->getVideoLink())):
                                                     $getParam = escape('#userInfo.displayName=%22' . $teacher->getFirstName() . " " . $teacher->getLastName() . "%22"); ?>

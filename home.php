@@ -23,7 +23,7 @@ include_once 'inc/header.php';
         <div class="checkbox">
             <label>
                 <input type="checkbox" id="showempty">
-                Leere Zeiträume ausblenden
+                Freie Zeiträume ausblenden
             </label>
         </div>
 

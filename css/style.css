@@ -62,10 +62,6 @@ body {
   margin-top: 10px;
 }
 
-.btn {
-  margin-right: 20px;
-}
-
 .btn-no-margin {
   margin-right: 0;
 }
@@ -88,6 +84,10 @@ body {
   vertical-align: middle !important;
 }
 
+.table td {
+  border: 1px solid #9b9 !important;
+}
+
 .es-time-table-available {
   background-color: #a4e4a0;
 }
@@ -105,11 +105,11 @@ body {
 }
 
 .es-time-table-occupied {
-  background-color: #77c869;
+  background-color: #7aa973;
 }
 
 .es-time-table-occupied:hover {
-  background-color: #77c869 !important;
+  background-color: #7aa973 !important;
 }
 
 .es-time-table-selected-teacher {
@@ -175,6 +175,10 @@ td.selectedTeacher {
   .es-time-table-occupied {
     background-color: #d4999f;
     -webkit-print-color-adjust: exact;
+  }
+
+  .table td {
+    border: 1px solid #ddd !important;
   }
 
   .section-to-print,
