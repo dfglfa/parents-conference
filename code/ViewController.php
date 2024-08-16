@@ -282,7 +282,7 @@ class ViewController extends Controller
                                             </tr>
                                         <?php else: ?>
                                             <tr
-                                                class='<?php echo ($studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                                                class='<?php echo ($studentAvailable && !$siblingAppointmentInSlot ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                                                 <td>
                                                     <?php echo ($timeTd); ?>
                                                 </td>
@@ -429,6 +429,11 @@ class ViewController extends Controller
                                                             data-slotId="<?php echo $slot->getId() ?>"
                                                             data-eventId="<?php echo $activeEvent->getId() ?>">
                                                             Termin verschieben
+                                                        </button>
+
+                                                    <?php elseif (false): ?>
+                                                        <button class="btn btn-warning es-button-cancel no-print">
+                                                            reservieren
                                                         </button>
                                                     <?php endif; ?>
                                                 </td>

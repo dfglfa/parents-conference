@@ -89,11 +89,11 @@ body {
 }
 
 .es-time-table-available {
-  background-color: #a4e4a0;
+  background-color: #cefacc;
 }
 
 .es-time-table-available:hover {
-  background-color: #a4e4a0 !important;
+  background-color: #cefacc !important;
 }
 
 .es-time-table-break {
@@ -105,11 +105,11 @@ body {
 }
 
 .es-time-table-occupied {
-  background-color: #7aa973;
+  background-color: #9cf58e;
 }
 
 .es-time-table-occupied:hover {
-  background-color: #7aa973 !important;
+  background-color: #9cf58e !important;
 }
 
 .es-time-table-selected-teacher {
@@ -153,7 +153,7 @@ h1 {
 }
 
 td.selectedTeacher {
-  background-color: gold;
+  background-color: #f8e78c;
 }
 
 /* ------- print ------- */
