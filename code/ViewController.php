@@ -430,7 +430,7 @@ class ViewController extends Controller
                                                         </button>
                                                     <?php elseif (!$teacherAvailable): ?>
                                                         <button class="btn btn-danger es-button-cancel no-print"
-                                                            id="cancel_<?php echo $slot->getId() ?>"
+                                                            id="cancel_slot_<?php echo $slot->getId() ?>"
                                                             data-teacherId="<?php echo $teacher->getId() ?>"
                                                             data-studentId="<?php echo $slot->getStudentId() ?>"
                                                             data-slotId="<?php echo $slot->getId() ?>"
