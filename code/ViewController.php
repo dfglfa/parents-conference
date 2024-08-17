@@ -108,7 +108,7 @@ class ViewController extends Controller
         $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
         ?>
-        <h3>Termine für <?php echo $teacherFullName ?></h3>
+        <h3>Zeitplan von <?php echo $teacherFullName ?></h3>
 
         <?php if ($room != null): ?>
             <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
@@ -117,13 +117,13 @@ class ViewController extends Controller
         <table class='table table-hover es-time-table'>
             <thead>
             <tr>
-                <th width='5%'>Uhrzeit</th>
+                <th width='8%'>Uhrzeit</th>
                 <th width='15%'><?php echo $teacherFullName ?></th>
                 <th width='15%'><?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
                 <?php foreach ($connectedUsers as $cu): ?>
-                    <th width='8%'><?php echo $cu->getFirstName() ?></th>
+                    <th width='15%'><?php echo $cu->getFirstName() ?></th>
                 <?php endforeach; ?>    
-                <th width='5%'>Aktion</th>
+                <th width='8%'>Aktion</th>
             </tr>
             </thead>
             <tbody>
@@ -224,15 +224,15 @@ class ViewController extends Controller
                         <table class='table table-hover es-time-table'>
                             <thead>
                                 <tr>
-                                    <th width='5%'>Uhrzeit</th>
-                                    <th width='15%'>Raum</th>
-                                    <th width='10%'>
+                                    <th width='8%'>Uhrzeit</th>
+                                    <th width='10%'>Raum</th>
+                                    <th width='15%'>
                                         <?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
                                     </th>
                                     <?php foreach ($connectedUsers as $cu): ?>
-                                        <th width='10%'><?php echo $cu->getFirstName() ?></th>
+                                        <th width='15%'><?php echo $cu->getFirstName() ?></th>
                                     <?php endforeach; ?>
-                                    <th width='5%' class='no-print'>Aktion</th>
+                                    <th width='8%' class='no-print'>Aktion</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -89,11 +89,11 @@ body {
 }
 
 .es-time-table-available {
-  background-color: #cefacc;
+  background-color: #fafafa;
 }
 
 .es-time-table-available:hover {
-  background-color: #cefacc !important;
+  background-color: #fafafa !important;
 }
 
 .es-time-table-break {
@@ -105,11 +105,11 @@ body {
 }
 
 .es-time-table-occupied {
-  background-color: #9cf58e;
+  background-color: #cefacc;
 }
 
 .es-time-table-occupied:hover {
-  background-color: #9cf58e !important;
+  background-color: #cefacc !important;
 }
 
 .es-time-table-selected-teacher {
