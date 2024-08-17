@@ -1,12 +1,12 @@
 <?php
-require_once ('AuthenticationManager.php');
-require_once ('dao/UserDAO.php');
-require_once ('dao/EventDAO.php');
-require_once ('dao/SlotDAO.php');
-require_once ('dao/LogDAO.php');
-require_once ('dao/RoomDAO.php');
-require_once ('dao/MessageDAO.php');
-require_once ('Notification.php');
+require_once('AuthenticationManager.php');
+require_once('dao/UserDAO.php');
+require_once('dao/EventDAO.php');
+require_once('dao/SlotDAO.php');
+require_once('dao/LogDAO.php');
+require_once('dao/RoomDAO.php');
+require_once('dao/MessageDAO.php');
+require_once('Notification.php');
 
 class Controller
 {
@@ -42,7 +42,7 @@ class Controller
             $target = strtok($_REQUEST['page'], '?');
         }
         // forward request to target
-        require ($_SERVER['DOCUMENT_ROOT'] . $target);
+        require($_SERVER['DOCUMENT_ROOT'] . $target);
         exit(0); // --> successful termination of script
     }
 
@@ -705,4 +705,33 @@ class Controller
         Erfolgreich verbunden: <?php echo $user->getId() . " und " . $studentId ?>
         <?php
     }
+
+    protected function action_reserveSlot()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $slotId = $_REQUEST['slotId'];
+        $eventId = $_REQUEST['eventId'];
+
+        if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
+            error_log("Slot access denied");
+            return;
+        }
+
+        SlotDAO::setStudentToSlot($eventId, $slotId, $user->getId());
+    }
+
+    protected function action_releaseSlot()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $slotId = $_REQUEST['slotId'];
+        $eventId = $_REQUEST['eventId'];
+
+        if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
+            error_log("Slot access denied");
+            return;
+        }
+
+        SlotDAO::deleteStudentFromSlot($eventId, $slotId);
+    }
+
 }

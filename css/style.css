@@ -112,12 +112,20 @@ body {
   background-color: #cefacc !important;
 }
 
+.es-time-table-reserved {
+  background-color: #fefad1;
+}
+
+.es-time-table-reserved:hover {
+  background-color: #fefad1 !important;
+}
+
 .es-time-table-selected-teacher {
   background-color: red !important;
 }
 
 .shadow-cell {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(100, 100, 100, 0.2);
 }
 
 .col1 {

@@ -1,9 +1,8 @@
 $(document).ready(function () {
-  loadTimeTable(2);
+  loadTimeTable();
 
   $("#showempty").change(() => {
-    const val = $("#showempty").is(":checked");
-    loadTimeTable(val ? 1 : 2);
+    loadTimeTable();
   });
 });
 
@@ -38,6 +37,42 @@ $(document).on("click", "#btn-change-attendance", function () {
 });
 
 function addButtonInteractivity() {
+  $(".es-button-reserve").on("click", (e) => {
+    const buttonIdHash = "#" + e.target.id;
+    const slotId = $(buttonIdHash).attr("data-slotId");
+    const eventId = $(buttonIdHash).attr("data-eventId");
+    $.ajax({
+      url: "controller.php",
+      type: "POST",
+      data: { action: "reserveSlot", slotId, eventId },
+      success: function (data, textStatus, jqXHR) {
+        loadTimeTable();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#timeTable").html("<h3>Reservierung fehlgeschlagen</h3>");
+        console.error(errorThrown);
+      },
+    });
+  });
+
+  $(".es-button-release").on("click", (e) => {
+    const buttonIdHash = "#" + e.target.id;
+    const slotId = $(buttonIdHash).attr("data-slotId");
+    const eventId = $(buttonIdHash).attr("data-eventId");
+    $.ajax({
+      url: "controller.php",
+      type: "POST",
+      data: { action: "releaseSlot", slotId, eventId },
+      success: function (data, textStatus, jqXHR) {
+        loadTimeTable();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#timeTable").html("<h3>Freigabe fehlgeschlagen</h3>");
+        console.error(errorThrown);
+      },
+    });
+  });
+
   $(".es-button-cancel").on("click", (e) => {
     const buttonIdHash = "#" + e.target.id;
     $(buttonIdHash).prop("disabled", "disabled");
@@ -125,7 +160,9 @@ function executeDelete(userId, slotId, eventId, rowId, reasonText) {
   });
 }
 
-function loadTimeTable(typeId) {
+function loadTimeTable() {
+  const typeId = $("#showempty").is(":checked") ? 1 : 2;
+
   var timeTable = $("#timeTable");
   $.ajax({
     url: "viewController.php?action=getTeacherTimeTable&typeId=" + typeId,

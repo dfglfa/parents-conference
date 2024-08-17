@@ -391,6 +391,7 @@ class ViewController extends Controller
                                 <?php foreach ($slots as $slot):
                                     $fromDate = $slot->getDateFrom();
                                     $teacherAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
+                                    $isReservedSlot = $slot->getStudentId() == $teacher->getId();
                                     $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
                                     ?>
 
@@ -408,12 +409,12 @@ class ViewController extends Controller
                                             </tr>
                                         <?php else: ?>
                                             <tr id='<?php echo "row_" . $slot->getId() ?>'
-                                                class='<?php echo ($teacherAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                                                class='<?php echo ($teacherAvailable ? 'es-time-table-available' : ($isReservedSlot ? 'es-time-table-reserved' : 'es-time-table-occupied')) ?>'>
                                                 <td>
                                                     <?php echo ($timeTd) ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo ($teacherAvailable ? '' : $bookedSlots[$fromDate]['studentName']) ?>
+                                                    <?php echo ($teacherAvailable ? '' : ($isReservedSlot ? 'RESERVIERT' : $bookedSlots[$fromDate]['studentName'])) ?>
                                                 </td>
                                                 <?php if (!empty($activeEvent->getVideoLink())):
                                                     $getParam = escape('#userInfo.displayName=%22' . $teacher->getFirstName() . " " . $teacher->getLastName() . "%22"); ?>
@@ -421,9 +422,15 @@ class ViewController extends Controller
                                                             target=_blank">VideoLink</a></td>
                                                 <?php endif; ?>
                                                 <td class="colAction no-print">
-                                                    <?php if (!$teacherAvailable): ?>
+                                                    <?php if ($isReservedSlot): ?>
+                                                        <button class="btn btn-warning es-button-release no-print"
+                                                            id="release_<?php echo $slot->getId() ?>" data-slotId="<?php echo $slot->getId() ?>"
+                                                            data-eventId="<?php echo $activeEvent->getId() ?>">
+                                                            freigeben
+                                                        </button>
+                                                    <?php elseif (!$teacherAvailable): ?>
                                                         <button class="btn btn-danger es-button-cancel no-print"
-                                                            id="button_<?php echo $slot->getId() ?>"
+                                                            id="cancel_<?php echo $slot->getId() ?>"
                                                             data-teacherId="<?php echo $teacher->getId() ?>"
                                                             data-studentId="<?php echo $slot->getStudentId() ?>"
                                                             data-slotId="<?php echo $slot->getId() ?>"
@@ -431,8 +438,10 @@ class ViewController extends Controller
                                                             Termin verschieben
                                                         </button>
 
-                                                    <?php elseif (false): ?>
-                                                        <button class="btn btn-warning es-button-cancel no-print">
+                                                    <?php else: ?>
+                                                        <button class="btn btn-warning es-button-reserve no-print"
+                                                            id="reserve_<?php echo $slot->getId() ?>" data-slotId="<?php echo $slot->getId() ?>"
+                                                            data-eventId="<?php echo $activeEvent->getId() ?>">
                                                             reservieren
                                                         </button>
                                                     <?php endif; ?>
