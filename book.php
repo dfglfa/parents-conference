@@ -4,6 +4,7 @@ include_once 'inc/header.php';
 ?>
 
 <script type='text/javascript' src='js/book.js'></script>
+<script type='text/javascript' src='js/mySlots.js'></script>
 
 <p id='pageName' hidden>Book</p>
 
