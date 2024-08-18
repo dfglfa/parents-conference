@@ -692,7 +692,7 @@ class Controller
 
         // Security check: Lastnames must be identical.
         $student = UserDAO::getUserForId($studentId);
-        if (strtolower($student->getLastName()) != strtolower($user->getLastName())) {
+        if ($this->normalize($student->getLastName()) != $this->normalize($user->getLastName())) {
             error_log("Linking denied, differing last names: " . $student->getLastName() . " / " . $user->getLastName());
             return;
         }
@@ -704,6 +704,11 @@ class Controller
         ?>
         Erfolgreich verbunden: <?php echo $user->getId() . " und " . $studentId ?>
         <?php
+    }
+
+    private function normalize($s)
+    {
+        return strtolower(str_replace(str_replace($s, " ", ""), "-", ""));
     }
 
     protected function action_reserveSlot()

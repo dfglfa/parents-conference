@@ -6,7 +6,7 @@ require_once('code/dao/AbstractDAO.php');
 SessionContext::create();
 
 if (isset($_SESSION['userId']) != '') {
-    header('Location: home.php');
+    header('Location: index.php');
 }
 
 ?>

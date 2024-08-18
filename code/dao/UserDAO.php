@@ -1,6 +1,6 @@
 <?php
 
-require_once ('AbstractDAO.php');
+require_once('AbstractDAO.php');
 
 class UserDAO extends AbstractDAO
 {
@@ -107,7 +107,15 @@ class UserDAO extends AbstractDAO
         $users = array();
         $con = self::getConnection();
 
-        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title  FROM user WHERE id != ? AND lower(lastname) = lower(?);', [$userId, $lastname]);
+        // Look for matching lastnames, ignoring case, whitespace and hyphens
+        $res = self::query(
+            $con,
+            "SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title
+            FROM user 
+            WHERE id != ? 
+            AND LOWER(REPLACE(REPLACE(lastName, '-', ''), ' ', '')) = LOWER(REPLACE(REPLACE(?, '-', ''), ' ', ''));",
+            [$userId, $lastname]
+        );
 
         while ($u = self::fetchObject($res)) {
             $users[] = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);
