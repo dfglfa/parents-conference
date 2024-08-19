@@ -921,4 +921,48 @@ class ViewController extends Controller
                             gerne per Mail an <a href="mailto:admin@dfglfa.net">admin@dfglfa.net</a></div>
                         <?php
     }
+
+
+    public function action_getConnectedUsersForm()
+    {
+        $users = UserDAO::getUsers();
+        ?>
+                        <div>
+                            Wähle zwei Benutzer aus, um ihre Konten zu verknüpfen oder zu trennen.
+                            <br><br>
+                        </div>
+                        <div class='form-group'>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <label for='selectUser1'>Benutzer 1</label>
+                                    <select class='form-control userconnectionSelect' id='selectUser1' name='user1'>
+                                        <option value="-1">Wähle Benutzer 1</option>
+                                        <?php foreach ($users as $user): ?>
+                                            <?php
+                                            $val = $user->__toString();
+                                            ?>
+                                            <option value='<?php echo $user->getId() ?>'>
+                                                <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-xs-4">
+                                    <label for='selectUser1'>Benutzer 2</label>
+                                    <select class='form-control userconnectionSelect' id='selectUser2' name='user2'>
+                                        <option value="-1">Wähle Benutzer 2</option>
+                                        <?php foreach ($users as $user): ?>
+                                            <?php
+                                            $val = $user->__toString();
+                                            ?>
+                                            <option value='<?php echo $user->getId() ?>'>
+                                                <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+    }
 }

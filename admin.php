@@ -1,6 +1,6 @@
 <?php
-require_once ('code/AuthenticationManager.php');
-require_once ('code/ViewController.php');
+require_once('code/AuthenticationManager.php');
+require_once('code/ViewController.php');
 AuthenticationManager::checkPrivilege('admin');
 
 include_once 'inc/header.php';
@@ -364,7 +364,7 @@ include_once 'inc/header.php';
             </div>
             <div id='collapse8' class='panel-collapse collapse'>
                 <div class='panel-body'>
-                    <div id='adminUserConnection' class="section-to-print only-print"></div>
+                    <div id='connectedUsersForm'></div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@ $(document).ready(function () {
   loadChangeUserForm("createUser");
   displayActiveEvent();
   updateUploadInfos();
+  loadConnectedUsersForm();
 
   $(document).on("click", "#btn-create-event", function () {
     validateForm();
@@ -559,6 +560,32 @@ function displayActiveEvent() {
       activeEventContainer.html("<p>Es ist momentan kein Elternsprechtag als aktiv gesetzt!</p>");
     },
   });
+}
+
+function loadConnectedUsersForm() {
+  var connectedUsersForm = $("#connectedUsersForm");
+  $.ajax({
+    url: "viewController.php?action=getConnectedUsersForm",
+    dataType: "html",
+    type: "GET",
+    success: function (data, textStatus, jqXHR) {
+      connectedUsersForm.html(data);
+
+      $(".userconnectionSelect").change(() => checkUserConnection());
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      connectedUsersForm.html("<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>");
+    },
+  });
+}
+
+function checkUserConnection() {
+  const val1 = $("#selectUser1").val();
+  const val2 = $("#selectUser2").val();
+
+  if (val1 != -1 && val2 != -1) {
+    // TODO: Load connection status
+  }
 }
 
 $(document).on("change", "#selectTeacher", function (event) {
