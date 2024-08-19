@@ -5,10 +5,6 @@ require_once('code/dao/AbstractDAO.php');
 
 SessionContext::create();
 
-if (isset($_SESSION['userId']) != '') {
-    header('Location: index.php');
-}
-
 ?>
 <!DOCTYPE html
     PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
