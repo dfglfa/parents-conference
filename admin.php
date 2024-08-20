@@ -365,6 +365,7 @@ include_once 'inc/header.php';
             <div id='collapse8' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div id='connectedUsersForm'></div>
+                    <div id='connectedUsersActions'></div>
                 </div>
             </div>
         </div>

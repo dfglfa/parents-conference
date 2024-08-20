@@ -739,4 +739,22 @@ class Controller
         SlotDAO::deleteStudentFromSlot($eventId, $slotId);
     }
 
+    public function action_toggleUserConnection()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $userId1 = $_REQUEST['userId1'];
+        $userId2 = $_REQUEST['userId2'];
+
+        $directConnection = UserDAO::areUsersDirectlyConnected($userId1, $userId2);
+
+        if ($directConnection) {
+            UserDAO::disconnectUsers($userId1, $userId2);
+        } else {
+            UserDAO::connectUsers($userId1, $userId2);
+        }
+    }
 }

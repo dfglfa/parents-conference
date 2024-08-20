@@ -124,6 +124,28 @@ class UserDAO extends AbstractDAO
         return $users;
     }
 
+    public static function areUsersDirectlyConnected($userId1, $userId2)
+    {
+        $con = self::getConnection();
+
+        $res = self::query(
+            $con,
+            "SELECT *
+            FROM userconnection 
+            WHERE userId1 = ? AND userId2 = ? OR userId1 = ? AND userId2 = ?",
+            [$userId1, $userId2, $userId2, $userId1]
+        );
+
+        $rows = self::fetchObject($res);
+        self::close($res);
+
+        if ($rows) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function connectUsers($userId1, $userId2)
     {
         $con = self::getConnection();
@@ -132,6 +154,18 @@ class UserDAO extends AbstractDAO
             VALUES 
                 (?, ?, '', UNIX_TIMESTAMP()),
                 (?, ?, '', UNIX_TIMESTAMP())", [$userId1, $userId2, $userId2, $userId1]);
+
+        self::close($res);
+    }
+
+    public static function disconnectUsers($userId1, $userId2)
+    {
+        $con = self::getConnection();
+        $res = self::query($con, "
+            DELETE FROM userconnection
+            WHERE userId1 = ? AND userId2 = ?
+            OR userId1 = ? AND userId2 = ?;
+            ", [$userId1, $userId2, $userId2, $userId1]);
 
         self::close($res);
     }

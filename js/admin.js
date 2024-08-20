@@ -580,11 +580,34 @@ function loadConnectedUsersForm() {
 }
 
 function checkUserConnection() {
-  const val1 = $("#selectUser1").val();
-  const val2 = $("#selectUser2").val();
+  const userId1 = $("#selectUser1").val();
+  const userId2 = $("#selectUser2").val();
+  const connectedUsersActions = $("#connectedUsersActions");
 
-  if (val1 != -1 && val2 != -1) {
-    // TODO: Load connection status
+  if (userId1 != -1 && userId1 === userId2) {
+    connectedUsersActions.html("<span class='text-danger'>Bitte zwei unterschiedliche Benutzer auswählen!</span>");
+  } else if (userId1 != -1 && userId2 != -1) {
+    $.ajax({
+      url: `viewController.php?action=checkUserConnection&userId1=${userId1}&userId2=${userId2}`,
+      dataType: "html",
+      type: "GET",
+      success: function (data, textStatus, jqXHR) {
+        connectedUsersActions.html(data);
+        $("#userconnectionAction").click(() => {
+          $.ajax({
+            url: "viewController.php?action=toggleUserConnection",
+            type: "POST",
+            data: { userId1, userId2 },
+            success: () => {
+              checkUserConnection();
+            },
+            error: () => {
+              connectedUsersActions.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
+            },
+          });
+        });
+      },
+    });
   }
 }
 

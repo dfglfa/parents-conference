@@ -925,6 +925,12 @@ class ViewController extends Controller
 
     public function action_getConnectedUsersForm()
     {
+        $user = AuthenticationManager::getAuthenticatedUser();
+
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
         $users = UserDAO::getUsers();
         ?>
                         <div>
@@ -938,9 +944,6 @@ class ViewController extends Controller
                                     <select class='form-control userconnectionSelect' id='selectUser1' name='user1'>
                                         <option value="-1">Wähle Benutzer 1</option>
                                         <?php foreach ($users as $user): ?>
-                                            <?php
-                                            $val = $user->__toString();
-                                            ?>
                                             <option value='<?php echo $user->getId() ?>'>
                                                 <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
                                             </option>
@@ -952,9 +955,6 @@ class ViewController extends Controller
                                     <select class='form-control userconnectionSelect' id='selectUser2' name='user2'>
                                         <option value="-1">Wähle Benutzer 2</option>
                                         <?php foreach ($users as $user): ?>
-                                            <?php
-                                            $val = $user->__toString();
-                                            ?>
                                             <option value='<?php echo $user->getId() ?>'>
                                                 <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
                                             </option>
@@ -963,6 +963,39 @@ class ViewController extends Controller
                                 </div>
                             </div>
                         </div>
+                        <?php
+    }
+
+    public function action_checkUserConnection()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $userId1 = $_REQUEST['userId1'];
+        $userId2 = $_REQUEST['userId2'];
+
+        $transitiveConnection = false;
+        $siblings = UserDAO::getConnectedUsersForUserId($userId1);
+        foreach ($siblings as $sib) {
+            if ($sib->getId() == $userId2) {
+                $transitiveConnection = true;
+                break;
+            }
+        }
+        $directConnection = UserDAO::areUsersDirectlyConnected($userId1, $userId2);
+
+        ?>
+                        <?php if ($directConnection): ?>
+                            <div>Die Benutzer sind verknüpft. &nbsp; <button class="btn btn-danger"
+                                    id="userconnectionAction">trennen</button> </div>
+                        <?php elseif ($transitiveConnection): ?>
+                            <div>Die Benutzer sind indirekt verknüpft.</div>
+                        <?php else: ?>
+                            <div>Die Benutzer sind noch nicht verknüpft. &nbsp; <button class="btn btn-success"
+                                    id="userconnectionAction">verknüpfen</button> </div>
+                        <?php endif ?>
                         <?php
     }
 }
