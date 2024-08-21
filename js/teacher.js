@@ -136,6 +136,7 @@ function addButtonInteractivity() {
         success: function (data, textStatus, jqXHR) {
           $("#" + reasonRowId).html(data);
           executeDelete(teacherId, slotId, eventId, rowId, reasonText);
+          setTimeout(loadTimeTable, 2000);
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $("#timeTable").html(errorText);
