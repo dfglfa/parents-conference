@@ -172,7 +172,7 @@ class ViewController extends Controller
                                 <?php endforeach ?>
 
                                 <td>
-                                    <?php if ($teacherAvailable && $studentAvailable && $canBook && !$timeAlreadyBooked): ?>
+                                    <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
                                         <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                                             value='<?php echo ($bookJson) ?>'>buchen
                                         </button>
@@ -225,7 +225,6 @@ class ViewController extends Controller
                             <thead>
                                 <tr>
                                     <th width='8%'>Uhrzeit</th>
-                                    <th width='10%'>Raum</th>
                                     <th width='15%'>
                                         <?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
                                     </th>
@@ -242,12 +241,6 @@ class ViewController extends Controller
                                     $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
                                     $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
 
-                                    $roomTd = "";
-                                    if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)) {
-                                        $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
-                                        $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
-                                    }
-
                                     $connectedUserSlotInfo = [];
                                     $siblingAppointmentInSlot = false;
                                     foreach ($connectedUsers as $cu) {
@@ -256,13 +249,6 @@ class ViewController extends Controller
                                             if ($cus["dateFrom"] == $fromDate) {
                                                 $connectedUserSlotInfo[$cu->getId()] = $cus;
                                                 $siblingAppointmentInSlot = true;
-
-                                                if ($roomTd == "") {
-                                                    $room = $rooms[$cus['teacherId']];
-                                                    $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
-                                                } else {
-                                                    $roomTd = "Mehrfachbuchung, bitte ändern!";
-                                                }
                                                 break;
                                             }
                                         }
@@ -276,7 +262,6 @@ class ViewController extends Controller
                                                 <td>
                                                     <?php echo ($timeTd) ?>
                                                 </td>
-                                                <td></td>
                                                 <td colspan='<?php echo 1 + count($connectedUsers) ?>'>PAUSE</td>
                                                 <td class='no-print'></td>
                                             </tr>
@@ -287,14 +272,25 @@ class ViewController extends Controller
                                                     <?php echo ($timeTd); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo ($roomTd) ?>
-                                                </td>
-                                                <td>
-                                                    <?php echo ($studentAvailable ? '' : $bookedSlots[$fromDate]['teacherName']) ?>
+                                                    <?php if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)):
+                                                        $_teacher = $bookedSlots[$fromDate];
+                                                        $_room = $rooms[$_teacher['teacherId']];
+                                                        ?>
+                                                        <?php echo $_teacher['teacherName'] ?>
+                                                        <br />
+                                                        <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                    <?php endif ?>
                                                 </td>
                                                 <?php foreach ($connectedUsers as $connUser): ?>
                                                     <td>
-                                                        <?php echo !isset($connectedUserSlotInfo[$connUser->getId()]) ? "" : $connectedUserSlotInfo[$connUser->getId()]["teacherName"] ?>
+                                                        <?php if (isset($connectedUserSlotInfo[$connUser->getId()])):
+                                                            $_teacher = $connectedUserSlotInfo[$connUser->getId()];
+                                                            $_room = $rooms[$_teacher["teacherId"]];
+                                                            ?>
+                                                            <?php echo $_teacher["teacherName"] ?>
+                                                            <br>
+                                                            <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                        <?php endif ?>
                                                     </td>
                                                 <?php endforeach ?>
 

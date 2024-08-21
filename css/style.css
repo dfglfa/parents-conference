@@ -105,11 +105,11 @@ body {
 }
 
 .es-time-table-occupied {
-  background-color: #f5e6dc;
+  background-color: #f6f3e0;
 }
 
 .es-time-table-occupied:hover {
-  background-color: #f5e6dc !important;
+  background-color: #f6f3e0 !important;
 }
 
 .es-time-table-reserved {
