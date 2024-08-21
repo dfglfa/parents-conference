@@ -994,4 +994,13 @@ class ViewController extends Controller
                         <?php endif ?>
                         <?php
     }
+
+    public function action_getConnectedUsersInfo()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $connUsers = UserDAO::getConnectedUsersForUserId($user->getId());
+        $siblings = UserDAO::getPossibleSiblings($user->getId(), $user->getLastName());
+
+        echo json_encode(count($siblings) > 0 && count($connUsers) == 0);
+    }
 }

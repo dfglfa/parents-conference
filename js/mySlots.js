@@ -1,5 +1,6 @@
 $(document).ready(function () {
   loadTimeTable(0);
+  checkSiblingsHint();
 
   $("#showempty").change(() => {
     const val = $("#showempty").is(":checked");
@@ -62,6 +63,22 @@ function dismissMessage(messageId, receiverId) {
     },
     error: function (jqXHR, textStatus, errorThrown) {
       timeTable.html("<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>");
+    },
+  });
+}
+
+function checkSiblingsHint() {
+  $.ajax({
+    url: "viewController.php?action=getConnectedUsersInfo",
+    type: "GET",
+    dataType: "json",
+    success: function (unusedConnectionsExist) {
+      if (unusedConnectionsExist) {
+        const html = `<div class="alert alert-info" role="alert" style="margin-bottom: 20px">
+          Hinweis: Es gibt die Möglichkeit, die Konten seiner Geschwister zu verknüpfen, um besser planen zu können. Im Benutzermenü oben rechts ist der Bereich <a href="./siblings.php">Geschwister</a> verlinkt.
+        </div>`;
+        $("#siblingsHint").html(html);
+      }
     },
   });
 }

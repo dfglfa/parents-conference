@@ -8,6 +8,7 @@ include_once 'inc/header.php';
 <div class='container'>
     <div id='tabs-1'>
         <h1>Meine Termine</h1>
+        <div id="siblingsHint"></div>
         <?php include_once 'inc/notifications.php'; ?>
     </div>
 </div>
