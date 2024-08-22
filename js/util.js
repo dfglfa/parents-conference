@@ -30,7 +30,6 @@ function PrintElem(elem, pageTitle) {
       printWindow.document.close();
       printWindow.focus();
       printWindow.print();
-      printWindow.close();
     } else {
       setTimeout(show, 100);
     }

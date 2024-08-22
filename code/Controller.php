@@ -55,19 +55,24 @@ class Controller
         $endTime = $_REQUEST['endTime'];
         $slotDuration = $_REQUEST['slotDuration'];
         $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
-        $bookingDate = $_REQUEST['bookingDate'];
+        $startBookingDate = $_REQUEST['startBookingDate'];
+        $endBookingDate = $_REQUEST['endBookingDate'];
         $videoLink = $_REQUEST['videoLink'];
         $breaks = $_REQUEST['breaks'];
 
         $unixTimeFrom = strtotime($date . ' ' . $beginTime);
         $unixTimeTo = strtotime($date . ' ' . $endTime);
-        $finalPostDate = strtotime($bookingDate);
+
+        // Making the bootstrap datepicker tz-aware is just too much hassle ... 
+        // We assume the we are in timezone Europe/Berlin in winter time, so we subtract one hour.
+        $startPostDate = strtotime($startBookingDate) - 3600;
+        $finalPostDate = strtotime($endBookingDate) - 3600;
 
         if (!$unixTimeFrom || !$unixTimeTo) {
             return;
         }
 
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $finalPostDate, $videoLink, $breaks);
+        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks);
         if ($eventId > 0) {
             echo 'success';
         }

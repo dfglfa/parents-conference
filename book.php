@@ -20,7 +20,18 @@ include_once 'inc/header.php';
 <div class='container'>
     <div>
         <?php if ($activeEvent != null): ?>
-            <?php if ($activeEvent->getFinalPostDate() > time()): ?>
+            <?php if ($activeEvent->getStartPostDate() > time()):
+                $timestamp = $activeEvent->getStartPostDate();
+                $date = new DateTime("@$timestamp");
+                $berlinTimezone = new DateTimeZone('Europe/Berlin');
+                $date->setTimezone($berlinTimezone);
+                $formattedDate = $date->format('d.m.Y h:i') . " Uhr";
+                ?>
+                <h3>Buchungen sind erst ab dem <?php echo $formattedDate ?>
+                    möglich </h3>
+            <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
+                <h3>Buchungen sind nicht mehr möglich!</h3>
+            <?php else: ?>
                 <form id='chooseTeacherForm'>
                     <div class='form-group'>
                         <label for='selectTeacher'>Lehrer / Lehrerin</label>
@@ -29,12 +40,8 @@ include_once 'inc/header.php';
                         </select>
                     </div>
                 </form>
-
                 <div id='timeTable'></div>
-            <?php else: ?>
-                <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php endif; ?>
-
         <?php else: ?>
             <h3>Es gibt momentan keinen Elternsprechtag!</h3>
         <?php endif; ?>

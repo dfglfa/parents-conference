@@ -45,7 +45,6 @@ tfoot {
 
 td {
   border-top: 1px #000 solid;
-  border-bottom: 1px #000 solid;
 }
 
 .es-time-table th {
@@ -65,7 +64,7 @@ td {
 }
 
 .es-time-table-available {
-  background-color: #a4e4a0;
+  background-color: white;
 }
 
 .es-time-table-break {
@@ -73,7 +72,7 @@ td {
 }
 
 .es-time-table-occupied {
-  background-color: #77c869;
+  background-color: #fefefe;
 }
 
 .pagebreak {

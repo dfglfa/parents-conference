@@ -181,8 +181,39 @@ td.selectedTeacher {
     padding: 5px !important;
   }
   .es-time-table-occupied {
-    background-color: #d4999f;
     -webkit-print-color-adjust: exact;
+  }
+
+  .es-time-table-available {
+    background-color: white;
+  }
+
+  .es-time-table-available:hover {
+    background-color: white !important;
+  }
+
+  .es-time-table-break {
+    background-color: #fefefe;
+  }
+
+  .es-time-table-break:hover {
+    background-color: #fefefe !important;
+  }
+
+  .es-time-table-occupied {
+    background-color: #fefefe;
+  }
+
+  .es-time-table-occupied:hover {
+    background-color: #fefefe !important;
+  }
+
+  .es-time-table-reserved {
+    background-color: #fefefe;
+  }
+
+  .es-time-table-reserved:hover {
+    background-color: #fefefe !important;
   }
 
   .table td {
