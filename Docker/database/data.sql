@@ -43,6 +43,7 @@ CREATE TABLE `event` (
   `dateTo` int(11) NOT NULL,
   `slotTimeMin` int(11) NOT NULL DEFAULT '5',
   `isActive` int(11) NOT NULL DEFAULT '0',
+  `startPostDate` int(11),
   `finalPostDate` int(11),
   `videoLink` varchar(250) COLLATE utf8_bin DEFAULT NULL,
   `breaks` int(1)
@@ -267,7 +268,7 @@ ALTER TABLE `slot`
 --
 ALTER TABLE `userconnection`
   ADD CONSTRAINT `fk_userconnection_user1` FOREIGN KEY (`userId1`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_userconnection_user2` FOREIGN KEY (`userId2`) REFERENCES `user` (`id`) ON DELETE,
+  ADD CONSTRAINT `fk_userconnection_user2` FOREIGN KEY (`userId2`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `connectionUnique` UNIQUE (`userId1`, `userId2`);  
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
