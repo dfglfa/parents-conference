@@ -15,7 +15,9 @@ include_once 'inc/header.php';
     </div>
 </div>
 
-<?php $activeEvent = EventDAO::getActiveEvent(); ?>
+<?php
+$activeEvent = EventDAO::getActiveEvent();
+?>
 
 <div class='container'>
     <div>

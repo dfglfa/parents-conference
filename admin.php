@@ -141,19 +141,19 @@ include_once 'inc/header.php';
                             </label>&nbsp;
                         </div>
 
-                        <label>Buchungskontingent pro Kind</label>
+                        <label>Tägliches Buchungskontingent pro Kind</label>
                         <div class='radio'>
                             <label><input type='radio' name='throttleQuota' value='0' checked>
                                 keine Begrenzung
                             </label> &nbsp;
                             <label><input type='radio' name='throttleQuota' value='1' checked>
-                                1 Termin pro Tag
+                                1 Terminbuchung pro Tag
                             </label> &nbsp;
                             <label><input type='radio' name='throttleQuota' value='2' checked>
-                                2 Termine pro Tag
+                                2 Terminbuchungen pro Tag
                             </label> &nbsp;
                             <label><input type='radio' name='throttleQuota' value='3' checked>
-                                3 Termine pro Tag
+                                3 Terminbuchung pro Tag
                             </label> &nbsp;
                         </div>
 

@@ -115,13 +115,13 @@ class ViewController extends Controller
 
         <?php if ($bookingQuota != -1): ?>
             <?php if ($remainingQuota > 1): ?>
-                <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> weitere Termine</strong> buchen.</div>
+                <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong> buchen.</div>
             <?php elseif ($remainingQuota == 1): ?>
-                <div>Du kannst noch <strong class='text-success'>einen weiteren Termin</strong> buchen.</div>
+                <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
             <?php else: ?>            
                 <div class='text-danger'>
                     Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
-                        </div>
+                </div>
             <?php endif; ?>
         <?php endif; ?>
 
