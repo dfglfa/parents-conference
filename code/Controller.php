@@ -59,6 +59,8 @@ class Controller
         $endBookingDate = $_REQUEST['endBookingDate'];
         $videoLink = $_REQUEST['videoLink'];
         $breaks = $_REQUEST['breaks'];
+        $throttleQuota = $_REQUEST['throttleQuota'];
+        $throttleDays = 3; // make configurable if needed
 
         $unixTimeFrom = strtotime($date . ' ' . $beginTime);
         $unixTimeTo = strtotime($date . ' ' . $endTime);
@@ -72,7 +74,7 @@ class Controller
             return;
         }
 
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks);
+        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota);
         if ($eventId > 0) {
             echo 'success';
         }

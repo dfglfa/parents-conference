@@ -11,17 +11,17 @@ class EventDAO extends AbstractDAO
     {
         $events = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks FROM event ORDER BY dateFrom;', array());
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks, throttleDays, throttleQuota FROM event ORDER BY dateFrom;', array());
 
         while ($e = self::fetchObject($res)) {
-            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks);
+            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks, $e->throttleDays, $e->throttleQuota);
         }
         self::close($res);
 
         return $events;
     }
 
-    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks)
+    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota)
     {
         $con = self::getConnection();
 
@@ -30,7 +30,11 @@ class EventDAO extends AbstractDAO
         }
 
         self::getConnection()->beginTransaction();
-        self::query($con, 'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, startPostDate, finalPostDate, videoLink, breaks) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', array($name, $dateFrom, $dateTo, $slotDuration, $startPostDate, $finalPostDate, $videoLink, $breaks));
+        self::query(
+            $con,
+            'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, startPostDate, finalPostDate, videoLink, breaks, throttleDays, throttleQuota) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+            array($name, $dateFrom, $dateTo, $slotDuration, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota)
+        );
         $eventId = self::lastInsertId($con);
 
         $teachers = UserDAO::getUsersForRole('teacher');
@@ -54,10 +58,10 @@ class EventDAO extends AbstractDAO
     {
         $event = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks FROM event WHERE id = ?;', array($eventId));
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks, throttleDays, throttleQuota FROM event WHERE id = ?;', array($eventId));
 
         if ($e = self::fetchObject($res)) {
-            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks);
+            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks, $e->throttleDays, $e->throttleQuota);
         }
         self::close($res);
         return $event;
@@ -67,10 +71,10 @@ class EventDAO extends AbstractDAO
     {
         $event = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks FROM event WHERE isActive = 1;', array());
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks, throttleDays, throttleQuota FROM event WHERE isActive = 1;', array());
 
         if ($e = self::fetchObject($res)) {
-            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks);
+            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks, $e->throttleDays, $e->throttleQuota);
         }
         self::close($res);
         return $event;
@@ -83,10 +87,10 @@ class EventDAO extends AbstractDAO
 
         $events = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks FROM event WHERE dateFrom BETWEEN ? AND ?;', array($from, $to));
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, isActive, startPostDate, finalPostDate, videoLink, breaks, throttleDays, throttleQuota FROM event WHERE dateFrom BETWEEN ? AND ?;', array($from, $to));
 
         while ($e = self::fetchObject($res)) {
-            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks);
+            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->isActive, $e->startPostDate, $e->finalPostDate, $e->videoLink, $e->breaks, $e->throttleDays, $e->throttleQuota);
         }
         self::close($res);
 

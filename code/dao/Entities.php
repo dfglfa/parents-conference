@@ -117,6 +117,8 @@ class Event extends Entity
     private $finalPostDate;
     private $videoLink;
     private $breaks;
+    private $throttleDays;
+    private $throttleQuota;
     const NOBREAK = 0;
     const HALFHOUR = 1;
     const FULLHOUR = 2;
@@ -124,7 +126,7 @@ class Event extends Entity
     const BREAKFOUR = 4;
     const BREAKFIVE = 5;
 
-    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $isActive, $startPostDate, $finalPostDate, $videoLink, $breaks)
+    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $isActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota)
     {
         parent::__construct($id);
         $this->name = $name;
@@ -136,6 +138,8 @@ class Event extends Entity
         $this->startPostDate = $startPostDate;
         $this->videoLink = $videoLink;
         $this->breaks = $breaks;
+        $this->throttleDays = $throttleDays;
+        $this->throttleQuota = $throttleQuota;
     }
 
     public function getName()
@@ -188,6 +192,15 @@ class Event extends Entity
     public function getBreaks()
     {
         return $this->breaks;
+    }
+    public function getThrottleDays()
+    {
+        return $this->throttleDays;
+    }
+
+    public function getThrottleQuota()
+    {
+        return $this->throttleQuota;
     }
 }
 

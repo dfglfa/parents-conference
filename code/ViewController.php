@@ -98,6 +98,10 @@ class ViewController extends Controller
             return;
         }
 
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
+        $remainingQuota = $bookingQuota - count($bookedSlots);
+        $quotaExceeded = $bookingQuota != -1 && $remainingQuota <= 0;
+
         // Fetch user data and booked slots for connected accounts, if any
         $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
         $bookedSlotsForConnectedUser = [];
@@ -108,59 +112,73 @@ class ViewController extends Controller
         $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
         ?>
-        <h3>Zeitplan von <?php echo $teacherFullName ?></h3>
 
-        <?php if ($room != null): ?>
-            <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
+        <?php if ($bookingQuota != -1): ?>
+            <?php if ($remainingQuota > 1): ?>
+                <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> weitere Termine</strong> buchen.</div>
+            <?php elseif ($remainingQuota == 1): ?>
+                <div>Du kannst noch <strong class='text-success'>einen weiteren Termin</strong> buchen.</div>
+            <?php else: ?>            
+                <div class='text-danger'>
+                    Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
+                        </div>
+            <?php endif; ?>
         <?php endif; ?>
 
-        <table class='table table-hover es-time-table'>
-            <thead>
-            <tr>
-                <th width='8%'>Uhrzeit</th>
-                <th width='15%'><?php echo $teacherFullName ?></th>
-                <th width='15%'><?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
-                <?php foreach ($connectedUsers as $cu): ?>
-                    <th width='15%'><?php echo $cu->getFirstName() ?></th>
-                <?php endforeach; ?>    
-                <th width='8%'>Aktion</th>
-            </tr>
-            </thead>
-            <tbody>
+                <h3>Zeitplan von <?php echo $teacherFullName ?></h3>
 
-            <?php foreach ($slots as $slot):
-                $fromDate = $slot->getDateFrom();
-                $teacherAvailable = $slot->getStudentId() == '';
-                $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
-                $timeAlreadyBooked = false;
+                <?php if ($room != null): ?>
+                    <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
+                <?php endif; ?>
 
-                $connectedUserSlotData = [];
-                foreach ($connectedUsers as $cu) {
-                    $connectedUserSlotData[$cu->getId()] = "";
-                    $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
-                    foreach ($connUserSlots as $cus) {
-                        if ($cus["dateFrom"] == $fromDate) {
-                            $connectedUserSlotData[$cu->getId()] = $cus["teacherName"];
-                            $timeAlreadyBooked = true;
-                            break;
-                        }
-                    }
-                }
+                <table class='table table-hover es-time-table'>
+                    <thead>
+                        <tr>
+                            <th width='8%'>Uhrzeit</th>
+                            <th width='15%'><?php echo $teacherFullName ?></th>
+                            <th width='15%'><?php echo count($connectedUsers) == 0 ? 'Mein Zeitplan' : $user->getFirstName() ?>
+                                <?php foreach ($connectedUsers as $cu): ?>
+                                <th width='15%'><?php echo $cu->getFirstName() ?></th>
+                            <?php endforeach; ?>
+                            <th width='8%'>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
-                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
-                ?>
+                        <?php foreach ($slots as $slot):
+                            $fromDate = $slot->getDateFrom();
+                            $teacherAvailable = $slot->getStudentId() == '';
+                            $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
+                            $timeAlreadyBooked = false;
 
-                <?php if ($slot->getType() == 2): ?>
-                <tr class='es-time-table-break'>
-                    <td><?php echo ($timeTd) ?></td>
-                    <td colspan='<?php echo 3 + count($connectedUsers) ?>'>PAUSE</td>
-                </tr>
-            <?php else: ?>
-                <tr class='<?php echo ($teacherAvailable && $studentAvailable && !$timeAlreadyBooked ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
-                    <td><?php echo ($timeTd) ?></td>
-                    <td><?php echo ($teacherAvailable ? '' : 'belegt') ?></td>
-                    <td <?php echo !$studentAvailable && $bookedSlots[$fromDate]['teacherName'] == $teacherFullName ? 'class="selectedTeacher"' : '' ?>">
+                            $connectedUserSlotData = [];
+                            foreach ($connectedUsers as $cu) {
+                                $connectedUserSlotData[$cu->getId()] = "";
+                                $connUserSlots = $bookedSlotsForConnectedUser[$cu->getId()];
+                                foreach ($connUserSlots as $cus) {
+                                    if ($cus["dateFrom"] == $fromDate) {
+                                        $connectedUserSlotData[$cu->getId()] = $cus["teacherName"];
+                                        $timeAlreadyBooked = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
+                            $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
+                            ?>
+
+                            <?php if ($slot->getType() == 2): ?>
+                                <tr class='es-time-table-break'>
+                                    <td><?php echo ($timeTd) ?></td>
+                                    <td colspan='<?php echo 3 + count($connectedUsers) ?>'>PAUSE</td>
+                                </tr>
+                            <?php else: ?>
+                                <tr
+                                    class='<?php echo ($teacherAvailable && $studentAvailable && !$timeAlreadyBooked ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+                                    <td><?php echo ($timeTd) ?></td>
+                                    <td><?php echo ($teacherAvailable ? '' : 'belegt') ?></td>
+                                    <td <?php echo !$studentAvailable && $bookedSlots[$fromDate]['teacherName'] == $teacherFullName ? 'class="selectedTeacher"' : '' ?>">
                                 <?php echo ($studentAvailable ? '' : $bookedSlots[$fromDate]['teacherName']) ?>
                                 </td>
 
@@ -172,7 +190,7 @@ class ViewController extends Controller
                                 <?php endforeach ?>
 
                                 <td>
-                                    <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
+                                    <?php if ($teacherAvailable && $studentAvailable && $canBook && !$quotaExceeded): ?>
                                         <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                                             value='<?php echo ($bookJson) ?>'>buchen
                                         </button>

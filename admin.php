@@ -141,6 +141,22 @@ include_once 'inc/header.php';
                             </label>&nbsp;
                         </div>
 
+                        <label>Terminkontingent pro Kind (nur die ersten 3 Tage)</label>
+                        <div class='radio'>
+                            <label><input type='radio' name='throttleQuota' value='0' checked>
+                                keine Begrenzung
+                            </label> &nbsp;
+                            <label><input type='radio' name='throttleQuota' value='1' checked>
+                                1 Termin pro Tag
+                            </label> &nbsp;
+                            <label><input type='radio' name='throttleQuota' value='2' checked>
+                                2 Termine pro Tag
+                            </label> &nbsp;
+                            <label><input type='radio' name='throttleQuota' value='3' checked>
+                                3 Termine pro Tag
+                            </label> &nbsp;
+                        </div>
+
                         <div class='form-group'>
                             <label><input type='checkbox' name='setActive[]' checked> als aktiven Elternsprechtag
                                 setzen</label>

@@ -120,3 +120,14 @@ function optionalBreak()
     return '<span class="no-print"><br></span><span class="only-print"> - </span>';
     //return '<span class="only-print"> - </span>';
 }
+
+function getMaximumNumberOfBookableSlotsUntilCurrentTime()
+{
+    $activeEvent = EventDAO::getActiveEvent();
+    if ($activeEvent == null || $activeEvent->getThrottleQuota() == 0) {
+        return -1;
+    }
+    $startTime = $activeEvent->getStartPostDate();
+    $fullDaysPassed = floor((time() - $startTime) / 86400);
+    return $activeEvent->getThrottleQuota() * (1 + $fullDaysPassed);
+}

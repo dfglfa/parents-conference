@@ -46,7 +46,9 @@ CREATE TABLE `event` (
   `startPostDate` int(11),
   `finalPostDate` int(11),
   `videoLink` varchar(250) COLLATE utf8_bin DEFAULT NULL,
-  `breaks` int(1)
+  `breaks` int(1),
+  `throttleDays` int(11) DEFAULT '0',
+  `throttleQuota` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
