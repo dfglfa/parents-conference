@@ -34,6 +34,7 @@ $activeEvent = EventDAO::getActiveEvent();
             <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
                 <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php else: ?>
+                <div id="quotaInformation"></div>
                 <form id='chooseTeacherForm'>
                     <div class='form-group'>
                         <label for='selectTeacher'>Lehrer / Lehrerin</label>

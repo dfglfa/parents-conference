@@ -99,8 +99,7 @@ class ViewController extends Controller
         }
 
         $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
-        $remainingQuota = $bookingQuota - count($bookedSlots);
-        $quotaExceeded = $bookingQuota != -1 && $remainingQuota <= 0;
+        $quotaExceeded = $bookingQuota != -1 && $bookingQuota - count($bookedSlots) <= 0;
 
         // Fetch user data and booked slots for connected accounts, if any
         $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
@@ -112,19 +111,6 @@ class ViewController extends Controller
         $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
         ?>
-
-        <?php if ($bookingQuota != -1): ?>
-            <?php if ($remainingQuota > 1): ?>
-                <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong> buchen.</div>
-            <?php elseif ($remainingQuota == 1): ?>
-                <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
-            <?php else: ?>            
-                <div class='text-danger'>
-                    Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
-
                 <h3>Zeitplan von <?php echo $teacherFullName ?></h3>
 
                 <?php if ($room != null): ?>
@@ -205,6 +191,33 @@ class ViewController extends Controller
                         <?php
     }
 
+    public function action_getMyQuota()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $activeEvent = EventDAO::getActiveEvent();
+        $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
+        $remainingQuota = $bookingQuota - count($bookedSlots);
+        ?>
+                        <?php if ($bookingQuota != -1): ?>
+                            <div style="padding-bottom: 20px; font-size:16pt;">
+                                <?php if ($remainingQuota > 1): ?>
+                                    <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong>
+                                        buchen.
+                                    </div>
+                                <?php elseif ($remainingQuota == 1): ?>
+                                    <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
+                                <?php else: ?>
+                                    <div class='text-danger'>
+                                        Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php
+
+    }
     public function action_getMySlotsTable()
     {
         $typeId = $_REQUEST['typeId'];
@@ -226,7 +239,10 @@ class ViewController extends Controller
         $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
         $bookedSlotsForConnectedUser = [];
         foreach ($connectedUsers as $cUser) {
-            $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
+            $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent(
+                $activeEvent->getId(),
+                $cUser->getId()
+            );
         }
 
         ?>
@@ -338,6 +354,7 @@ class ViewController extends Controller
                         </table>
                         <?php
     }
+
 
     public function action_getTeacherTimeTable()
     {
