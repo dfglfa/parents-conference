@@ -141,7 +141,7 @@ include_once 'inc/header.php';
                             </label>&nbsp;
                         </div>
 
-                        <label>Terminkontingent pro Kind (nur die ersten 3 Tage)</label>
+                        <label>Terminkontingent pro Kind</label>
                         <div class='radio'>
                             <label><input type='radio' name='throttleQuota' value='0' checked>
                                 keine Begrenzung
