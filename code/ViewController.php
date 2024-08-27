@@ -199,7 +199,13 @@ class ViewController extends Controller
         $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
         $remainingQuota = $bookingQuota - count($bookedSlots);
         ?>
-                        <?php if ($bookingQuota != -1): ?>
+                        <?php if ($bookingQuota != -1):
+                            $date = new DateTime();
+                            $date->setTimestamp($activeEvent->getStartPostDate());
+                            $timezone = new DateTimeZone('Europe/Berlin');
+                            $date->setTimezone($timezone);
+                            $hour = $date->format('H');
+                            ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
                                     <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong>
@@ -212,6 +218,10 @@ class ViewController extends Controller
                                         Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
                                     </div>
                                 <?php endif; ?>
+
+                                <div class="text-info" style="font-size: 12pt">
+                                    Nächste Erhöhung des Kontingents: Morgen um <?php echo $hour ?> Uhr.
+                                </div>
                             </div>
                         <?php endif; ?>
 
