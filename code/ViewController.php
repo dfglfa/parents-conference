@@ -328,6 +328,7 @@ class ViewController extends Controller
                                                     <?php if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)):
                                                         $_teacher = $bookedSlots[$fromDate];
                                                         $_room = $rooms[$_teacher['teacherId']];
+                                                        $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                         ?>
                                                         <?php echo $_teacher['teacherName'] ?>
                                                         <br />
@@ -351,9 +352,12 @@ class ViewController extends Controller
                                                     <?php if (!$studentAvailable):
                                                         $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                         ?>
-                                                        <button type='button' class='btn btn-primary btn-delete'
+                                                        <button type='button' class='btn btn-danger btn-delete'
                                                             id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
                                                             value='<?php echo ($deleteJson) ?>'>Termin löschen
+                                                            <?php if (count($connectedUsers) > 0): ?>
+                                                                (<?php echo $user->getFirstName() ?>)
+                                                            <?php endif ?>
                                                         </button>
                                                         <?php if (!empty($activeEvent->getVideoLink())):
                                                             $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
@@ -362,6 +366,18 @@ class ViewController extends Controller
                                                                 target="_blank"> Zum Videomeeting</a>
                                                         <?php endif; ?>
                                                     <?php endif; ?>
+                                                    <?php foreach ($connectedUsers as $connUser): ?>
+                                                        <?php if (isset($connectedUserSlotInfo[$connUser->getId()])):
+                                                            $connUserSlot = $connectedUserSlotInfo[$connUser->getId()];
+                                                            $deleteJson = escape(json_encode(array('userId' => $connUser->getId(), 'slotId' => $connUserSlot['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
+                                                            ?>
+                                                            <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
+                                                                id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
+                                                                value='<?php echo ($deleteJson) ?>'>Termin löschen
+                                                                (<?php echo $connUser->getFirstName() ?>)
+                                                            </button>
+                                                        <?php endif ?>
+                                                    <?php endforeach ?>
                                                 </td>
                                             </tr>
                                         <?php endif; ?>
