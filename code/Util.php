@@ -127,6 +127,13 @@ function getMaximumNumberOfBookableSlotsUntilCurrentTime()
     if ($activeEvent == null || $activeEvent->getThrottleQuota() == 0) {
         return -1;
     }
+
+    // Check if throttling is finished 
+    $throttleEndTime = $activeEvent->getStartPostDate() + $activeEvent->getThrottleDays() * 86400;
+    if ($throttleEndTime < time()) {
+        return -1;
+    }
+
     $startTime = $activeEvent->getStartPostDate();
     $fullDaysPassed = floor((time() - $startTime) / 86400);
     return $activeEvent->getThrottleQuota() * (1 + $fullDaysPassed);
