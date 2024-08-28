@@ -363,6 +363,23 @@ class Controller
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
 
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getId() != $userId) {
+            // Possibly unauthorized. Sibling access might be allowed
+            $isSibling = false;
+            foreach (UserDAO::getConnectedUsersForUserId($authUser->getId()) as $cu) {
+                if ($cu->getId() == $userId) {
+                    // connected sibling found => OK
+                    $isSibling = true;
+                    break;
+                }
+            }
+            if (!$isSibling) {
+                echo "Unauthorized!";
+                return;
+            }
+        }
+
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
