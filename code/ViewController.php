@@ -332,7 +332,9 @@ class ViewController extends Controller
                                                         ?>
                                                         <?php echo $_teacher['teacherName'] ?>
                                                         <br />
-                                                        <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                        <span class="room">
+                                                            <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                        </span>
                                                     <?php endif ?>
                                                 </td>
                                                 <?php foreach ($connectedUsers as $connUser): ?>
@@ -343,7 +345,9 @@ class ViewController extends Controller
                                                             ?>
                                                             <?php echo $_teacher["teacherName"] ?>
                                                             <br>
-                                                            <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                            <span class="room">
+                                                                <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                            </span>
                                                         <?php endif ?>
                                                     </td>
                                                 <?php endforeach ?>
@@ -354,7 +358,7 @@ class ViewController extends Controller
                                                         ?>
                                                         <button type='button' class='btn btn-danger btn-delete'
                                                             id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                            value='<?php echo ($deleteJson) ?>'>Termin löschen
+                                                            value='<?php echo ($deleteJson) ?>'>Termin stornieren
                                                             <?php if (count($connectedUsers) > 0): ?>
                                                                 (<?php echo $user->getFirstName() ?>)
                                                             <?php endif ?>
@@ -373,7 +377,7 @@ class ViewController extends Controller
                                                             ?>
                                                             <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
                                                                 id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                                value='<?php echo ($deleteJson) ?>'>Termin löschen
+                                                                value='<?php echo ($deleteJson) ?>'>Termin stornieren
                                                                 (<?php echo $connUser->getFirstName() ?>)
                                                             </button>
                                                         <?php endif ?>

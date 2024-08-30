@@ -16,9 +16,9 @@ $(document).ready(function () {
 });
 
 $(document).on("click", ".btn-delete", function (event) {
-  var postData = $.parseJSON(this.value);
-  var typeId = postData.typeId;
-  var errorText = "<h3>Beim Laden der Termine ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>";
+  const postData = $.parseJSON(this.value);
+  const typeId = postData.typeId;
+  const errorText = "<h3>Beim Stornieren ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>";
   postData.action = "deleteSlot";
 
   $.ajax({

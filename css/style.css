@@ -84,6 +84,10 @@ body {
   vertical-align: middle !important;
 }
 
+.es-time-table td .room {
+  font-weight: normal;
+}
+
 .table td {
   border: 1px solid #9b9 !important;
 }
