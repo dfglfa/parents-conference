@@ -16,25 +16,35 @@ $(document).on("click", ".btn-book", function (event) {
   var errorText = "<h3>Beim Laden der Termine ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>";
   postData.action = "changeSlot";
 
-  $.ajax({
-    url: "controller.php",
-    type: "POST",
-    data: postData,
-    success: function (data, textStatus, jqXHR) {
-      if (data.indexOf("success") > -1) {
-        loadTimeTable(teacherId);
-      } else if (data.indexOf("dirtyRead") > -1) {
-        loadTimeTable(teacherId);
-        alert(
-          "WARNUNG!\n\nDer gewünschte Termin wurde in der Zwischenzeit vergeben! Bitte wählen Sie einen anderen Termin!"
-        );
-      } else {
+  const onConfirm = () =>
+    $.ajax({
+      url: "controller.php",
+      type: "POST",
+      data: postData,
+      success: function (data, textStatus, jqXHR) {
+        if (data.indexOf("success") > -1) {
+          loadTimeTable(teacherId);
+        } else if (data.indexOf("dirtyRead") > -1) {
+          loadTimeTable(teacherId);
+          alert(
+            "WARNUNG!\n\nDer gewünschte Termin wurde in der Zwischenzeit vergeben! Bitte wählen Sie einen anderen Termin!"
+          );
+        } else {
+          $("#timeTable").html(errorText);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
         $("#timeTable").html(errorText);
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#timeTable").html(errorText);
-    },
+      },
+    });
+
+  showConfirmationModal({
+    title: "Buchung bestätigen",
+    content: `<strong>Soll der Termin verbindlich gebucht werden?</strong>
+    <br><br>
+    Die Lehrkraft wird per E-Mail informiert.`,
+    confirmationCaption: "Ja, Termin buchen",
+    onConfirm,
   });
 });
 

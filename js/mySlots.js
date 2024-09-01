@@ -21,20 +21,28 @@ $(document).on("click", ".btn-delete", function (event) {
   const errorText = "<h3>Beim Stornieren ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>";
   postData.action = "deleteSlot";
 
-  $.ajax({
-    url: "controller.php",
-    type: "POST",
-    data: postData,
-    success: function (data, textStatus, jqXHR) {
-      if (data.indexOf("success") > -1) {
-        loadTimeTable(typeId);
-      } else {
+  const onDelete = () =>
+    $.ajax({
+      url: "controller.php",
+      type: "POST",
+      data: postData,
+      success: function (data, textStatus, jqXHR) {
+        if (data.indexOf("success") > -1) {
+          loadTimeTable(typeId);
+        } else {
+          $("#timeTable").html(errorText);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
         $("#timeTable").html(errorText);
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#timeTable").html(errorText);
-    },
+      },
+    });
+
+  showConfirmationModal({
+    title: "Stornierung bestätigen",
+    content: "Soll der Termin wirklich storniert werden?<br><br>Die Lehrkraft wird per E-Mail informiert.",
+    confirmationCaption: "Ja, stornieren",
+    onConfirm: onDelete,
   });
 });
 

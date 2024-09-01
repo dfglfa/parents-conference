@@ -151,7 +151,7 @@ class ViewController extends Controller
                             }
 
                             $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
-                            $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
+                            $bookJson = escape(json_encode(array('time' => $slot->getDateFrom(), 'slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
                             ?>
 
                             <?php if ($slot->getType() == 2): ?>

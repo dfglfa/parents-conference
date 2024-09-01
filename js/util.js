@@ -37,3 +37,11 @@ function PrintElem(elem, pageTitle) {
 
   show();
 }
+
+function showConfirmationModal({ title, content, confirmationCaption, onConfirm }) {
+  $("#confirmationTitle").html(title);
+  $("#confirmationContent").html(content);
+  $("#confirmationButton").html(confirmationCaption);
+  $("#confirmationButton").click(onConfirm);
+  $("#confirmationDialog").modal("show");
+}
