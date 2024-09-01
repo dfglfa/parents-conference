@@ -1,5 +1,6 @@
 <?php
 
+require_once('code/Config.php');
 require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 require_once('code/AuthenticationManager.php');
@@ -23,7 +24,7 @@ $user = AuthenticationManager::getAuthenticatedUser();
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
-    <title>ElternSprechtagsVerwaltung</title>
+    <title>Elternsprechtag</title>
 
     <link href='libs/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
     <link href='libs/bootstrap/css/bootstrap-theme.min.css' rel='stylesheet'>

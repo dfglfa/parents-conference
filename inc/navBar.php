@@ -9,7 +9,8 @@
                 <span class='icon-bar'></span>
             </button>
             <a class='navbar-brand' href='redirectUser.php'>
-                <img src="img/dfgLogo.png" style="display:inline-block"> Elternsprechtag DFG</a>
+                <img src="img/logo.png" style="display:inline-block"> Elternsprechtag
+                <?php echo Config::$SCHOOL_NAME ?></a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
 

@@ -1,7 +1,7 @@
-# SpeechDay
+# Reunion
 
-This project can be used to easily and effectively hold a speechday (a parent-teacher-meeting) in your school.
-The administrator can import data for teachers and students and create a speechday-event.
+This project can be used to easily and effectively hold a parent-teacher-reunion in your school.
+The administrator can import data for teachers and students and create a reunion.
 The newsletter filled with the needed access data so that parents can log in and book their desired time slots for the teachers they want to meet can then be created automatically.
 
 ## Installation
@@ -16,10 +16,11 @@ Be aware that the UI is in german.
 
 As an administrator:
 
+0. Upload the logo of your school to img/logo.png on your server (by default, this is the logo of the DFG Freiburg)
 1. Import teachers via a CSV file.
 2. Import student data via a CSV file.
 3. Upload a newsletter template in ODT format.
-4. Create a speechday-event.
+4. Create a reunion.
 5. Create the newsletter and distribute it among the students / parents.
 
 As a teacher (optional):
@@ -32,9 +33,9 @@ As a student / parent:
 2. Book the desired slots for the desired teacher.
 3. Print your time-table.
 
-## Online Speech day
+## Online Reunion
 
-We added support to hold the speech day online. When you create a new speech day event you can now specify a base URL for a video conferencing service. (E.g. https://meet.jit.si)
+We added support to hold the reunion online. When you create a new reunion you can now specify a base URL for a video conferencing service. (E.g. https://meet.jit.si)
 Teachers and students will find an individal link for each booked slot, where they can meet online.
 
 ## Development
@@ -42,15 +43,15 @@ Teachers and students will find an individal link for each booked slot, where th
 You need to have Docker and Docker Compose installed. Then, run the commands
 
 ```
-# Copy SMTP config
-cp code/email.php_TEMPLATE code/email.php
+# Copy app config from template
+cp code/config.php_TEMPLATE code/config.php
 
 # Create (first time only) and run docker containers
 cd Docker
 docker-compose up -d
 ```
 
-You can then visit your speechday instance at http://localhost
+You can then visit your reunion instance at http://localhost
 
 The code is mounted into the php-fpm docker container, so all code changes are reflected immediately.
 
