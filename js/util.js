@@ -42,6 +42,6 @@ function showConfirmationModal({ title, content, confirmationCaption, onConfirm 
   $("#confirmationTitle").html(title);
   $("#confirmationContent").html(content);
   $("#confirmationButton").html(confirmationCaption);
-  $("#confirmationButton").click(onConfirm);
+  $("#confirmationButton").off("click").on("click", onConfirm);
   $("#confirmationDialog").modal("show");
 }

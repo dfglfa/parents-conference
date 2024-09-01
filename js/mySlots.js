@@ -40,7 +40,8 @@ $(document).on("click", ".btn-delete", function (event) {
 
   showConfirmationModal({
     title: "Stornierung bestätigen",
-    content: "Soll der Termin wirklich storniert werden?<br><br>Die Lehrkraft wird per E-Mail informiert.",
+    content:
+      "<strong>Soll der Termin wirklich storniert werden?</strong><br><br>Die Lehrkraft wird per E-Mail informiert.",
     confirmationCaption: "Ja, stornieren",
     onConfirm: onDelete,
   });
