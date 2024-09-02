@@ -1,20 +1,16 @@
 <?php
 
-// This class contains application-wide config values.
+// This file contains application-wide config values.
 // Insert the appropriate values for your environment here.
 // By default the values correspond to the Docker-based dev setup.
 
-class Config
-{
-    // Email settings
-    public static $SMTP_HOST = "mailcatcher";
-    public static $SMTP_PORT = 1025;
-    public static $SMTP_LOGIN = "";
-    public static $SMTP_FROM = "admin@yourdomain.net";
-    public static $SMTP_PWD = "";
-    public static $SMTP_AUTH = false; // Set to true for prod
+// Email settings
+$SMTP_HOST = "mailcatcher";
+$SMTP_PORT = 1025;
+$SMTP_LOGIN = "";
+$SMTP_FROM = "admin@yourdomain.net";
+$SMTP_PWD = "";
+$SMTP_AUTH = false; // Set to true for prod
 
-    // School settings
-    public static $SCHOOL_NAME = "Gymnasium";
-}
-?>
+// School settings
+$SCHOOL_NAME = "Gymnasium";

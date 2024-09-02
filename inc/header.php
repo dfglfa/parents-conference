@@ -31,9 +31,6 @@ $user = AuthenticationManager::getAuthenticatedUser();
     <link href='css/style.css' rel='stylesheet'>
 
     <script type='text/javascript' src='js/jquery-1.11.3-jquery.min.js'></script>
-
-    <!-- favicon -->
-    <?php include_once('inc/favicons.php') ?>
 </head>
 
 <body>

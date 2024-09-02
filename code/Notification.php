@@ -1,6 +1,6 @@
 <?php
-require_once('Util.php');
 require_once('config.php');
+require_once('Util.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -131,15 +131,16 @@ function sendUserConnectionInfo($userId1, $userId2)
         return;
     }
 
+    global $SMTP_FROM;
     $emailTemplate = "<div> " .
         "<p>Guten Tag " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
         "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . " hat Dich beim Elternsprechtag als Bruder/Schwester angegeben.<p>" .
-        "<p>Eure Benutzer sind ab jetzt verknüpft. Falls das nicht korrekt ist, melde Dich bitte bei <a href='mailto:" . Config::$SMTP_FROM . "'>" . Config::$SMTP_FROM . "</a>" .
+        "<p>Eure Benutzer sind ab jetzt verknüpft. Falls das nicht korrekt ist, melde Dich bitte bei <a href='mailto:" . $SMTP_FROM . "'>" . $SMTP_FROM . "</a>" .
         "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
         "<br/>---------------------------------<br/>" .
         "<p>Bonjour " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
         "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . "  t'a déclaré comme frère/sœur lors de la réunion parents-professeurs.<p>" .
-        "<p>Vos comptes utilisateurs sont maintenant liés. Si cela n'est pas correct, merci de contacter <a href='mailto:" . Config::$SMTP_FROM . "'>" . Config::$SMTP_FROM . "</a>" .
+        "<p>Vos comptes utilisateurs sont maintenant liés. Si cela n'est pas correct, merci de contacter <a href='mailto:" . $SMTP_FROM . "'>" . $SMTP_FROM . "</a>" .
         "<div>Cordialement, <br> Les admins</div>";
 
     sendMail($user2->getEmail(), "Elternsprechtag: Konten verknüpft / Liens des comptes", $emailTemplate);
@@ -149,23 +150,24 @@ function sendUserConnectionInfo($userId1, $userId2)
 function sendMail($to, $subject, $body)
 {
     $mail = new PHPMailer(true);
+    global $SMTP_FROM, $SMTP_HOST, $SMTP_PORT, $SMTP_AUTH, $SMTP_LOGIN, $SMTP_PWD;
 
     try {
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
-        $mail->Host = Config::$SMTP_HOST;
-        $mail->Username = Config::$SMTP_LOGIN;
-        $mail->Password = Config::$SMTP_PWD;
-        $mail->Port = Config::$SMTP_PORT;
+        $mail->Host = $SMTP_HOST;
+        $mail->Username = $SMTP_LOGIN;
+        $mail->Password = $SMTP_PWD;
+        $mail->Port = $SMTP_PORT;
         $mail->CharSet = "UTF-8";
 
-        if (Config::$SMTP_AUTH) {
+        if ($SMTP_AUTH) {
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         }
 
         //Recipients
-        $mail->setFrom(Config::$SMTP_FROM);
+        $mail->setFrom($SMTP_FROM);
         $mail->addAddress($to);
 
         //Content

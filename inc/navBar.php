@@ -10,7 +10,7 @@
             </button>
             <a class='navbar-brand' href='redirectUser.php'>
                 <img src="img/logo.png" style="display:inline-block"> Elternsprechtag
-                <?php echo Config::$SCHOOL_NAME ?></a>
+                <?php echo $SCHOOL_NAME ?></a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
 

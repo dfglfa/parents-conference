@@ -988,8 +988,7 @@ class ViewController extends Controller
 
                         <div>Falls Du Schwierigkeiten bei der Verknüpfung hast oder Deine Geschwister hier nicht findest, melde
                             Dich
-                            gerne per Mail an <a
-                                href="mailto:<?php echo Config::$SMTP_FROM ?>"><?php echo Config::$SMTP_FROM ?></a></div>
+                            gerne per Mail an <a href="mailto:<?php echo $SMTP_FROM ?>"><?php echo $SMTP_FROM ?></a></div>
                         <?php
     }
 

@@ -6,6 +6,7 @@ require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
 require_once('dao/MessageDAO.php');
+require_once('config.php');
 require_once('Notification.php');
 
 class Controller
