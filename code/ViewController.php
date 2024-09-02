@@ -938,6 +938,7 @@ class ViewController extends Controller
 
     public function action_getSiblingsForm()
     {
+        global $SMTP_FROM;
         $user = AuthenticationManager::getAuthenticatedUser();
         $alreadyLinkedUserIds = array_map(function ($user) {
             return $user->getId();
