@@ -65,9 +65,12 @@ function updateUploadInfos() {
   if (selectedType == "newsletter") {
     allowedFileTypes.html("Es sind nur ODT Dateien erlaubt.");
     uploadDialog.attr("accept", ".odt");
-  } else {
+  } else if (["teacher", "student"].indexOf(selectedType) > -1) {
     allowedFileTypes.html("Es sind nur CSV Dateien erlaubt.");
     uploadDialog.attr("accept", ".csv");
+  } else if (selectedType === "logo") {
+    allowedFileTypes.html("Es sind nur PNG-Dateien erlaubt.");
+    uploadDialog.attr("accept", ".png");
   }
 
   $("#templateDownloadAlertContainer").load("viewController.php?action=templateDownloadAlert&type=" + selectedType);
@@ -147,7 +150,7 @@ $(document).on("click", "#btn-upload-file", function (event) {
     var uploadType = postData[0].value;
     data.append("uploadType", uploadType);
 
-    var successMessage = "Die Rundbrief-Vorlage wurde erfolgreich hochgeladen!";
+    var successMessage = "Die Datei wurde erfolgreich hochgeladen!";
     if (uploadType == "teacher") {
       successMessage = "Die Lehrer wurden erfolgreich importiert!";
       if (

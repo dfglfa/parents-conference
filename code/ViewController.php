@@ -799,7 +799,6 @@ class ViewController extends Controller
                 break;
 
             case 'newsletter':
-            default:
                 $typeText = 'Rundbrief Vorlage (ODT)';
                 $mimeType = 'application/vnd.oasis.opendocument.text';
                 $filePath = 'templates/newsletter_template.odt';
@@ -817,13 +816,18 @@ class ViewController extends Controller
                         <li>ESPASSWORD (Passwort des Schülers)</li>
                     </ul>
                     </p>';
+                break;
+            default:
+                $typeText = '';
+                $mimeType = 'image/png';
+                $filePath = '';
+                $infos = 'Das Logo wird auf 30px Höhe herunterskaliert.';
         }
 
         ?>
                         <div class='alert alert-info'>
                             <button type='button' class='close' data-dismiss='alert'>&times;</button>
                             <h4>Tipp!</h4>
-                            <p><b>Vorlage herunterladen:</b></p>
                             <a href='<?php echo ($filePath) ?>' type='<?php echo ($mimeType) ?>' download>
                                 <?php echo escape($typeText); ?>
                             </a>

@@ -145,6 +145,14 @@ class Controller
                         echo 'success';
                         return;
 
+                    } else if ($type == 'logo') {
+                        if (!$this->validateFileExtension($ext, array('png'))) {
+                            echo 'Ungültiges Dateiformat!';
+                            return;
+                        }
+                        $this->uploadFileAs('logo.png', $tmpName);
+                        echo 'success';
+                        return;
                     } else {
                         echo 'Ungültiger Typ!';
                         return;

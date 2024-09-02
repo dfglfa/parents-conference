@@ -188,13 +188,14 @@ include_once 'inc/header.php';
                                 <option value='student'>Schüler</option>
                                 <!-- <option value='subject'>Fächer</option> -->
                                 <option value='newsletter'>Rundbrief</option>
+                                <option value='logo'>Schul-Logo</option>
                             </select>
                         </div>
 
                         <div class='form-group'>
                             <label class='control-label'>Datei auswählen</label>
                             <input id='input-file' type='file' name='file' class='file' data-show-preview='false'
-                                accept='.csv,.odt'>
+                                accept='.csv,.odt,.png'>
                             <p id="allowed-file-types" class='help-block'>Es sind nur CSV Dateien erlaubt.</p>
 
                             <div id='templateDownloadAlertContainer'></div>

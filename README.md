@@ -16,7 +16,7 @@ Be aware that the UI is in german.
 
 As an administrator:
 
-0. Upload the logo of your school to img/logo.png on your server (by default, this is the logo of the DFG Freiburg)
+0. Upload the logo of your school
 1. Import teachers via a CSV file.
 2. Import student data via a CSV file.
 3. Upload a newsletter template in ODT format.
