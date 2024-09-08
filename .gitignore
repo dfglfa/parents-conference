@@ -1,8 +1,9 @@
 .idea/*
-/uploads/newsletter.odt
-/uploads/newsletter_filled.odt
-/uploads/Teachers.csv
-/uploads/Students.csv
+uploads/newsletter.odt
+uploads/newsletter_filled.odt
+uploads/Teachers.csv
+uploads/Students.csv
+uploads/logo.png
 sync.sh
 .vscode
 config.php

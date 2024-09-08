@@ -9,7 +9,9 @@
                 <span class='icon-bar'></span>
             </button>
             <a class='navbar-brand' href='redirectUser.php'>
-                <img src="uploads/logo.png" style="display:inline-block; height: 30px; margin-top: -5px">
+                <?php if (file_exists("uploads/logo.png")): ?>
+                    <img src="uploads/logo.png" style="display:inline-block; height: 30px; margin-top: -5px">
+                <?php endif ?>
                 Elternsprechtag
                 <?php echo $SCHOOL_NAME ?></a>
         </div>

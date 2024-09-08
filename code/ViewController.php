@@ -956,46 +956,23 @@ class ViewController extends Controller
     {
         global $SMTP_FROM;
         $user = AuthenticationManager::getAuthenticatedUser();
-        $alreadyLinkedUserIds = array_map(function ($user) {
-            return $user->getId();
-        }, UserDAO::getConnectedUsersForUserId($user->getId()));
-        $sameLastName = UserDAO::getPossibleSiblings($user->getId(), $user->getLastName());
+        $alreadyLinkedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
         ?>
-                        <div>Hier kannst Du die Konten Deiner Geschwister verknüpfen, um Dir die Planung einfacher zu machen.
+                        <div>Hier siehst Du, welche anderen Benutzer als Deine Geschwister eingetragen sind.
                         </div>
-                        <br />
-                        <div>Da die Vorschläge nur über den Nachnamen laufen, kann es vorkommen, dass hier Personen gelistet
-                            werden, die
-                            gar nicht mit Dir verwandt sind. <br />Mit nicht verwandten Personen sollst Du natürlich keine
-                            Verknüpfung
-                            herstellen.</div>
-                        <br />
-                        <div class="mt-3">
-                            <strong>
-                                Die andere Person wird per E-Mail informiert, dass Du sie verknüpft hast.
-                            </strong>
-                        </div>
-                        <?php if (count($sameLastName) == 0 && count($alreadyLinkedUserIds) == 0): ?>
-                            <h4>Es wurden keine anderen Personen mit Deinem Nachnamen gefunden.</h4>
+                        <?php if (count($alreadyLinkedUsers) == 0): ?>
+                            <h4>Für Dich sind keine Geschwister eingetragen.</h4>
                         <?php else: ?>
                             <div class="siblingsForm">
                                 <table class="table">
-                                    <?php foreach ($sameLastName as $sln): ?>
+                                    <?php foreach ($alreadyLinkedUsers as $linkedUser): ?>
                                         <tr>
                                             <td>
-                                                <strong><?php echo $sln->getFirstName() . " " . $sln->getLastName() ?></strong>
+                                                <strong><?php echo $linkedUser->getFirstName() . " " . $linkedUser->getLastName() ?></strong>
                                             </td>
                                             <td>
-                                                <?php if (in_array($sln->getId(), $alreadyLinkedUserIds)): ?>
-                                                    <strong class="text-success"><span class="glyphicon glyphicon-check"></span> bereits
-                                                        verknüpft</strong>
-                                                <?php else: ?>
-                                                    <button id="link_<?php echo $sln->getId() ?>"
-                                                        data-studentid="<?php echo $sln->getId() ?>"
-                                                        class="btn btn-primary linkStudentBtn"><span
-                                                            class="glyphicon glyphicon-link"></span>
-                                                        verknüpfen</button>
-                                                <?php endif ?>
+                                                <strong class="text-success"><span class="glyphicon glyphicon-check"></span> bereits
+                                                    verknüpft</strong>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -1003,8 +980,7 @@ class ViewController extends Controller
                             </div>
                         <?php endif ?>
 
-                        <div>Falls Du Schwierigkeiten bei der Verknüpfung hast oder Deine Geschwister hier nicht findest, melde
-                            Dich
+                        <div>Falls Du Deine Geschwister hier nicht findest oder ein Problem bemerkst, melde Dich
                             gerne per Mail an <a href="mailto:<?php echo $SMTP_FROM ?>"><?php echo $SMTP_FROM ?></a></div>
                         <?php
     }
@@ -1084,14 +1060,5 @@ class ViewController extends Controller
                                     id="userconnectionAction">verknüpfen</button> </div>
                         <?php endif ?>
                         <?php
-    }
-
-    public function action_getConnectedUsersInfo()
-    {
-        $user = AuthenticationManager::getAuthenticatedUser();
-        $connUsers = UserDAO::getConnectedUsersForUserId($user->getId());
-        $siblings = UserDAO::getPossibleSiblings($user->getId(), $user->getLastName());
-
-        echo json_encode(count($siblings) > 0 && count($connUsers) == 0);
     }
 }
