@@ -380,4 +380,10 @@ class UserDAO extends AbstractDAO
 
         return self::query($con, 'DELETE FROM user WHERE id = ?', array($userId), true)['success'];
     }
+
+    public static function deleteAllConnections()
+    {
+        $con = self::getConnection();
+        return self::query($con, 'DELETE FROM userconnection', array(), true)['success'];
+    }
 }

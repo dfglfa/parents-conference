@@ -298,7 +298,7 @@ class Controller
                     if ($roomNumber != '' && $roomName != '') {
                         $rooms[$userName] = array($roomNumber, $roomName);
                     }
-                } else {
+                } elseif ($role == 'student') {
                     $userName = trim($row[4]);
 
                     $tries = 0;
@@ -318,21 +318,25 @@ class Controller
                     $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
                     $accessData[] = array($userName, $password);
+                } else {
+                    return array(
+                        'success' => false,
+                        'message' => 'Unbekannter Typ "' . $role . '"'
+                    );
                 }
 
                 $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $email, $class, $role, $title);
             }
         }
 
-        $deleteUserSuccess = UserDAO::deleteUsersByRole($role);
-        $deleteEventSuccess = true;
-        $deleteRoomSuccess = true;
+        $deleteExistingDataSuccess = UserDAO::deleteUsersByRole($role);
         if ($role == 'teacher') {
-            $deleteEventSuccess = EventDAO::deleteAllEvents();
-            $deleteRoomSuccess = RoomDAO::deleteAllRooms();
+            $deleteExistingDataSuccess = $deleteExistingDataSuccess && EventDAO::deleteAllEvents() && RoomDAO::deleteAllRooms();
+        } elseif ($role == 'student') {
+            $deleteExistingDataSuccess = $deleteExistingDataSuccess && UserDAO::deleteAllConnections();
         }
 
-        if (!$deleteUserSuccess || !$deleteEventSuccess || !$deleteRoomSuccess) {
+        if (!$deleteExistingDataSuccess) {
             fclose($fp);
             return array(
                 'success' => false,
