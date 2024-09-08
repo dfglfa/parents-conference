@@ -765,15 +765,27 @@ class ViewController extends Controller
                     <p>
                     Ein Datensatz muss folgende Elemente besitzen:
                     <br>
-                    Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort
+                    Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort;Geschwister
                     <br><br>
-                    Trennzeichen muss der Strichpunkt sein. Benutzername und Passwort sind optional.
+                    Trennzeichen muss der Strichpunkt sein!. Benutzername, Passwort und Geschwister können leer gelassen werden.
+                    <br><br>
+                    Um ein Geschwisterkind zu verknüpfen, muss der Name des Kindes in der letzten Spalte in der Form NACHNAME, VORNAME angegeben werden.
+                    Die Schreibweise des Namens muss exakt übereinstimmen.
+                    <br><br>
+                    Es genügt, ein Geschwisterkind
+                    anzugeben, damit die Verknüpfung zwischen allen Geschwistern erkannt wird. 
                     <br><br>
                     Beispiele:
                     <ul>
-                        <li>Angelika;Albers;angie@albers.net;8B;;</li>
-                        <li>Britta;Bäcker;britta@baecker.de;1D;baecker1;password1</li>
+                        <li>Eric;Ellinger;ee@foo.de;4A;ellingere;1234567;</li>
+                        <li>Franziska;Fürst;ff@foo.de;6A;fuerstf;1234567;</li>
+                        <li>Peter;Müller;pm@foo.de;11A;muellerp;1234567;Müller,Anna</li>
+                        <li>Anna;Müller;am@foo.de;8A;muellera;1234567;Müller,Peter</li>
+                        <li>Hertha;Müller;hm@foo.de;6A;muellerh;1234567;Müller,Peter</li>
                     </ul>
+                    <br>
+                    Hier sind drei Kinder mit Nachnamen Müller miteinander als Geschwister verknüpft. Am einfachsten ist es, wenn alle Geschwister außer dem ersten
+                    den Namen des ersten als Geschwister angeben (sternförmiger Graph). 
                     </p>';
                 break;
 
@@ -813,7 +825,7 @@ class ViewController extends Controller
                         <li>ESLASTNAME (Nachname des Schülers)</li>
                         <li>ESCLASS (Klasse des Schülers)</li>
                         <li>ESUSERNAME (Benutzername des Schülers)</li>
-                        <li>ESPASSWORD (Passwort des Schülers)</li>
+                        <li>ES1234567 (Passwort des Schülers)</li>
                     </ul>
                     </p>';
                 break;

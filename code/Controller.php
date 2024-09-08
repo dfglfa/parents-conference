@@ -193,7 +193,7 @@ class Controller
     private function checkCSVHeader($type, $row)
     {
         $constraints['teacher'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
-        $constraints['student'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort');
+        $constraints['student'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Geschwister');
         $constraints['subject'] = array('ToDo');
 
         $constraintPart = implode('', $constraints[$type]);
@@ -253,6 +253,7 @@ class Controller
         $accessData = array();
         $rooms = array();
         $userNames = array();
+        $userConnections = array();
 
         $duplicateUserError = array(
             'success' => false,
@@ -317,6 +318,11 @@ class Controller
 
                     $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
+                    if (trim($row[6] != '')) {
+                        //error_log("Found sibling " . $row[6] . " of username " . $userName);
+                        $userConnections[$userName] = trim($row[6]);
+                    }
+
                     $accessData[] = array($userName, $password);
                 } else {
                     return array(
@@ -347,6 +353,10 @@ class Controller
         UserDAO::bulkInsertUsers($users, $rooms);
         if (count($accessData) > 0) {
             UserDAO::bulkInsertAccessData($accessData);
+        }
+
+        if ($role == 'student') {
+            UserDAO::bulkConnectUsers($userConnections);
         }
 
         fclose($fp);

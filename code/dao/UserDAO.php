@@ -158,6 +158,52 @@ class UserDAO extends AbstractDAO
         self::close($res);
     }
 
+    public static function bulkConnectUsers($userConnections)
+    {
+        $con = self::getConnection();
+        foreach ($userConnections as $userName => $fullName) {
+            $res = self::query(
+                $con,
+                "SELECT id
+                FROM user
+                WHERE userName = ?",
+                [$userName]
+            );
+
+            $user1Rows = self::fetchObject($res);
+            if ($user1Rows) {
+                $userId1 = $user1Rows->id;
+                error_log("Found user " . $userId1 . " for username " . $userName);
+            }
+
+            $nameParts = explode(",", $fullName);
+            $res = self::query(
+                $con,
+                "SELECT id
+                FROM user
+                WHERE firstName = ? AND lastName = ?",
+                [trim($nameParts[1]), trim($nameParts[0])]
+            );
+
+            $user2Rows = [];
+            while ($row = self::fetchObject($res)) {
+                $user2Rows[] = $row;
+            }
+
+            if (count($user2Rows) == 1) {
+                $userId2 = $user2Rows[0]->id;
+                try {
+                    UserDAO::connectUsers($userId1, $userId2);
+                } catch (Exception $exception) {
+                    error_log("Could not connect " . $userId1 . " and " . $userId2 . ":" . $exception);
+                }
+            } else {
+                error_log("Illegal number of matches for user fullname " . $fullName . " with name parts '" . $nameParts[0] . "' and '" . $nameParts[1] . "' (found " . count($user2Rows) . " matches) - skipping!");
+                continue;
+            }
+        }
+    }
+
     public static function disconnectUsers($userId1, $userId2)
     {
         $con = self::getConnection();
