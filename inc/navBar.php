@@ -42,9 +42,6 @@
                     </a>
                     <ul class='dropdown-menu'>
                         <li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Benutzerprofil</a></li>
-                        <?php if ($user->getRole() === 'student'): ?>
-                            <li><a href='siblings.php'><span class='glyphicon glyphicon-link'></span> Geschwister</a></li>
-                        <?php endif ?>
                         <li><a href='code/actions/logout.php'><span class='glyphicon glyphicon-log-out'></span>
                                 Ausloggen</a>
                         </li>

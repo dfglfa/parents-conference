@@ -98,22 +98,23 @@ class ViewController extends Controller
             return;
         }
 
-        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
-        $quotaExceeded = $bookingQuota != -1 && $bookingQuota - count($bookedSlots) <= 0;
-
         // Fetch user data and booked slots for connected accounts, if any
         $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
         $bookedSlotsForConnectedUser = [];
+        $bookedSlotsCount = count($bookedSlots);
         foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
             $teacherNotYetBooked = $teacherNotYetBooked && !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlotsForConnectedUser[$cUser->getId()]);
+            $bookedSlotsCount += count($bookedSlotsForConnectedUser[$cUser->getId()]);
         }
+
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime() * (count($connectedUsers) + 1);
+        $quotaExceeded = $bookingQuota != -1 && $bookingQuota - $bookedSlotsCount <= 0;
 
         $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
         ?>
                 <h3>Zeitplan von <?php echo $teacherFullName ?></h3>
-
                 <?php if ($room != null): ?>
                     <h4>Raum: <?php echo (escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
                 <?php endif; ?>
@@ -203,16 +204,22 @@ class ViewController extends Controller
     {
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
-        $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
-        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
-        $remainingQuota = $bookingQuota - count($bookedSlots);
+        $bookedSlotsCount = count(SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId()));
+
+        $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
+        foreach ($connectedUsers as $cUser) {
+            $bookedSlotsCount += count(SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId()));
+        }
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime() * (count($connectedUsers) + 1);
+        $remainingQuota = $bookingQuota - $bookedSlotsCount;
+
         ?>
                         <?php if ($bookingQuota != -1):
                             $date = new DateTime();
                             $date->setTimestamp($activeEvent->getStartPostDate());
                             $timezone = new DateTimeZone('Europe/Berlin');
                             $date->setTimezone($timezone);
-                            $hour = $date->format('H');
+                            $hour = $date->format('G');
                             ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
@@ -228,7 +235,8 @@ class ViewController extends Controller
                                 <?php endif; ?>
 
                                 <div class="text-info" style="font-size: 12pt">
-                                    Täglich um <?php echo $hour ?> Uhr werden <?php echo $activeEvent->getThrottleQuota() ?> weitere
+                                    Täglich um <?php echo $hour ?> Uhr werden für jeden Schüler
+                                    <?php echo $activeEvent->getThrottleQuota() ?> weitere
                                     Buchungen ermöglicht.
                                 </div>
                             </div>
@@ -952,17 +960,22 @@ class ViewController extends Controller
                         <?php
     }
 
-    public function action_getSiblingsForm()
+    public function action_getSiblingsList()
     {
         global $SMTP_FROM;
         $user = AuthenticationManager::getAuthenticatedUser();
+
+        if ($user->getRole() != "student") {
+            return;
+        }
+
         $alreadyLinkedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
         ?>
-                        <div>Hier siehst Du, welche anderen Benutzer als Deine Geschwister eingetragen sind.
-                        </div>
                         <?php if (count($alreadyLinkedUsers) == 0): ?>
                             <h4>Für Dich sind keine Geschwister eingetragen.</h4>
                         <?php else: ?>
+                            <div>Folgende Benutzer sind als Deine Geschwister eingetragen:
+                            </div>
                             <div class="siblingsForm">
                                 <table class="table">
                                     <?php foreach ($alreadyLinkedUsers as $linkedUser): ?>
@@ -971,7 +984,7 @@ class ViewController extends Controller
                                                 <strong><?php echo $linkedUser->getFirstName() . " " . $linkedUser->getLastName() ?></strong>
                                             </td>
                                             <td>
-                                                <strong class="text-success"><span class="glyphicon glyphicon-check"></span> bereits
+                                                <strong class="text-success"><span class="glyphicon glyphicon-check"></span>
                                                     verknüpft</strong>
                                             </td>
                                         </tr>
@@ -980,8 +993,8 @@ class ViewController extends Controller
                             </div>
                         <?php endif ?>
 
-                        <div>Falls Du Deine Geschwister hier nicht findest oder ein Problem bemerkst, melde Dich
-                            gerne per Mail an <a href="mailto:<?php echo $SMTP_FROM ?>"><?php echo $SMTP_FROM ?></a></div>
+                        <div>Falls Du Deine Geschwister hier nicht findest oder eine falsche Verknüpfung bemerkst, melde Dich
+                            bitte per Mail an <a href="mailto:<?php echo $SMTP_FROM ?>"><?php echo $SMTP_FROM ?></a></div>
                         <?php
     }
 

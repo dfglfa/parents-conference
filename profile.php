@@ -3,7 +3,8 @@
 <?php
 $user = AuthenticationManager::getAuthenticatedUser();
 
-function getRoleInGerman($role){
+function getRoleInGerman($role)
+{
     switch ($role) {
         case 'admin':
             return 'Administrator';
@@ -44,7 +45,16 @@ function getRoleInGerman($role){
             <td><?php echo escape(getRoleInGerman($user->getRole())); ?></td>
         </tr>
     </table>
+
+    <?php if ($user->getRole() == "student"): ?>
+        <script type='text/javascript' src='js/siblings.js'></script>
+
+        <div>
+            <h1>Geschwister</h1>
+
+            <div id='siblingsList'></div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
-
