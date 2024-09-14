@@ -266,7 +266,8 @@ include_once 'inc/header.php';
 
                     <div class='message' id='changeTimeMessage'></div>
 
-                    <div style="margin-top: 20px" id="all-attendances"></div>
+                    <div style="margin: 20px 0" id="all-attendances"></div>
+                    <button onclick="PrintElem('#all-attendances', 'Anwesenheiten')">Anwesenheiten drucken</button>
                 </div>
             </div>
         </div>
