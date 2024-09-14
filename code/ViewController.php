@@ -864,6 +864,17 @@ class ViewController extends Controller
         return $this->getAttendance($user, $event);
     }
 
+    public function action_allAttendances()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $event = EventDAO::getActiveEvent();
+        return $this->getAllAttendances($event);
+    }
+
     public function action_attendanceParametrized()
     {
         $userId = $_REQUEST['userId'];
@@ -898,6 +909,58 @@ class ViewController extends Controller
 
         echo $output . '<br><br>';
         return $attendance;
+    }
+    private function getAllAttendances($event)
+    {
+        $attendances = SlotDAO::getAttendanceForAllTeachers($event);
+        $middleIndex = ceil(count($attendances) / 2);
+        $isOdd = count($attendances) % 2 == 1;
+
+        $leftColumn = array_slice($attendances, 0, $middleIndex);
+        $rightColumn = array_slice($attendances, $middleIndex);
+
+        ?>
+                        <table>
+                            <th>Lehrkraft</th>
+                            <th>Anwesenheit</th>
+                            <th class="secondColumnStart">Lehrkraft</th>
+                            <th>Anwesenheit</th>
+                            <?php for ($i = 0; $i < $middleIndex - 1; $i++):
+                                $left = $leftColumn[$i];
+                                $right = $rightColumn[$i];
+                                ?>
+                                <tr>
+                                    <td><?php echo $left['lastName'] ?>, <?php echo $left['firstName'] ?></td>
+                                    <td>
+                                        <?php echo toDate($left['from'], 'H:i') ?>
+                                        - <?php echo toDate($left['to'], 'H:i') ?>
+                                        Uhr
+                                    </td>
+                                    <td class="secondColumnStart">
+                                        <?php echo $right['lastName'] ?>, <?php echo $right['firstName'] ?>
+                                    </td>
+                                    <td>
+                                        <?php echo toDate($right['from'], 'H:i') ?>
+                                        - <?php echo toDate($right['to'], 'H:i') ?>
+                                        Uhr
+                                    </td>
+                                </tr>
+                            <?php endfor ?>
+                            <?php if ($isOdd):
+                                $lastEntry = $attendances[$middleIndex - 1]; ?>
+                                <tr>
+                                    <td><?php echo $lastEntry['lastName'] ?>, <?php echo $lastEntry['firstName'] ?></td>
+                                    <td>
+                                        <?php echo toDate($lastEntry['from'], 'H:i') ?>
+                                        - <?php echo toDate($lastEntry['to'], 'H:i') ?>
+                                        Uhr
+                                    </td>
+                                    <td class="secondColumnStart"></td>
+                                    <td></td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                        <?php
     }
 
     public function action_changeAttendance()
@@ -993,7 +1056,8 @@ class ViewController extends Controller
                             </div>
                         <?php endif ?>
 
-                        <div>Falls Du Deine Geschwister hier nicht findest oder eine falsche Verknüpfung bemerkst, melde Dich
+                        <div>Falls Du Deine Geschwister hier nicht findest oder eine falsche Verknüpfung bemerkst, melde
+                            Dich
                             bitte per Mail an <a href="mailto:<?php echo $SMTP_FROM ?>"><?php echo $SMTP_FROM ?></a></div>
                         <?php
     }

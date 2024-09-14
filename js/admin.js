@@ -3,6 +3,7 @@ $(document).ready(function () {
   displayActiveEvent();
   updateUploadInfos();
   loadConnectedUsersForm();
+  loadAllAttendances();
 
   $(document).on("click", "#btn-create-event", function () {
     validateForm();
@@ -639,6 +640,7 @@ $(document).on("click", "#btn-change-attendance", function () {
           );
 
           showMessage(message, "success", "Die Anwesenheit wurde erfolgreich geändert!");
+          loadAllAttendances();
         } else {
           showMessage(message, "danger", "Die Anwesenheit konnte nicht geändert werden!");
         }
@@ -652,3 +654,18 @@ $(document).on("click", "#btn-change-attendance", function () {
 
   return true;
 });
+
+function loadAllAttendances() {
+  const section = $("#all-attendances");
+  $.ajax({
+    url: "viewController.php?action=allAttendances",
+    type: "GET",
+    dataType: "html",
+    success: (data) => {
+      section.html(data);
+    },
+    error: () => {
+      section.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
+    },
+  });
+}

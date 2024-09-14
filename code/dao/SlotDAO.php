@@ -73,6 +73,36 @@ class SlotDAO extends AbstractDAO
         return $attendance;
     }
 
+    public static function getAttendanceForAllTeachers($event)
+    {
+        if ($event == null) {
+            return null;
+        }
+
+        $attendances = array();
+        $con = self::getConnection();
+        $res = self::query($con, 'SELECT firstName, lastName, MIN(dateFrom) AS `from`, MAX(dateTo) AS `to` 
+                                                     FROM slot 
+                                                     INNER JOIN user on slot.teacherId = user.id
+                                                     WHERE eventId = ? AND available = 1 
+                                                     GROUP BY teacherId
+                                                     ORDER BY lastName;', array($event->getId()));
+
+        while ($a = self::fetchObject($res)) {
+            $attendances[] = array(
+                'firstName' => $a->firstName,
+                'lastName' => $a->lastName,
+                'date' => $event->getDateFrom(),
+                'from' => $a->from,
+                'to' => $a->to,
+                'eventId' => $event->getId()
+            );
+        }
+        self::close($res);
+
+        return $attendances;
+    }
+
     public static function calculateSlots($event, $asDummy = false)
     {
         $slots = array();

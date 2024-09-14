@@ -265,6 +265,8 @@ include_once 'inc/header.php';
                     <div id="changeAttendanceTime"></div>
 
                     <div class='message' id='changeTimeMessage'></div>
+
+                    <div style="margin-top: 20px" id="all-attendances"></div>
                 </div>
             </div>
         </div>
