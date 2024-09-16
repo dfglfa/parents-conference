@@ -170,6 +170,7 @@ $(document).on("click", "#btn-upload-file", function (event) {
       }
     }
 
+    $("#btn-upload-file").attr("disabled", true).text("Import läuft ...");
     var formURL = "controller.php";
     $.ajax({
       url: formURL,
@@ -179,6 +180,7 @@ $(document).on("click", "#btn-upload-file", function (event) {
       processData: false,
       type: "POST",
       success: function (data, textStatus, jqXHR) {
+        $("#btn-upload-file").attr("disabled", false).text("Importieren");
         if (data.indexOf("success") > -1) {
           showMessage(message, "success", successMessage);
           if ($.inArray(uploadType, ["teacher", "student"]) > -1) {
@@ -194,6 +196,7 @@ $(document).on("click", "#btn-upload-file", function (event) {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
+        $("#btn-upload-file").attr("disabled", false).text("Importieren");
         showMessage(message, "danger", data);
       },
     });

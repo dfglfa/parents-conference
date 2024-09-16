@@ -1,14 +1,201 @@
 Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort;Geschwister
-Angelika;Albers;aa@foo.de;8B;albersa;password;
-Britta;Bäcker;bb@foo.de;1D;baeckerb;password;
-Charlotte;Correns;cc@foo.de;1C;corrensc;password;
-Dennis;Decker;dd@foo.de;8A;deckerd;password;
-Eric;Ellinger;ee@foo.de;4A;ellingere;password;
-Franziska;Fürst;ff@foo.de;6A;fuerstf;password;
-Peter;Müller;pm@foo.de;11A;muellerp;password;Müller,Anna
-Anna;Müller;am@foo.de;8A;muellera;password;Müller,Peter
-Hertha;Müller;hm@foo.de;6A;muellerh;password;Müller,Peter
-Gerda;von Hausen;gvh@foo.de;10A;vonhauseng;password;
-Ulla;Von Hausen;uvh@foo.de;6A;vonhausenu;password;von Hausen, Gerda
-Hans;Meier Hansen;hmh@foo.de;11A;meierhansenh;password;
-Ella;Meier-Hansen;emh@foo.de;6A;meierhansene;password;Meier Hansen, Hans
+Paul;Barragán;paul.barragán@school.net;8b;paul.barragán;password;
+Sophie;Águila;sophie.águila@school.net;10a;sophie.águila;password;
+Paul;Kastner;paul.kastner@school.net;6c;paul.kastner;password;
+Max;Olivares;max.olivares@school.net;12c;max.olivares;password;
+David;Pujol;david.pujol@school.net;10b;david.pujol;password;
+Uwe;Lachapelle;uwe.lachapelle@school.net;6a;uwe.lachapelle;password;
+Greta;Orozco;greta.orozco@school.net;9c;greta.orozco;password;
+Zoe;Yturralde;zoe.yturralde@school.net;9c;zoe.yturralde;password;
+Uwe;Téllez;uwe.téllez@school.net;10c;uwe.téllez;password;
+David;Ríos;david.ríos@school.net;7a;david.ríos;password;
+Clara;Weinstein;clara.weinstein@school.net;8b;clara.weinstein;password;
+Greta;Favre;greta.favre@school.net;6b;greta.favre;password;
+Lena;Deschamps;lena.deschamps@school.net;6c;lena.deschamps;password;
+Rita;Nadal;rita.nadal@school.net;9c;rita.nadal;password;
+Quentin;Dupré;quentin.dupré@school.net;10a;quentin.dupré;password;
+Ben;Ramírez;ben.ramírez@school.net;9a;ben.ramírez;password;
+Tom;Joubert;tom.joubert@school.net;7c;tom.joubert;password;
+Ben;Leroux;ben.leroux@school.net;11c;ben.leroux;password;
+Oliver;Nevárez;oliver.nevárez@school.net;5a;oliver.nevárez;password;
+Ben;Favre;ben.favre@school.net;11c;ben.favre;password;
+Xenia;Téllez;xenia.téllez@school.net;9b;xenia.téllez;password;
+Walter;Saavedra;walter.saavedra@school.net;7c;walter.saavedra;password;
+Paul;Pacheco;paul.pacheco@school.net;12a;paul.pacheco;password;
+Lena;Leroux;lena.leroux@school.net;10c;lena.leroux;password;
+Hannah;Clément;hannah.clément@school.net;11a;hannah.clément;password;
+Uwe;Kastner;uwe.kastner@school.net;8c;uwe.kastner;password;
+Quentin;Olivares;quentin.olivares@school.net;7c;quentin.olivares;password;
+Jan;Zaragoza;jan.zaragoza@school.net;5a;jan.zaragoza;password;
+Xenia;Gascón;xenia.gascón@school.net;5b;xenia.gascón;password;
+Tom;Saavedra;tom.saavedra@school.net;10c;tom.saavedra;password;
+Clara;Lachapelle;clara.lachapelle@school.net;6a;clara.lachapelle;password;
+Rita;Leroux;rita.leroux@school.net;6c;rita.leroux;password;
+Yannick;Jourdain;yannick.jourdain@school.net;5a;yannick.jourdain;password;
+Sophie;Téllez;sophie.téllez@school.net;11a;sophie.téllez;password;Téllez, Uwe
+Felix;Pacheco;felix.pacheco@school.net;8c;felix.pacheco;password;
+Zoe;Zaragoza;zoe.zaragoza@school.net;9a;zoe.zaragoza;password;
+Tom;Ramírez;tom.ramírez@school.net;6c;tom.ramírez;password;
+Hannah;Vidal;hannah.vidal@school.net;6a;hannah.vidal;password;
+Lena;Dupré;lena.dupré@school.net;5a;lena.dupré;password;Dupré, Quentin
+Walter;Ximénez;walter.ximénez@school.net;6a;walter.ximénez;password;
+Felix;Hidalgo;felix.hidalgo@school.net;5b;felix.hidalgo;password;
+Vera;Leroux;vera.leroux@school.net;5c;vera.leroux;password;Leroux, Ben
+Yannick;Elizondo;yannick.elizondo@school.net;8b;yannick.elizondo;password;
+Jan;Zapata;jan.zapata@school.net;5c;jan.zapata;password;
+Xenia;Deschamps;xenia.deschamps@school.net;5b;xenia.deschamps;password;
+Oliver;Águila;oliver.águila@school.net;11b;oliver.águila;password;
+Ben;Nadal;ben.nadal@school.net;7b;ben.nadal;password;
+Felix;Jourdain;felix.jourdain@school.net;12a;felix.jourdain;password;
+Quentin;Zaragoza;quentin.zaragoza@school.net;7c;quentin.zaragoza;password;Zaragoza, Jan
+Max;Lachapelle;max.lachapelle@school.net;5b;max.lachapelle;password;Lachapelle, Clara
+Clara;Orozco;clara.orozco@school.net;11a;clara.orozco;password;
+Yannick;Zaragoza;yannick.zaragoza@school.net;10b;yannick.zaragoza;password;
+Greta;Montoya;greta.montoya@school.net;5c;greta.montoya;password;
+Hannah;Barragán;hannah.barragán@school.net;11b;hannah.barragán;password;
+Max;Gascón;max.gascón@school.net;12a;max.gascón;password;Gascón, Xenia
+Rita;Fontaine;rita.fontaine@school.net;11c;rita.fontaine;password;
+Clara;Urrutia;clara.urrutia@school.net;5c;clara.urrutia;password;
+Ben;Zaragoza;ben.zaragoza@school.net;12a;ben.zaragoza;password;
+Paul;Abascal;paul.abascal@school.net;5c;paul.abascal;password;
+Yannick;Ximénez;yannick.ximénez@school.net;8c;yannick.ximénez;password;
+Clara;Abascal;clara.abascal@school.net;6c;clara.abascal;password;Abascal, Paul
+Quentin;Montoya;quentin.montoya@school.net;5a;quentin.montoya;password;
+Vera;Nadal;vera.nadal@school.net;12c;vera.nadal;password;
+Jan;Ramírez;jan.ramírez@school.net;12a;jan.ramírez;password;Ramírez, Ben
+Tom;Hidalgo;tom.hidalgo@school.net;5a;tom.hidalgo;password;Hidalgo, Felix
+Max;Nevárez;max.nevárez@school.net;7a;max.nevárez;password;Nevárez, Oliver
+Uwe;Deschamps;uwe.deschamps@school.net;12c;uwe.deschamps;password;
+Sophie;Zapata;sophie.zapata@school.net;8b;sophie.zapata;password;
+David;Olivares;david.olivares@school.net;11c;david.olivares;password;Olivares, Quentin
+Max;Ríos;max.ríos@school.net;9c;max.ríos;password;
+Tom;Vidal;tom.vidal@school.net;7b;tom.vidal;password;
+David;Echeverría;david.echeverría@school.net;9a;david.echeverría;password;
+Rita;Lachapelle;rita.lachapelle@school.net;6a;rita.lachapelle;password;
+Ben;Saavedra;ben.saavedra@school.net;12b;ben.saavedra;password;Saavedra, Walter
+Hannah;Dupré;hannah.dupré@school.net;7c;hannah.dupré;password;Dupré, Lena
+Uwe;Pacheco;uwe.pacheco@school.net;10c;uwe.pacheco;password;Pacheco, Paul
+Nina;Urrutia;nina.urrutia@school.net;8c;nina.urrutia;password;Urrutia, Clara
+Tom;Ibarra;tom.ibarra@school.net;10b;tom.ibarra;password;
+Xenia;Vidal;xenia.vidal@school.net;10b;xenia.vidal;password;
+Jan;Jourdain;jan.jourdain@school.net;12b;jan.jourdain;password;
+Greta;Casanova;greta.casanova@school.net;10b;greta.casanova;password;
+Quentin;Pujol;quentin.pujol@school.net;12a;quentin.pujol;password;
+Yannick;Orozco;yannick.orozco@school.net;7a;yannick.orozco;password;
+Oliver;Dupré;oliver.dupré@school.net;11b;oliver.dupré;password;
+Clara;Barragán;clara.barragán@school.net;6c;clara.barragán;password;
+Anna;Clément;anna.clément@school.net;11c;anna.clément;password;
+Yannick;Urrutia;yannick.urrutia@school.net;5c;yannick.urrutia;password;
+Oliver;Hidalgo;oliver.hidalgo@school.net;11b;oliver.hidalgo;password;
+Uwe;Brunet;uwe.brunet@school.net;8a;uwe.brunet;password;
+Nina;Kastner;nina.kastner@school.net;9b;nina.kastner;password;Kastner, Paul
+Lena;Weinstein;lena.weinstein@school.net;7a;lena.weinstein;password;Weinstein, Clara
+Sophie;Thibault;sophie.thibault@school.net;12c;sophie.thibault;password;
+Eva;Kastner;eva.kastner@school.net;8a;eva.kastner;password;
+Eva;Gonzaga;eva.gonzaga@school.net;11b;eva.gonzaga;password;
+Yannick;Mendoza;yannick.mendoza@school.net;12a;yannick.mendoza;password;
+Xenia;Zapata;xenia.zapata@school.net;12c;xenia.zapata;password;Zapata, Sophie
+Eva;Águila;eva.águila@school.net;8a;eva.águila;password;
+Max;Hidalgo;max.hidalgo@school.net;12b;max.hidalgo;password;
+Yannick;Águila;yannick.águila@school.net;5c;yannick.águila;password;
+Zoe;Delgado;zoe.delgado@school.net;10b;zoe.delgado;password;
+Clara;Kraus;clara.kraus@school.net;7a;clara.kraus;password;
+Jan;Gascón;jan.gascón@school.net;8b;jan.gascón;password;
+Max;Deschamps;max.deschamps@school.net;7c;max.deschamps;password;
+Nina;Ybarra;nina.ybarra@school.net;12a;nina.ybarra;password;
+Paul;Águila;paul.águila@school.net;10b;paul.águila;password;
+Oliver;Huguet;oliver.huguet@school.net;12b;oliver.huguet;password;
+David;Jourdain;david.jourdain@school.net;11b;david.jourdain;password;
+Lena;Olivares;lena.olivares@school.net;7c;lena.olivares;password;
+Tom;Huguet;tom.huguet@school.net;11a;tom.huguet;password;
+Jan;Nadal;jan.nadal@school.net;8c;jan.nadal;password;
+Eva;Kraus;eva.kraus@school.net;7a;eva.kraus;password;
+Anna;Urrutia;anna.urrutia@school.net;7c;anna.urrutia;password;
+Jan;Ximénez;jan.ximénez@school.net;8b;jan.ximénez;password;Ximénez, Walter
+Lena;Quirós;lena.quirós@school.net;5b;lena.quirós;password;
+Lena;Wiesner;lena.wiesner@school.net;12a;lena.wiesner;password;
+Hannah;Mendoza;hannah.mendoza@school.net;7c;hannah.mendoza;password;
+Walter;Nevárez;walter.nevárez@school.net;8b;walter.nevárez;password;
+Paul;Kraus;paul.kraus@school.net;10a;paul.kraus;password;
+Walter;Zapata;walter.zapata@school.net;6a;walter.zapata;password;
+Xenia;Olivares;xenia.olivares@school.net;10a;xenia.olivares;password;
+Greta;Téllez;greta.téllez@school.net;6b;greta.téllez;password;Téllez, Uwe
+Jan;Pacheco;jan.pacheco@school.net;11a;jan.pacheco;password;
+Hannah;Vargas;hannah.vargas@school.net;10b;hannah.vargas;password;
+David;Hidalgo;david.hidalgo@school.net;7c;david.hidalgo;password;Hidalgo, Tom
+Zoe;Wiesner;zoe.wiesner@school.net;6a;zoe.wiesner;password;
+Felix;Echeverría;felix.echeverría@school.net;10a;felix.echeverría;password;
+Xenia;Thibault;xenia.thibault@school.net;5a;xenia.thibault;password;
+Xenia;Echeverría;xenia.echeverría@school.net;10c;xenia.echeverría;password;Echeverría, Felix
+David;Vargas;david.vargas@school.net;10a;david.vargas;password;
+Nina;Nevárez;nina.nevárez@school.net;9a;nina.nevárez;password;
+Max;Águila;max.águila@school.net;11b;max.águila;password;Águila, Yannick
+Quentin;Yturralde;quentin.yturralde@school.net;12c;quentin.yturralde;password;Yturralde, Zoe
+Xenia;Ríos;xenia.ríos@school.net;5b;xenia.ríos;password;Ríos, David
+Clara;Quirós;clara.quirós@school.net;12a;clara.quirós;password;
+Clara;Delgado;clara.delgado@school.net;12b;clara.delgado;password;Delgado, Zoe
+Paul;Clément;paul.clément@school.net;10b;paul.clément;password;
+Quentin;Kraus;quentin.kraus@school.net;12c;quentin.kraus;password;
+Walter;Pacheco;walter.pacheco@school.net;12b;walter.pacheco;password;Pacheco, Paul
+Eva;Huguet;eva.huguet@school.net;11a;eva.huguet;password;
+Clara;Vargas;clara.vargas@school.net;8b;clara.vargas;password;
+Sophie;Huguet;sophie.huguet@school.net;7c;sophie.huguet;password;Huguet, Eva
+Anna;Joubert;anna.joubert@school.net;9b;anna.joubert;password;
+David;Favre;david.favre@school.net;8b;david.favre;password;
+Xenia;Kastner;xenia.kastner@school.net;11c;xenia.kastner;password;Kastner, Paul
+Max;Casanova;max.casanova@school.net;6c;max.casanova;password;
+Paul;Gascón;paul.gascón@school.net;10c;paul.gascón;password;Gascón, Xenia
+Yannick;Leroux;yannick.leroux@school.net;11a;yannick.leroux;password;
+Zoe;Weinstein;zoe.weinstein@school.net;11a;zoe.weinstein;password;
+Anna;Brunet;anna.brunet@school.net;11a;anna.brunet;password;
+Rita;Brunet;rita.brunet@school.net;7c;rita.brunet;password;Brunet, Uwe
+Jan;Delgado;jan.delgado@school.net;7a;jan.delgado;password;Delgado, Zoe
+Sophie;Delgado;sophie.delgado@school.net;9c;sophie.delgado;password;Delgado, Zoe
+Felix;Ríos;felix.ríos@school.net;12c;felix.ríos;password;
+Greta;Echeverría;greta.echeverría@school.net;9c;greta.echeverría;password;
+Oliver;Pujol;oliver.pujol@school.net;7b;oliver.pujol;password;
+Walter;Huguet;walter.huguet@school.net;8a;walter.huguet;password;
+Paul;Saavedra;paul.saavedra@school.net;8a;paul.saavedra;password;
+Eva;Mendoza;eva.mendoza@school.net;10a;eva.mendoza;password;
+Quentin;Favre;quentin.favre@school.net;9a;quentin.favre;password;Favre, David
+Anna;Orozco;anna.orozco@school.net;12c;anna.orozco;password;
+Tom;Echeverría;tom.echeverría@school.net;8a;tom.echeverría;password;Echeverría, Felix
+Felix;Wiesner;felix.wiesner@school.net;11a;felix.wiesner;password;
+Oliver;Ramírez;oliver.ramírez@school.net;5b;oliver.ramírez;password;Ramírez, Jan
+Nina;Dupré;nina.dupré@school.net;12a;nina.dupré;password;Dupré, Oliver
+Tom;Lachapelle;tom.lachapelle@school.net;10a;tom.lachapelle;password;
+Yannick;Montoya;yannick.montoya@school.net;10a;yannick.montoya;password;
+Quentin;Hidalgo;quentin.hidalgo@school.net;5b;quentin.hidalgo;password;Hidalgo, Tom
+Oliver;Barragán;oliver.barragán@school.net;9c;oliver.barragán;password;Barragán, Hannah
+Uwe;Orozco;uwe.orozco@school.net;11b;uwe.orozco;password;Orozco, Anna
+Xenia;Delgado;xenia.delgado@school.net;10a;xenia.delgado;password;
+Uwe;Zaragoza;uwe.zaragoza@school.net;12c;uwe.zaragoza;password;Zaragoza, Yannick
+Clara;Hidalgo;clara.hidalgo@school.net;8c;clara.hidalgo;password;Hidalgo, Tom
+Ben;Huguet;ben.huguet@school.net;10c;ben.huguet;password;
+Xenia;Dupré;xenia.dupré@school.net;8c;xenia.dupré;password;
+Uwe;Yturralde;uwe.yturralde@school.net;5a;uwe.yturralde;password;Yturralde, Quentin
+Uwe;Gascón;uwe.gascón@school.net;7a;uwe.gascón;password;
+Jan;Yturralde;jan.yturralde@school.net;7c;jan.yturralde;password;
+Nina;Huguet;nina.huguet@school.net;7b;nina.huguet;password;Huguet, Eva
+Ben;Águila;ben.águila@school.net;9b;ben.águila;password;
+Sophie;Deschamps;sophie.deschamps@school.net;7b;sophie.deschamps;password;Deschamps, Uwe
+Yannick;Echeverría;yannick.echeverría@school.net;8b;yannick.echeverría;password;
+Clara;Elizondo;clara.elizondo@school.net;8b;clara.elizondo;password;Elizondo, Yannick
+Oliver;Echeverría;oliver.echeverría@school.net;5c;oliver.echeverría;password;Echeverría, Felix
+Felix;Gonzaga;felix.gonzaga@school.net;9c;felix.gonzaga;password;
+Walter;Joubert;walter.joubert@school.net;7c;walter.joubert;password;
+Lena;Elizondo;lena.elizondo@school.net;9c;lena.elizondo;password;
+Tom;Zaragoza;tom.zaragoza@school.net;8a;tom.zaragoza;password;Zaragoza, Uwe
+Jan;Elizondo;jan.elizondo@school.net;9c;jan.elizondo;password;
+Nina;Brunet;nina.brunet@school.net;12a;nina.brunet;password;
+Tom;Delgado;tom.delgado@school.net;12b;tom.delgado;password;Delgado, Zoe
+Anna;Ibarra;anna.ibarra@school.net;9b;anna.ibarra;password;
+Eva;Urrutia;eva.urrutia@school.net;7c;eva.urrutia;password;Urrutia, Anna
+Clara;Thibault;clara.thibault@school.net;6b;clara.thibault;password;
+Anna;Hidalgo;anna.hidalgo@school.net;7a;anna.hidalgo;password;Hidalgo, Tom
+Oliver;Téllez;oliver.téllez@school.net;6b;oliver.téllez;password;Téllez, Uwe
+Clara;Ríos;clara.ríos@school.net;10b;clara.ríos;password;Ríos, David
+Eva;Barragán;eva.barragán@school.net;9c;eva.barragán;password;
+Oliver;Saavedra;oliver.saavedra@school.net;11c;oliver.saavedra;password;
+Hannah;Pacheco;hannah.pacheco@school.net;6a;hannah.pacheco;password;
+Paul;Gonzaga;paul.gonzaga@school.net;10a;paul.gonzaga;password;

@@ -108,8 +108,8 @@ class ViewController extends Controller
             $bookedSlotsCount += count($bookedSlotsForConnectedUser[$cUser->getId()]);
         }
 
-        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime() * (count($connectedUsers) + 1);
-        $quotaExceeded = $bookingQuota != -1 && $bookingQuota - $bookedSlotsCount <= 0;
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
+        $quotaExceeded = $bookingQuota != -1 && $bookingQuota * (count($connectedUsers) + 1) - $bookedSlotsCount <= 0;
 
         $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
@@ -210,8 +210,8 @@ class ViewController extends Controller
         foreach ($connectedUsers as $cUser) {
             $bookedSlotsCount += count(SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId()));
         }
-        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime() * (count($connectedUsers) + 1);
-        $remainingQuota = $bookingQuota - $bookedSlotsCount;
+        $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
+        $remainingQuota = $bookingQuota * (count($connectedUsers) + 1) - $bookedSlotsCount;
 
         ?>
                         <?php if ($bookingQuota != -1):
@@ -221,6 +221,8 @@ class ViewController extends Controller
                             $date->setTimezone($timezone);
                             $hour = $date->format('G');
                             ?>
+                            Quota: <?php echo $bookingQuota ?>
+                            Remaining: <?php echo $remainingQuota ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
                                     <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong>
@@ -775,7 +777,7 @@ class ViewController extends Controller
                     <br>
                     Vorname;Nachname;E-Mail;Klasse;Benutzername;Passwort;Geschwister
                     <br><br>
-                    Trennzeichen muss der Strichpunkt sein!. Benutzername, Passwort und Geschwister können leer gelassen werden.
+                    Trennzeichen muss der Strichpunkt sein! Benutzername, Passwort und Geschwister können leer gelassen werden.
                     <br><br>
                     Um ein Geschwisterkind zu verknüpfen, muss der Name des Kindes in der letzten Spalte in der Form NACHNAME, VORNAME angegeben werden.
                     Die Schreibweise des Namens muss exakt übereinstimmen.
@@ -872,6 +874,11 @@ class ViewController extends Controller
         }
 
         $event = EventDAO::getActiveEvent();
+
+        if ($event == null) {
+            return "";
+        }
+
         return $this->getAllAttendances($event);
     }
 
@@ -932,16 +939,14 @@ class ViewController extends Controller
                                 <tr>
                                     <td><?php echo $left['lastName'] ?>, <?php echo $left['firstName'] ?></td>
                                     <td>
-                                        <?php echo toDate($left['from'], 'H:i') ?>
-                                        - <?php echo toDate($left['to'], 'H:i') ?>
+                                        <?php echo toDate($left['from'], 'H:i') ?>-<?php echo toDate($left['to'], 'H:i') ?>
                                         Uhr
                                     </td>
                                     <td class="secondColumnStart">
                                         <?php echo $right['lastName'] ?>, <?php echo $right['firstName'] ?>
                                     </td>
                                     <td>
-                                        <?php echo toDate($right['from'], 'H:i') ?>
-                                        - <?php echo toDate($right['to'], 'H:i') ?>
+                                        <?php echo toDate($right['from'], 'H:i') ?>-<?php echo toDate($right['to'], 'H:i') ?>
                                         Uhr
                                     </td>
                                 </tr>
@@ -951,8 +956,7 @@ class ViewController extends Controller
                                 <tr>
                                     <td><?php echo $lastEntry['lastName'] ?>, <?php echo $lastEntry['firstName'] ?></td>
                                     <td>
-                                        <?php echo toDate($lastEntry['from'], 'H:i') ?>
-                                        - <?php echo toDate($lastEntry['to'], 'H:i') ?>
+                                        <?php echo toDate($lastEntry['from'], 'H:i') ?>-<?php echo toDate($lastEntry['to'], 'H:i') ?>
                                         Uhr
                                     </td>
                                     <td class="secondColumnStart"></td>
