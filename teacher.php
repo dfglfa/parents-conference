@@ -36,10 +36,12 @@ include_once 'inc/header.php';
                         <?php
                         $viewController = ViewController::getInstance();
                         $attendance = $viewController->action_attendance();
+                        $event = EventDAO::getActiveEvent();
+                        $canChangeAttendance = $event != null && time() < $event->getStartPostDate();
                         ?>
                     </p>
 
-                    <?php if ($attendance != null): ?>
+                    <?php if ($attendance != null && $canChangeAttendance): ?>
                         <h4>
                             Anwesenheit ändern
                         </h4>
@@ -60,13 +62,16 @@ include_once 'inc/header.php';
                                 </select>
                             </div>
 
+                            
                             <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
                                 Anwesenheit ändern
                             </button>
+                            
                         </form>
-
+                        
                         <div class='message' id='message'></div>
-
+                    <?php else: ?>
+                        <div class="text-danger">Du kannst Deine Anwesenheit nicht mehr ändern, da Buchungen bereits möglich sind.</div>
                     <?php endif; ?>
                 </div>
             </div>

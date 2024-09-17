@@ -153,7 +153,7 @@ include_once 'inc/header.php';
                                 2 Terminbuchungen pro Tag
                             </label> &nbsp;
                             <label><input type='radio' name='throttleQuota' value='3' checked>
-                                3 Terminbuchung pro Tag
+                                3 Terminbuchungen pro Tag
                             </label> &nbsp;
                         </div>
 
