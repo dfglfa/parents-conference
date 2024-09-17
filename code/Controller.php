@@ -93,6 +93,14 @@ class Controller
             return;
         }
 
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        $event = EventDAO::getActiveEvent();
+
+        if ($event == null || $event->getStartPostDate() < time() && $authUser->getRole() != "admin") {
+            echo "Changes forbidden, booking already started!";
+            return;
+        }
+
         SlotDAO::changeAttendanceForUser($userId, $eventId, $fromTime, $toTime);
 
         echo 'success';

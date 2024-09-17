@@ -22,6 +22,7 @@ $(document).on("click", "#btn-change-attendance", function () {
           $("#attendance").load("viewController.php?action=attendance");
 
           showMessage(message, "success", "Die Anwesenheit wurde erfolgreich geändert!");
+          loadTimeTable();
         } else {
           showMessage(message, "danger", "Die Anwesenheit konnte nicht geändert werden!");
         }

@@ -221,8 +221,6 @@ class ViewController extends Controller
                             $date->setTimezone($timezone);
                             $hour = $date->format('G');
                             ?>
-                            Quota: <?php echo $bookingQuota ?>
-                            Remaining: <?php echo $remainingQuota ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
                                     <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong>
