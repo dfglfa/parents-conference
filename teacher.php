@@ -49,29 +49,28 @@ include_once 'inc/header.php';
                             <input type='hidden' name='userId' value='<?php echo (escape($user->getId())) ?>'>
                             <input type='hidden' name='eventId' value='<?php echo (escape($attendance['eventId'])) ?>'>
                             <div class='form-group'>
-                                <label for='inputFromTime'>Von</label>
-                                <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
+                                <select class='form-control' id='inputSlotDuration' name='inputFromTime'
+                                    style="width: 100px; display: inline-block">
                                     <?php echo (getDateOptions($attendance, true)); ?>
                                 </select>
-                            </div>
-
-                            <div class='form-group'>
-                                <label for='inputToTime'>Bis</label>
-                                <select class='form-control' id='inputSlotDuration' name='inputToTime'>
+                                <label style="padding: 0 20px;">bis</label>
+                                <select class='form-control' id='inputSlotDuration' name='inputToTime'
+                                    style="width: 100px; display: inline-block">
                                     <?php echo (getDateOptions($attendance, false)); ?>
                                 </select>
                             </div>
 
-                            
+
                             <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
                                 Anwesenheit ändern
                             </button>
-                            
+
                         </form>
-                        
+
                         <div class='message' id='message'></div>
                     <?php else: ?>
-                        <div class="text-danger">Du kannst Deine Anwesenheit nicht mehr ändern, da Buchungen bereits möglich sind.</div>
+                        <div class="text-danger">Du kannst Deine Anwesenheit nicht mehr ändern, da Buchungen bereits möglich
+                            sind.</div>
                     <?php endif; ?>
                 </div>
             </div>

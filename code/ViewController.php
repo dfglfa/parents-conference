@@ -987,15 +987,13 @@ class ViewController extends Controller
                                 <input type='hidden' name='userId' value='<?php echo (escape($userId)) ?>'>
                                 <input type='hidden' name='eventId' value='<?php echo (escape($attendance['eventId'])) ?>'>
                                 <div class='form-group'>
-                                    <label for='inputFromTime'>Von</label>
-                                    <select class='form-control' id='inputSlotDuration' name='inputFromTime'>
+                                    <select class='form-control' id='inputSlotDuration' name='inputFromTime'
+                                        style="width: 100px; display: inline-block">
                                         <?php echo (getDateOptions($attendance, true)); ?>
                                     </select>
-                                </div>
-
-                                <div class='form-group'>
-                                    <label for='inputToTime'>Bis</label>
-                                    <select class='form-control' id='inputSlotDuration' name='inputToTime'>
+                                    <label style="padding: 0 20px;">bis</label>
+                                    <select class='form-control' id='inputSlotDuration' name='inputToTime'
+                                        style="width: 100px; display: inline-block">
                                         <?php echo (getDateOptions($attendance, false)); ?>
                                     </select>
                                 </div>
