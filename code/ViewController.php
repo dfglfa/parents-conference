@@ -366,10 +366,10 @@ class ViewController extends Controller
                                                         ?>
                                                         <button type='button' class='btn btn-danger btn-delete'
                                                             id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                            value='<?php echo ($deleteJson) ?>'>Termin stornieren
-                                                            <?php if (count($connectedUsers) > 0): ?>
-                                                                (<?php echo $user->getFirstName() ?>)
-                                                            <?php endif ?>
+                                                            value='<?php echo ($deleteJson) ?>'>Termin <?php if (count($connectedUsers) > 0): ?>
+                                                                von <?php echo $user->getFirstName() ?>
+                                                            <?php endif ?> stornieren
+
                                                         </button>
                                                         <?php if (!empty($activeEvent->getVideoLink())):
                                                             $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
@@ -385,8 +385,8 @@ class ViewController extends Controller
                                                             ?>
                                                             <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
                                                                 id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                                value='<?php echo ($deleteJson) ?>'>Termin stornieren
-                                                                (<?php echo $connUser->getFirstName() ?>)
+                                                                value='<?php echo ($deleteJson) ?>'>Termin von
+                                                                <?php echo $connUser->getFirstName() ?> stornieren
                                                             </button>
                                                         <?php endif ?>
                                                     <?php endforeach ?>
@@ -1093,7 +1093,7 @@ class ViewController extends Controller
                                     </select>
                                 </div>
                                 <div class="col-xs-4">
-                                    <label for='selectUser1'>Benutzer 2</label>
+                                    <label for='selectUser2'>Benutzer 2</label>
                                     <select class='form-control userconnectionSelect' id='selectUser2' name='user2'>
                                         <option value="-1">Wähle Benutzer 2</option>
                                         <?php foreach ($users as $user): ?>
@@ -1105,6 +1105,35 @@ class ViewController extends Controller
                                 </div>
                             </div>
                         </div>
+                        <?php
+    }
+
+    public function action_getConnections()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $connections = UserDAO::getAllConnections();
+
+        ?>
+
+                        <h4>Bereits verknüpfte Benutzer:</h4>
+                        <div id="toggleFeedback"></div>
+                        <table>
+                            <?php foreach ($connections as $conn): ?>
+                                <tr>
+                                    <td><?php echo $conn['lastName1'] . ", " . $conn['firstName1'] ?></td>
+                                    <td><?php echo $conn['lastName2'] . ", " . $conn['firstName2'] ?></td>
+                                    <td><button class="btn btn-link editConnectionBtn" data-userid1="<?php echo $conn['userId1'] ?>"
+                                            data-userid2="<?php echo $conn['userId2'] ?>">bearbeiten</button></td>
+                                </tr>
+                            <?php endforeach ?>
+
+                        </table>
+
                         <?php
     }
 

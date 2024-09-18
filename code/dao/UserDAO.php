@@ -427,6 +427,20 @@ class UserDAO extends AbstractDAO
         return self::query($con, 'DELETE FROM user WHERE id = ?', array($userId), true)['success'];
     }
 
+    public static function getAllConnections()
+    {
+        $con = self::getConnection();
+        return self::query(
+            $con,
+            '
+            SELECT uc.userId1, uc.userId2, u1.firstName as firstName1, u1.lastName lastName1, u2.firstName as firstName2, u2.lastName as lastName2
+            from userconnection uc
+            inner join user u1 on u1.id = uc.userId1
+            inner join user u2 on u2.id = uc.userId2',
+            array()
+        );
+    }
+
     public static function deleteAllConnections()
     {
         $con = self::getConnection();

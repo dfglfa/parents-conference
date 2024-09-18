@@ -4,6 +4,7 @@ $(document).ready(function () {
   updateUploadInfos();
   loadConnectedUsersForm();
   loadAllAttendances();
+  loadAllConnections();
 
   $(document).on("click", "#btn-create-event", function () {
     validateForm();
@@ -577,7 +578,6 @@ function loadConnectedUsersForm() {
     type: "GET",
     success: function (data, textStatus, jqXHR) {
       connectedUsersForm.html(data);
-
       $(".userconnectionSelect").change(() => checkUserConnection());
     },
     error: function (jqXHR, textStatus, errorThrown) {
@@ -586,36 +586,65 @@ function loadConnectedUsersForm() {
   });
 }
 
+function loadAllConnections() {
+  var connectedUsersList = $("#allConnections");
+  $.ajax({
+    url: "viewController.php?action=getConnections",
+    dataType: "html",
+    type: "GET",
+    success: function (data, textStatus, jqXHR) {
+      connectedUsersList.html(data);
+      $(".editConnectionBtn").on("click", (e) => {
+        const { userid1, userid2 } = e.target.dataset;
+        $("#selectUser1").val(userid1);
+        $("#selectUser2").val(userid2);
+        checkUserConnection();
+        document.getElementById("user-connection").scrollIntoView({ behavior: "smooth" });
+      });
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      connectedUsersList.html("<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>");
+    },
+  });
+}
+
 function checkUserConnection() {
   const userId1 = $("#selectUser1").val();
   const userId2 = $("#selectUser2").val();
-  const connectedUsersActions = $("#connectedUsersActions");
+  const connectedUsersFeedback = $("#connectedUsersFeedback");
 
   if (userId1 != -1 && userId1 === userId2) {
-    connectedUsersActions.html("<span class='text-danger'>Bitte zwei unterschiedliche Benutzer auswählen!</span>");
+    connectedUsersFeedback.html("<span class='text-danger'>Bitte zwei unterschiedliche Benutzer auswählen!</span>");
   } else if (userId1 != -1 && userId2 != -1) {
     $.ajax({
       url: `viewController.php?action=checkUserConnection&userId1=${userId1}&userId2=${userId2}`,
       dataType: "html",
       type: "GET",
       success: function (data, textStatus, jqXHR) {
-        connectedUsersActions.html(data);
-        $("#userconnectionAction").click(() => {
-          $.ajax({
-            url: "viewController.php?action=toggleUserConnection",
-            type: "POST",
-            data: { userId1, userId2 },
-            success: () => {
-              checkUserConnection();
-            },
-            error: () => {
-              connectedUsersActions.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
-            },
-          });
-        });
+        connectedUsersFeedback.html(data);
+        $("#userconnectionAction").click(() => toggleUserConnection(userId1, userId2));
       },
     });
   }
+}
+
+function toggleUserConnection(userId1, userId2, successFeedback) {
+  const connectedUsersFeedback = $("#connectedUsersFeedback");
+  $.ajax({
+    url: "viewController.php?action=toggleUserConnection",
+    type: "POST",
+    data: { userId1, userId2 },
+    success: () => {
+      if (successFeedback) {
+        connectedUsersFeedback.html(successFeedback);
+      }
+      checkUserConnection();
+      loadAllConnections();
+    },
+    error: () => {
+      connectedUsersFeedback.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
+    },
+  });
 }
 
 $(document).on("change", "#selectTeacher", function (event) {

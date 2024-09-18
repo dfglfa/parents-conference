@@ -66,9 +66,7 @@ function dismissMessage(messageId, receiverId) {
     url: "controller.php",
     data: { action: "dismissMessage", messageId, receiverId },
     type: "POST",
-    success: function (data, textStatus, jqXHR) {
-      console.log("Dismissed");
-    },
+    success: function (data, textStatus, jqXHR) {},
     error: function (jqXHR, textStatus, errorThrown) {
       timeTable.html("<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>");
     },
