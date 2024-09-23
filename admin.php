@@ -23,11 +23,53 @@ include_once 'inc/header.php';
     <h1>Administration</h1>
 
     <div class='panel-group' id='accordion'>
+
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse2'>
+                        Datei Upload / Import
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse2' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <form id='uploadFileForm'>
+                        <div class='form-group'>
+                            <label for='inputUploadType'>Typ</label>
+                            <select class='form-control' id='inputUploadType' name='uploadType'>
+                                <option value='teacher'>Lehrer</option>
+                                <option value='student'>Schüler</option>
+                                <!-- <option value='subject'>Fächer</option> -->
+                                <option value='newsletter'>Rundbrief</option>
+                                <option value='logo'>Schul-Logo</option>
+                            </select>
+                        </div>
+
+                        <div class='form-group'>
+                            <label class='control-label'>Datei auswählen</label>
+                            <input id='input-file' type='file' name='file' class='file' data-show-preview='false'
+                                accept='.csv,.odt,.png'>
+                            <p id="allowed-file-types" class='help-block'>Es sind nur CSV Dateien erlaubt.</p>
+
+                            <div id='templateDownloadAlertContainer'></div>
+                        </div>
+
+                        <button type='submit' class='btn btn-primary' id='btn-upload-file'>Importieren</button>
+                    </form>
+
+                    <div class='message' id='uploadFileMessage'></div>
+
+                    <div id="csv-preview"></div>
+                </div>
+            </div>
+        </div>
+
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse1'>
-                        Neuen Elternsprechtag anlegen
+                        Sprechtag planen
                     </a>
                 </h4>
             </div>
@@ -79,7 +121,7 @@ include_once 'inc/header.php';
                             <label for='inputSlotDuration'>Dauer einer Einheit</label>
                             <select class='form-control' id='inputSlotDuration' name='slotDuration'>
                                 <option>5</option>
-                                <option>10</option>
+                                <option selected>10</option>
                                 <option>15</option>
                                 <option>20</option>
                             </select>
@@ -173,49 +215,8 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse2'>
-                        Datei Upload / Import
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse2' class='panel-collapse collapse'>
-                <div class='panel-body'>
-                    <form id='uploadFileForm'>
-                        <div class='form-group'>
-                            <label for='inputUploadType'>Typ</label>
-                            <select class='form-control' id='inputUploadType' name='uploadType'>
-                                <option value='teacher'>Lehrer</option>
-                                <option value='student'>Schüler</option>
-                                <!-- <option value='subject'>Fächer</option> -->
-                                <option value='newsletter'>Rundbrief</option>
-                                <option value='logo'>Schul-Logo</option>
-                            </select>
-                        </div>
-
-                        <div class='form-group'>
-                            <label class='control-label'>Datei auswählen</label>
-                            <input id='input-file' type='file' name='file' class='file' data-show-preview='false'
-                                accept='.csv,.odt,.png'>
-                            <p id="allowed-file-types" class='help-block'>Es sind nur CSV Dateien erlaubt.</p>
-
-                            <div id='templateDownloadAlertContainer'></div>
-                        </div>
-
-                        <button type='submit' class='btn btn-primary' id='btn-upload-file'>Importieren</button>
-                    </form>
-
-                    <div class='message' id='uploadFileMessage'></div>
-
-                    <div id="csv-preview"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse3'>
-                        Elternsprechtagsverwaltung
+                        Geplante Sprechtage
                     </a>
                 </h4>
             </div>
@@ -236,7 +237,7 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapseTimeManagement'>
-                        Anwesenheitszeitverwaltung
+                        Anwesenheitszeiten
                     </a>
                 </h4>
             </div>
@@ -276,11 +277,31 @@ include_once 'inc/header.php';
             </div>
         </div>
 
+        <div id="print-panel" class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse7'>
+                        Zeitpläne ausdrucken
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse7' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <button class="btn btn-primary"
+                        onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
+                        <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne aller Lehrkräfte ausdrucken
+                    </button>
+
+                    <div id='adminTimeTable' class="section-to-print only-print"></div>
+                </div>
+            </div>
+        </div>
+
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse4'>
-                        Benutzerverwaltung
+                        Benutzer
                     </a>
                 </h4>
             </div>
@@ -311,11 +332,55 @@ include_once 'inc/header.php';
             </div>
         </div>
 
+        <div id="user-connection" class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse8'>
+                        Verknüpfte Konten
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse8' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <div id='connectedUsersForm'></div>
+                    <div id='connectedUsersFeedback'></div>
+                    <div id="allConnections"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapseMailTemplates'>
+                        E-Mail-Vorlagen
+                    </a>
+                </h4>
+            </div>
+            <div id='collapseMailTemplates' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <select class='form-control' id='selectTeacher'>
+                        <option value="bookSlotMailToTeacher">Terminbuchung, E-Mail an Lehrkraft</option>
+                        <option value="bookSlotMailToStudent">Terminbuchung, E-Mail an Schüler/in</option>
+                        <option value="slotCancelledByTeacherMailToStudent">Terminstornierung durch Lehrkraft, E-Mail an
+                            Schüler/in</option>
+                        <option value="slotCancelledByStudentMailToTeacher">Terminstornierung durch Schüler/in, E-Mail
+                            an
+                            Lehrkraft</option>
+                    </select>
+
+                    TODO
+                </div>
+            </div>
+        </div>
+                            -->
+
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
-                        Rundbriefverwaltung
+                        Rundbrief
                     </a>
                 </h4>
             </div>
@@ -358,43 +423,6 @@ include_once 'inc/header.php';
                     <div class='message' id='statisticsMessage'></div>
 
                     <div id='statistics'></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="print-panel" class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse7'>
-                        Zeitpläne ausdrucken
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse7' class='panel-collapse collapse'>
-                <div class='panel-body'>
-                    <button class="btn btn-primary"
-                        onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
-                        <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne ausdrucken
-                    </button>
-
-                    <div id='adminTimeTable' class="section-to-print only-print"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="user-connection" class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse8'>
-                        Verknüpfte Konten
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse8' class='panel-collapse collapse'>
-                <div class='panel-body'>
-                    <div id='connectedUsersForm'></div>
-                    <div id='connectedUsersFeedback'></div>
-                    <div id="allConnections"></div>
                 </div>
             </div>
         </div>
