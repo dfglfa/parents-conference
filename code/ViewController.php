@@ -1195,7 +1195,9 @@ class ViewController extends Controller
                             </div>
                             <br><br>
                             <div class="form-group">
-                                <label for="body" class="col-sm-2 control-label" style="margin-top: 5px">E-Mail-Text</label>
+                                <label for="body" class="col-sm-2 control-label" style="margin-top: 5px">E-Mail-Text
+                                    <br><span style="font-weight: normal; font-size: small">(HTML erlaubt)</span>
+                                </label>
                                 <div class="col-sm-10" style="padding-bottom: 20px">
                                     <textarea class="form-control" id="emailTemplateContent" rows="8"
                                         name="emailTemplateContent"
