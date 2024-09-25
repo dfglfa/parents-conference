@@ -718,9 +718,7 @@ function saveEmailTemplate() {
     type: "POST",
     data: { action: "saveEmailTemplate", templateId, subject, content },
     success: function (data, textStatus, jqXHR) {
-      const feedback = $("#emailTemplateFeedback");
-      feedback.html("<div class='alert alert-success'>Die Vorlage wurde gespeichert.</div>");
-      setTimeout(() => feedback.html(""), 3000);
+      showMessage($("#emailTemplateFeedback"), "success", "Die Vorlage wurde gespeichert.");
     },
   });
 }
