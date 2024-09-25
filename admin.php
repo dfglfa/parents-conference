@@ -357,7 +357,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='collapseMailTemplates' class='panel-collapse'>
+            <div id='collapseMailTemplates' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div class="form-group">
                         <label for="selectMailTemplate" class="col-sm-2 control-label"
@@ -407,63 +407,64 @@ include_once 'inc/header.php';
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class='panel panel-default'>
-                <div class='panel-heading'>
-                    <h4 class='panel-title'>
-                        <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
-                            Rundbrief
-                        </a>
-                    </h4>
-                </div>
-                <div id='collapse5' class='panel-collapse collapse'>
-                    <div class='panel-body'>
-                        <div>
-                            Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
-                            Papierform zukommen zu lassen.
-                        </div>
-                        <br>
-                        <?php
-                        $viewController = ViewController::getInstance();
-                        $viewController->action_getNewsletterForm();
-                        ?>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
+                        Rundbrief
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse5' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <div>
+                        Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
+                        Papierform zukommen zu lassen.
                     </div>
+                    <br>
+                    <?php
+                    $viewController = ViewController::getInstance();
+                    $viewController->action_getNewsletterForm();
+                    ?>
                 </div>
             </div>
+        </div>
 
-            <div class='panel panel-default'>
-                <div class='panel-heading'>
-                    <h4 class='panel-title'>
-                        <a data-toggle='collapse' data-parent='#accordion' href='#collapse6'>
-                            Statistik
-                        </a>
-                    </h4>
-                </div>
-                <div id='collapse6' class='panel-collapse collapse'>
-                    <div class='panel-body'>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse6'>
+                        Statistik
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse6' class='panel-collapse collapse'>
+                <div class='panel-body'>
 
-                        <form id='statisticsForm'>
-                            <div class='form-group'>
-                                <label for='selectUserStats'>Benutzer</label>
-                                <select class='form-control' id='selectUserStats' name='type'>
-                                    <option value="-1">Bitte wähle einen Benutzer ...</option>
-                                    <?php $users = UserDAO::getUsers(); ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <option value='<?php echo (escape($user->__toString())) ?>'>
-                                            <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </form>
+                    <form id='statisticsForm'>
+                        <div class='form-group'>
+                            <label for='selectUserStats'>Benutzer</label>
+                            <select class='form-control' id='selectUserStats' name='type'>
+                                <option value="-1">Bitte wähle einen Benutzer ...</option>
+                                <?php $users = UserDAO::getUsers(); ?>
+                                <?php foreach ($users as $user): ?>
+                                    <option value='<?php echo (escape($user->__toString())) ?>'>
+                                        <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
 
-                        <div class='message' id='statisticsMessage'></div>
+                    <div class='message' id='statisticsMessage'></div>
 
-                        <div id='statistics'></div>
-                    </div>
+                    <div id='statistics'></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <?php include_once 'inc/footer.php'; ?>
+<?php include_once 'inc/footer.php'; ?>
