@@ -550,6 +550,10 @@ class Controller
         }
 
         $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            echo 'Unauthorized';
+            return;
+        }
 
         if (!file_exists('uploads/newsletter.odt')) {
             echo 'Keine Rundbrief-Vorlage vorhanden! Bitte lade zuerst eine hoch!';

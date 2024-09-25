@@ -28,7 +28,7 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse2'>
-                        Datei Upload / Import
+                        Daten importieren
                     </a>
                 </h4>
             </div>
@@ -349,7 +349,6 @@ include_once 'inc/header.php';
             </div>
         </div>
 
-        <!--
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
@@ -374,7 +373,6 @@ include_once 'inc/header.php';
                 </div>
             </div>
         </div>
-                            -->
 
         <div class='panel panel-default'>
             <div class='panel-heading'>

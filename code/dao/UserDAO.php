@@ -70,7 +70,12 @@ class UserDAO extends AbstractDAO
     {
         $users = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT u.id, u.userName, a.password, u.firstName, u.lastName, u.email, u.class, u.role FROM user AS u JOIN accessdata AS a ON u.userName = a.userName WHERE role = ?;', array('student'));
+        $res = self::query(
+            $con,
+            'SELECT u.id, u.userName, a.password, u.firstName, u.lastName, u.email, u.class, u.role 
+                    FROM user AS u JOIN accessdata AS a ON u.userName = a.userName WHERE role = ? ORDER BY u.class, u.lastName, u.firstName;',
+            array('student')
+        );
 
         while ($u = self::fetchObject($res)) {
             $users[] = array(
