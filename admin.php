@@ -249,7 +249,7 @@ include_once 'inc/header.php';
                     <div class='form-group'>
                         <h4>Lehrer</h4>
                         <select class='form-control' id='selectTeacher'>
-                            <option>Lehrkraft auswählen</option>
+                            <option value="">Lehrkraft auswählen</option>
                             <?php
                             $teachers = UserDAO::getUsersForRole('teacher');
                             foreach ($teachers as $teacher): ?>

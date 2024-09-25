@@ -546,6 +546,11 @@ function displayAttendance() {
   var teacherSelect = $("#selectTeacher");
 
   var selectedTeacher = teacherSelect.find("option:selected");
+
+  if (!selectedTeacher || !selectedTeacher.val()) {
+    return;
+  }
+
   var user = $.parseJSON(selectedTeacher.val());
   var userId = user.id;
   var eventId = $("#activeEventId").val();
