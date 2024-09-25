@@ -1184,24 +1184,24 @@ class ViewController extends Controller
 
         ?>
                         <div>
-                            <form>
-                                <input type="hidden" name="templateId" value="<?php echo $templateId ?>" />
-                                <div class="form-group">
-                                    <label for="subject" class="col-sm-2 control-label">Betreff</label>
-                                    <div class="col-sm-10">
-                                        <input value="<?php echo $data['subject'] ?>" type="text" class="form-control"
-                                            id="subject" placeholder="Betreff eingeben">
-                                    </div>
+
+                            <input type="hidden" name="templateId" value="<?php echo $templateId ?>" />
+                            <div class="form-group">
+                                <label for="subject" class="col-sm-2 control-label">Betreff</label>
+                                <div class="col-sm-10">
+                                    <input value="<?php echo $data['subject'] ?>" type="text" class="form-control" id="subject"
+                                        placeholder="Betreff eingeben">
                                 </div>
-                                <br><br>
-                                <div class="form-group">
-                                    <label for="body" class="col-sm-2 control-label">E-Mail-Text</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="body" rows="8"
-                                            placeholder="E-Mail-Text eingeben"><?php echo $data['content'] ?></textarea>
-                                    </div>
+                            </div>
+                            <br><br>
+                            <div class="form-group">
+                                <label for="body" class="col-sm-2 control-label">E-Mail-Text</label>
+                                <div class="col-sm-10" style="padding-bottom: 20px">
+                                    <textarea class="form-control" id="body" rows="8"
+                                        placeholder="E-Mail-Text eingeben"><?php echo str_replace("<br>", "\n", $data['content']) ?></textarea>
                                 </div>
-                            </form>
+                            </div>
+
                         </div>
                         <?php
     }

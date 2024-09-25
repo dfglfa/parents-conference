@@ -1,4 +1,4 @@
 {
-    "subject": "Neue Terminbuchung",
+    "subject": "Neue Terminbuchung von {STUDENT_NAME}",
     "content": "Hallo {TEACHER_NAME},<br><br>{STUDENT_NAME} hat bei Ihnen einen Termin um {SLOT_TIME} gebucht.<br><br>Viele Grüße von den Admins"
 }

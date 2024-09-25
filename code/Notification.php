@@ -52,7 +52,17 @@ function sendCreationNotificationMail($slotId)
     }
 }
 
-function sendCancellationNotificationMail($slotId, $reasonText)
+function sendCancellationNotificationMailToStudent($slotId, $reasonText)
+{
+    _sendCancellationNotificationMail($slotId, $reasonText, true);
+}
+
+function sendCancellationNotificationMailToTeacher($slotId)
+{
+    _sendCancellationNotificationMail($slotId, "", false);
+}
+
+function _sendCancellationNotificationMail($slotId, $reasonText, $recipientIsStudent)
 {
     $slotData = SlotDAO::getNamesAndEmailAddressesForSlotId($slotId);
 
@@ -68,29 +78,30 @@ function sendCancellationNotificationMail($slotId, $reasonText)
         '{CANCELLATION_MESSAGE}' => $reasonText,
     );
 
-    // Mail to student
-    $studentMailData = getDataForMailTemplate("slotCancelledByTeacherMailToStudent");
-    $emailContentStudent = $studentMailData["content"];
-    $emailContentStudent = strtr($emailContentStudent, $trans);
-    $emailSubjectStudent = $studentMailData["subject"];
-    $emailSubjectStudent = strtr($emailSubjectStudent, $trans);
+    if ($recipientIsStudent) {
+        $studentMailData = getDataForMailTemplate("slotCancelledByTeacherMailToStudent");
+        $emailContentStudent = $studentMailData["content"];
+        $emailContentStudent = strtr($emailContentStudent, $trans);
+        $emailSubjectStudent = $studentMailData["subject"];
+        $emailSubjectStudent = strtr($emailSubjectStudent, $trans);
 
-    $studentEmail = $slotData["studentEmail"];
+        $studentEmail = $slotData["studentEmail"];
 
-    if (!empty($studentEmail)) {
-        sendMail($studentEmail, $emailSubjectStudent, $emailContentStudent);
-    }
+        if (!empty($studentEmail)) {
+            sendMail($studentEmail, $emailSubjectStudent, $emailContentStudent);
+        }
+    } else {
+        // Mail to teacher
+        $teacherMailData = getDataForMailTemplate("slotCancelledByStudentMailToTeacher");
+        $emailContentTeacher = $teacherMailData["content"];
+        $emailContentTeacher = strtr($emailContentTeacher, $trans);
+        $emailSubjectTeacher = $teacherMailData["subject"];
+        $emailSubjectTeacher = strtr($emailSubjectTeacher, $trans);
 
-    // Mail to teacher
-    $teacherMailData = getDataForMailTemplate("slotCancelledByStudentMailToTeacher");
-    $emailContentTeacher = $teacherMailData["content"];
-    $emailContentTeacher = strtr($emailContentTeacher, $trans);
-    $emailSubjectTeacher = $teacherMailData["subject"];
-    $emailSubjectTeacher = strtr($emailSubjectTeacher, $trans);
-
-    $teacherEmail = $slotData["teacherEmail"];
-    if (!empty($teacherEmail)) {
-        sendMail($teacherEmail, $emailSubjectTeacher, $emailContentTeacher);
+        $teacherEmail = $slotData["teacherEmail"];
+        if (!empty($teacherEmail)) {
+            sendMail($teacherEmail, $emailSubjectTeacher, $emailContentTeacher);
+        }
     }
 }
 

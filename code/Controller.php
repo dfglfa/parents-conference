@@ -429,15 +429,20 @@ class Controller
 
     protected function action_deleteSlot()
     {
-        $userId = $_REQUEST['userId'];
         $slotId = $_REQUEST['slotId'];
         $eventId = $_REQUEST['eventId'];
-        $reasonText = $_REQUEST['reasonText'];
+
+        $authUser = AuthenticationManager::getAuthenticatedUser();
 
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
-        LogDAO::log($userId, LogDAO::LOG_ACTION_DELETE_SLOT, $info);
+        LogDAO::log($authUser->getId(), LogDAO::LOG_ACTION_DELETE_SLOT, $info);
 
-        sendCancellationNotificationMail($slotId, $reasonText);
+        if ($authUser->getRole() == "teacher") {
+            $reasonText = $_REQUEST['reasonText'];
+            sendCancellationNotificationMailToStudent($slotId, $reasonText);
+        } else {
+            sendCancellationNotificationMailToTeacher($slotId);
+        }
         $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
 
         if ($success) {

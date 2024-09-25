@@ -371,6 +371,30 @@ include_once 'inc/header.php';
                     </select>
 
                     <div id="templateForm"></div>
+
+                    <div>
+                        <div style="padding: 20px 0">
+                            Folgende Platzhalter können verwendet werden:
+                        </div>
+
+                        <div>
+                            <strong>{TEACHER_NAME}</strong> für den Namen der Lehrkraft. Titel, Vor- und
+                            Nachname werden
+                            eingesetzt.
+                        </div>
+                        <div>
+                            <strong>{STUDENT_NAME}</strong> für den Namen des Schülers. Vor- und Nachname werden
+                            eingesetzt.
+                        </div>
+                        <div>
+                            <strong>{SLOT_TIME}</strong> für die Uhrzeit des gebuchten/abgesagten Termins.
+                        </div>
+                        <div>
+                            <strong>{CANCELLATION_MESSAGE}</strong> wird im Fall einer Terminabsage mit dem Text
+                            ersetzt,
+                            den die Lehrkraft als Grund für die Absage angegeben hat.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -384,11 +408,12 @@ include_once 'inc/header.php';
                 </h4>
             </div>
             <div id='collapse5' class='panel-collapse collapse'>
-                <div>
-                    Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
-                    Papierform zukommen zu lassen. Jede Seite enthält die Zugangsdate
-                </div>
                 <div class='panel-body'>
+                    <div>
+                        Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
+                        Papierform zukommen zu lassen.
+                    </div>
+                    <br>
                     <?php
                     $viewController = ViewController::getInstance();
                     $viewController->action_getNewsletterForm();
