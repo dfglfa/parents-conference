@@ -5,6 +5,7 @@ $(document).ready(function () {
   loadConnectedUsersForm();
   loadAllAttendances();
   loadAllConnections();
+  addMailTemplateSelectListener();
 
   $(document).on("click", "#btn-create-event", function () {
     validateForm();
@@ -699,5 +700,29 @@ function loadAllAttendances() {
     error: () => {
       section.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
     },
+  });
+}
+
+function addMailTemplateSelectListener() {
+  const selectboxId = "#selectMailTemplate";
+  const formElem = $("#templateForm");
+  $(selectboxId).on("change", (e) => {
+    const val = $(selectboxId).val();
+    console.log("VAL:", val);
+    if (!val) {
+      formElem.html("");
+    } else {
+      $.ajax({
+        url: "viewController.php?action=mailTemplateForm&templateId=" + val,
+        type: "GET",
+        dataType: "html",
+        success: (data) => {
+          formElem.html(data);
+        },
+        error: () => {
+          formElem.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
+        },
+      });
+    }
   });
 }

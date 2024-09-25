@@ -138,3 +138,19 @@ function getMaximumNumberOfBookableSlotsUntilCurrentTime()
     $fullDaysPassed = floor((time() - $startTime) / 86400);
     return $activeEvent->getThrottleQuota() * (1 + $fullDaysPassed);
 }
+
+function getDataForMailTemplate($templateId)
+{
+    $template_filename = "uploads/" . $templateId . ".json";
+    if (!file_exists($template_filename)) {
+        $template_filename = "templates/email/" . $templateId . ".json";
+
+        if (!file_exists($template_filename)) {
+            echo "Cannot resolve file for template ID " . $templateId;
+            return null;
+        }
+    }
+
+    $file_content = file_get_contents($template_filename);
+    return json_decode($file_content, true);
+}

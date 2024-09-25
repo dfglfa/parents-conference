@@ -357,9 +357,10 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='collapseMailTemplates' class='panel-collapse collapse'>
+            <div id='collapseMailTemplates' class='panel-collapse'>
                 <div class='panel-body'>
-                    <select class='form-control' id='selectTeacher'>
+                    <select class='form-control' id='selectMailTemplate'>
+                        <option value="">Keine Vorlage ausgewählt</option>
                         <option value="bookSlotMailToTeacher">Terminbuchung, E-Mail an Lehrkraft</option>
                         <option value="bookSlotMailToStudent">Terminbuchung, E-Mail an Schüler/in</option>
                         <option value="slotCancelledByTeacherMailToStudent">Terminstornierung durch Lehrkraft, E-Mail an
@@ -369,7 +370,7 @@ include_once 'inc/header.php';
                             Lehrkraft</option>
                     </select>
 
-                    TODO
+                    <div id="templateForm"></div>
                 </div>
             </div>
         </div>
@@ -383,6 +384,10 @@ include_once 'inc/header.php';
                 </h4>
             </div>
             <div id='collapse5' class='panel-collapse collapse'>
+                <div>
+                    Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
+                    Papierform zukommen zu lassen. Jede Seite enthält die Zugangsdate
+                </div>
                 <div class='panel-body'>
                     <?php
                     $viewController = ViewController::getInstance();

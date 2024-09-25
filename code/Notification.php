@@ -20,48 +20,35 @@ function sendCreationNotificationMail($slotId)
         return;
     }
 
-    $studentName = $slotData["studentName"];
+    $trans = array(
+        '{SLOT_TIME}' => getSlotTimeReadable($slotData["dateFrom"]),
+        '{STUDENT_NAME}' => $slotData["studentName"],
+        '{TEACHER_NAME}' => $slotData["teacherName"],
+    );
+
+    // Mail to student
+    $studentMailData = getDataForMailTemplate("bookSlotMailToStudent");
+    $emailContentStudent = $studentMailData["content"];
+    $emailContentStudent = strtr($emailContentStudent, $trans);
+    $emailSubjectStudent = $studentMailData["subject"];
+    $emailSubjectStudent = strtr($emailSubjectStudent, $trans);
+
     $studentEmail = $slotData["studentEmail"];
 
-    $teacherName = $slotData["teacherName"];
-    $teacherEmail = $slotData["teacherEmail"];
-
-    $date = $slotData["dateFrom"];
-
-    $emailTemplateStudent = "<div> " .
-        "<p>Guten Tag " . $studentName . ", </p> " .
-        "<p>Es wurde ein Termin mit " . $teacherName . " am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr vereinbart.</p>" .
-        "</div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<hr />" .
-        "<div> " .
-        "<p>Bonjour " . $studentName . ", </p> " .
-        "<p>Le rendez-vous avec " . $teacherName . " le " . toDate($date, "d.m.Y") .
-        " à " . toDate($date, "H:i") . " a bien été réservé.</p>" .
-        "</div>" .
-        "<div>Cordialement, <br> Les admins</div>";
-
-    $emailTemplateTeacher = "<div> " .
-        "<p>Guten Tag " . $teacherName . ", </p> " .
-        "<p>Soeben wurde von " . $studentName . " ein Termin am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr gebucht.</p>" .
-        "<div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<hr />" .
-        "<div> " .
-        "<p>Bonjour " . $teacherName . ", </p> " .
-        "<p>" . $studentName . " a réservé un rendez-vous le " . toDate($date, "d.m.Y") .
-        " à " . toDate($date, "H:i") . ".</p>" .
-        "<div>" .
-        "<div>Cordialement, <br> Les admins</div>";
-
     if (!empty($studentEmail)) {
-        sendMail($studentEmail, "Terminbestätigung / Confirmation de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
+        sendMail($studentEmail, $emailSubjectStudent, $emailContentStudent);
     }
 
+    // Mail to teacher
+    $teacherMailData = getDataForMailTemplate("bookSlotMailToTeacher");
+    $emailContentTeacher = $teacherMailData["content"];
+    $emailContentTeacher = strtr($emailContentTeacher, $trans);
+    $emailSubjectTeacher = $teacherMailData["subject"];
+    $emailSubjectTeacher = strtr($emailSubjectTeacher, $trans);
+
+    $teacherEmail = $slotData["teacherEmail"];
     if (!empty($teacherEmail)) {
-        sendMail($teacherEmail, "Neue Terminbuchung von " . $studentName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateTeacher);
+        sendMail($teacherEmail, $emailSubjectTeacher, $emailContentTeacher);
     }
 }
 
@@ -74,78 +61,43 @@ function sendCancellationNotificationMail($slotId, $reasonText)
         return;
     }
 
-    $studentName = $slotData["studentName"];
+    $trans = array(
+        '{SLOT_TIME}' => getSlotTimeReadable($slotData["dateFrom"]),
+        '{STUDENT_NAME}' => $slotData["studentName"],
+        '{TEACHER_NAME}' => $slotData["teacherName"],
+        '{CANCELLATION_MESSAGE}' => $reasonText,
+    );
+
+    // Mail to student
+    $studentMailData = getDataForMailTemplate("slotCancelledByTeacherMailToStudent");
+    $emailContentStudent = $studentMailData["content"];
+    $emailContentStudent = strtr($emailContentStudent, $trans);
+    $emailSubjectStudent = $studentMailData["subject"];
+    $emailSubjectStudent = strtr($emailSubjectStudent, $trans);
+
     $studentEmail = $slotData["studentEmail"];
 
-    $teacherName = $slotData["teacherName"];
-    $teacherEmail = $slotData["teacherEmail"];
-
-    $date = $slotData["dateFrom"];
-
-    $emailTemplateStudent = "<div> " .
-        "<p>Guten Tag " . $studentName . ", </p> " .
-        "<p>" . $teacherName . " möchte den geplanten Termin am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr verschieben.</p>" .
-        "</div>" .
-        ($reasonText != null ? "<div>Kommentar der Lehrkraft: <br/><strong>" . $reasonText . "</strong></div><br/>" : "") .
-        "<div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<hr />" .
-        "<div> " .
-        "<p>Bonjour " . $studentName . ", </p> " .
-        "<p>" . $teacherName . " préférerait déplacer le rendez-vous prévu le " . toDate($date, "d.m.Y") .
-        " à " . toDate($date, "H:i") . ".</p>" .
-        "</div>" .
-        ($reasonText != null ? "<div>Commentaire de l'enseignant(e): <br/><strong>" . $reasonText . "</strong></div><br/>" : "") .
-        "<div>" .
-        "<div>Cordialement, <br> Les admins</div>";
-
-    $emailTemplateTeacher = "<div> " .
-        "<p>Guten Tag " . $teacherName . ", </p> " .
-        "<p>Ihr Termin mit " . $studentName . " am " . toDate($date, "d.m.Y") .
-        " um " . toDate($date, "H:i") . " Uhr wurde verschoben.</p>" .
-        "<div>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>";
-
-
     if (!empty($studentEmail)) {
-        sendMail($studentEmail, "Terminverschiebung / Déplacement de rendez-vous : " . $teacherName . " - " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateStudent);
-    } else {
-        error_log("No email address found for student");
+        sendMail($studentEmail, $emailSubjectStudent, $emailContentStudent);
     }
 
+    // Mail to teacher
+    $teacherMailData = getDataForMailTemplate("slotCancelledByStudentMailToTeacher");
+    $emailContentTeacher = $teacherMailData["content"];
+    $emailContentTeacher = strtr($emailContentTeacher, $trans);
+    $emailSubjectTeacher = $teacherMailData["subject"];
+    $emailSubjectTeacher = strtr($emailSubjectTeacher, $trans);
+
+    $teacherEmail = $slotData["teacherEmail"];
     if (!empty($teacherEmail)) {
-        sendMail($teacherEmail, "Terminverschiebung von " . $studentName . " am " . toDate($date, "d.m.Y H:i") . " Uhr", $emailTemplateTeacher);
-    } else {
-        error_log("No email address found for teacher");
+        sendMail($teacherEmail, $emailSubjectTeacher, $emailContentTeacher);
     }
 }
 
-function sendUserConnectionInfo($userId1, $userId2)
+function getSlotTimeReadable($date)
 {
-    $user1 = UserDAO::getUserForId($userId1);
-    $user2 = UserDAO::getUserForId($userId2);
-
-    if ($user1 == null || $user2 == null) {
-        error_log("Not all users found for IDs " . $userId1 . " and " . $userId2);
-        return;
-    }
-
-    global $SMTP_FROM;
-    $emailTemplate = "<div> " .
-        "<p>Guten Tag " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
-        "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . " hat Dich beim Elternsprechtag als Bruder/Schwester angegeben.<p>" .
-        "<p>Eure Benutzer sind ab jetzt verknüpft. Falls das nicht korrekt ist, melde Dich bitte bei <a href='mailto:" . $SMTP_FROM . "'>" . $SMTP_FROM . "</a>" .
-        "<div>Viele Grüße, <br> Die Elternsprechtag-Admins</div>" .
-        "<br/>---------------------------------<br/>" .
-        "<p>Bonjour " . $user2->getFirstName() . " " . $user2->getLastName() . ", </p> " .
-        "<p>" . $user1->getFirstName() . " " . $user1->getLastName() . "  t'a déclaré comme frère/sœur lors de la réunion parents-professeurs.<p>" .
-        "<p>Vos comptes utilisateurs sont maintenant liés. Si cela n'est pas correct, merci de contacter <a href='mailto:" . $SMTP_FROM . "'>" . $SMTP_FROM . "</a>" .
-        "<div>Cordialement, <br> Les admins</div>";
-
-    sendMail($user2->getEmail(), "Elternsprechtag: Konten verknüpft / Liens des comptes", $emailTemplate);
+    return toDate($date, "H:i") . " Uhr";
 }
-
 
 function sendMail($to, $subject, $body)
 {

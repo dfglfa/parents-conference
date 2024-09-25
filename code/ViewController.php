@@ -1167,4 +1167,42 @@ class ViewController extends Controller
                         <?php endif ?>
                         <?php
     }
+
+    public function action_mailTemplateForm()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $templateId = $_REQUEST['templateId'];
+        $data = getDataForMailTemplate($templateId);
+
+        if ($data == null) {
+            return;
+        }
+
+        ?>
+                        <div>
+                            <form>
+                                <input type="hidden" name="templateId" value="<?php echo $templateId ?>" />
+                                <div class="form-group">
+                                    <label for="subject" class="col-sm-2 control-label">Betreff</label>
+                                    <div class="col-sm-10">
+                                        <input value="<?php echo $data['subject'] ?>" type="text" class="form-control"
+                                            id="subject" placeholder="Betreff eingeben">
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="form-group">
+                                    <label for="body" class="col-sm-2 control-label">E-Mail-Text</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="body" rows="8"
+                                            placeholder="E-Mail-Text eingeben"><?php echo $data['content'] ?></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <?php
+    }
 }

@@ -1,0 +1,4 @@
+{
+    "subject": "Termin abgesagt",
+    "content": "Hallo {TEACHER_NAME},<br><br>{STUDENT_NAME} hat den Termin um {SLOT_TIME} abgesagt.<br><br>Viele Grüße von den Admins"
+}
