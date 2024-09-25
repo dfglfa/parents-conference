@@ -1185,24 +1185,26 @@ class ViewController extends Controller
         ?>
                         <div>
 
-                            <input type="hidden" name="templateId" value="<?php echo $templateId ?>" />
+                            <input type="hidden" name="templateId" id="templateId" value="<?php echo $templateId ?>" />
                             <div class="form-group">
-                                <label for="subject" class="col-sm-2 control-label">Betreff</label>
+                                <label for="subject" class="col-sm-2 control-label" style="margin-top: 5px">Betreff</label>
                                 <div class="col-sm-10">
-                                    <input value="<?php echo $data['subject'] ?>" type="text" class="form-control" id="subject"
-                                        placeholder="Betreff eingeben">
+                                    <input value="<?php echo $data['subject'] ?>" type="text" class="form-control"
+                                        id="emailTemplateSubject" placeholder="Betreff eingeben" name="emailTemplateSubject">
                                 </div>
                             </div>
                             <br><br>
                             <div class="form-group">
-                                <label for="body" class="col-sm-2 control-label">E-Mail-Text</label>
+                                <label for="body" class="col-sm-2 control-label" style="margin-top: 5px">E-Mail-Text</label>
                                 <div class="col-sm-10" style="padding-bottom: 20px">
-                                    <textarea class="form-control" id="body" rows="8"
+                                    <textarea class="form-control" id="emailTemplateContent" rows="8"
+                                        name="emailTemplateContent"
                                         placeholder="E-Mail-Text eingeben"><?php echo str_replace("<br>", "\n", $data['content']) ?></textarea>
                                 </div>
                             </div>
-
                         </div>
+                        <button class="btn btn-primary" id="saveTemplateButton" onClick="saveEmailTemplate()">Vorlage
+                            speichern</button>
                         <?php
     }
 }

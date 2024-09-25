@@ -708,6 +708,23 @@ function loadAllAttendances() {
   });
 }
 
+function saveEmailTemplate() {
+  const templateId = $("#templateId").val();
+  const subject = $("#emailTemplateSubject").val();
+  const content = $("#emailTemplateContent").val().replace(/\n/g, "<br>");
+
+  $.ajax({
+    url: "controller.php",
+    type: "POST",
+    data: { action: "saveEmailTemplate", templateId, subject, content },
+    success: function (data, textStatus, jqXHR) {
+      const feedback = $("#emailTemplateFeedback");
+      feedback.html("<div class='alert alert-success'>Die Vorlage wurde gespeichert.</div>");
+      setTimeout(() => feedback.html(""), 3000);
+    },
+  });
+}
+
 function addMailTemplateSelectListener() {
   const selectboxId = "#selectMailTemplate";
   const formElem = $("#templateForm");
@@ -715,6 +732,7 @@ function addMailTemplateSelectListener() {
     const val = $(selectboxId).val();
     console.log("VAL:", val);
     if (!val) {
+      $("#emailTemplateFeedback").html("");
       formElem.html("");
     } else {
       $.ajax({

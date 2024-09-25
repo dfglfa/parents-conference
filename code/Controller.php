@@ -800,4 +800,30 @@ class Controller
             UserDAO::connectUsers($userId1, $userId2);
         }
     }
+
+    public function action_saveEmailTemplate()
+    {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
+        $templateId = $_REQUEST['templateId'];
+        $data = array(
+
+            "subject" => $_REQUEST['subject'],
+            "content" => $_REQUEST['content']
+        );
+
+        if (getDataForMailTemplate($templateId) == null) {
+            echo "Unknown template ID: " . $templateId;
+            return;
+        }
+
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+        $filePath = "uploads/" . $templateId . ".json";
+
+        file_put_contents($filePath, $jsonData);
+    }
 }

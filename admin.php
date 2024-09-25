@@ -359,102 +359,111 @@ include_once 'inc/header.php';
             </div>
             <div id='collapseMailTemplates' class='panel-collapse'>
                 <div class='panel-body'>
-                    <select class='form-control' id='selectMailTemplate'>
-                        <option value="">Keine Vorlage ausgewählt</option>
-                        <option value="bookSlotMailToTeacher">Terminbuchung, E-Mail an Lehrkraft</option>
-                        <option value="bookSlotMailToStudent">Terminbuchung, E-Mail an Schüler/in</option>
-                        <option value="slotCancelledByTeacherMailToStudent">Terminstornierung durch Lehrkraft, E-Mail an
-                            Schüler/in</option>
-                        <option value="slotCancelledByStudentMailToTeacher">Terminstornierung durch Schüler/in, E-Mail
-                            an
-                            Lehrkraft</option>
-                    </select>
-
-                    <div id="templateForm"></div>
-
-                    <div>
-                        <div style="padding: 20px 0">
-                            Folgende Platzhalter können verwendet werden:
-                        </div>
-
-                        <div>
-                            <strong>{TEACHER_NAME}</strong> für den Namen der Lehrkraft. Titel, Vor- und
-                            Nachname werden
-                            eingesetzt.
-                        </div>
-                        <div>
-                            <strong>{STUDENT_NAME}</strong> für den Namen des Schülers. Vor- und Nachname werden
-                            eingesetzt.
-                        </div>
-                        <div>
-                            <strong>{SLOT_TIME}</strong> für die Uhrzeit des gebuchten/abgesagten Termins.
-                        </div>
-                        <div>
-                            <strong>{CANCELLATION_MESSAGE}</strong> wird im Fall einer Terminabsage mit dem Text
-                            ersetzt,
-                            den die Lehrkraft als Grund für die Absage angegeben hat.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
-                        Rundbrief
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse5' class='panel-collapse collapse'>
-                <div class='panel-body'>
-                    <div>
-                        Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
-                        Papierform zukommen zu lassen.
-                    </div>
-                    <br>
-                    <?php
-                    $viewController = ViewController::getInstance();
-                    $viewController->action_getNewsletterForm();
-                    ?>
-                </div>
-            </div>
-        </div>
-
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse6'>
-                        Statistik
-                    </a>
-                </h4>
-            </div>
-            <div id='collapse6' class='panel-collapse collapse'>
-                <div class='panel-body'>
-
-                    <form id='statisticsForm'>
-                        <div class='form-group'>
-                            <label for='selectUserStats'>Benutzer</label>
-                            <select class='form-control' id='selectUserStats' name='type'>
-                                <option value="-1">Bitte wähle einen Benutzer ...</option>
-                                <?php $users = UserDAO::getUsers(); ?>
-                                <?php foreach ($users as $user): ?>
-                                    <option value='<?php echo (escape($user->__toString())) ?>'>
-                                        <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
-                                    </option>
-                                <?php endforeach; ?>
+                    <div class="form-group">
+                        <label for="selectMailTemplate" class="col-sm-2 control-label"
+                            style="margin-top: 5px">Vorlage</label>
+                        <div class="col-sm-10">
+                            <select class='form-control' id='selectMailTemplate'>
+                                <option value="">Keine Vorlage ausgewählt</option>
+                                <option value="bookSlotMailToTeacher">Terminbuchung, E-Mail an Lehrkraft</option>
+                                <option value="bookSlotMailToStudent">Terminbuchung, E-Mail an Schüler/in</option>
+                                <option value="slotCancelledByTeacherMailToStudent">Terminstornierung durch Lehrkraft,
+                                    E-Mail an
+                                    Schüler/in</option>
+                                <option value="slotCancelledByStudentMailToTeacher">Terminstornierung durch Schüler/in,
+                                    E-Mail
+                                    an
+                                    Lehrkraft</option>
                             </select>
                         </div>
-                    </form>
+                        <br><br>
 
-                    <div class='message' id='statisticsMessage'></div>
+                        <div id="templateForm"></div>
+                        <div id="emailTemplateFeedback"></div>
 
-                    <div id='statistics'></div>
+                        <div>
+                            <div style="padding: 20px 0">
+                                Folgende Platzhalter können verwendet werden:
+                            </div>
+
+                            <div>
+                                <strong>{TEACHER_NAME}</strong> für den Namen der Lehrkraft. Titel, Vor- und
+                                Nachname werden
+                                eingesetzt.
+                            </div>
+                            <div>
+                                <strong>{STUDENT_NAME}</strong> für den Namen des Schülers. Vor- und Nachname werden
+                                eingesetzt.
+                            </div>
+                            <div>
+                                <strong>{SLOT_TIME}</strong> für die Uhrzeit des gebuchten/abgesagten Termins.
+                            </div>
+                            <div>
+                                <strong>{CANCELLATION_MESSAGE}</strong> wird im Fall einer Terminabsage mit dem Text
+                                ersetzt,
+                                den die Lehrkraft als Grund für die Absage angegeben hat.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel panel-default'>
+                <div class='panel-heading'>
+                    <h4 class='panel-title'>
+                        <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
+                            Rundbrief
+                        </a>
+                    </h4>
+                </div>
+                <div id='collapse5' class='panel-collapse collapse'>
+                    <div class='panel-body'>
+                        <div>
+                            Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
+                            Papierform zukommen zu lassen.
+                        </div>
+                        <br>
+                        <?php
+                        $viewController = ViewController::getInstance();
+                        $viewController->action_getNewsletterForm();
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel panel-default'>
+                <div class='panel-heading'>
+                    <h4 class='panel-title'>
+                        <a data-toggle='collapse' data-parent='#accordion' href='#collapse6'>
+                            Statistik
+                        </a>
+                    </h4>
+                </div>
+                <div id='collapse6' class='panel-collapse collapse'>
+                    <div class='panel-body'>
+
+                        <form id='statisticsForm'>
+                            <div class='form-group'>
+                                <label for='selectUserStats'>Benutzer</label>
+                                <select class='form-control' id='selectUserStats' name='type'>
+                                    <option value="-1">Bitte wähle einen Benutzer ...</option>
+                                    <?php $users = UserDAO::getUsers(); ?>
+                                    <?php foreach ($users as $user): ?>
+                                        <option value='<?php echo (escape($user->__toString())) ?>'>
+                                            <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </form>
+
+                        <div class='message' id='statisticsMessage'></div>
+
+                        <div id='statistics'></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<?php include_once 'inc/footer.php'; ?>
+    <?php include_once 'inc/footer.php'; ?>
