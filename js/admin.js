@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  prepareCreateEventForm();
   loadChangeUserForm("createUser");
   displayActiveEvent();
   updateUploadInfos();
@@ -526,6 +527,17 @@ $(document).on("click", "#deleteStatisticsForm .btn", function (event) {
 $(document).on("click", "#print-panel", function (event) {
   loadTimeTable();
 });
+
+function prepareCreateEventForm() {
+  $('[data-toggle="tooltip"]').tooltip();
+  $("#throttleQuotaSelect").change(() => {
+    if ($("#throttleQuotaSelect").val() === "0") {
+      $("#throttleDaysSelect").addClass("hidden");
+    } else {
+      $("#throttleDaysSelect").removeClass("hidden");
+    }
+  });
+}
 
 function loadTimeTable(typeId) {
   var timeTable = $("#adminTimeTable");

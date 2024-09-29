@@ -73,12 +73,13 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='collapse1' class='panel-collapse collapse'>
+            <div id='collapse1' class='panel-collapse'>
                 <div class='panel-body'>
 
                     <form id='createEventForm'>
                         <div class='form-group'>
-                            <label for='inputName'>Name</label>
+                            <label for='inputName'>Name <i style="font-weight: normal">(wird in der Navigationsleiste
+                                    angezeigt)</i></label>
                             <input type='text' class='form-control' id='inputName' name='name'
                                 placeholder='Tragen Sie hier den Namen des Elternsprechtags ein'>
                         </div>
@@ -183,24 +184,38 @@ include_once 'inc/header.php';
                             </label>&nbsp;
                         </div>
 
-                        <label>Tägliches Buchungskontingent pro Kind</label>
-                        <div class='radio'>
-                            <label><input type='radio' name='throttleQuota' value='0' checked>
-                                keine Begrenzung
-                            </label> &nbsp;
-                            <label><input type='radio' name='throttleQuota' value='1' checked>
-                                1 Terminbuchung pro Tag
-                            </label> &nbsp;
-                            <label><input type='radio' name='throttleQuota' value='2' checked>
-                                2 Terminbuchungen pro Tag
-                            </label> &nbsp;
-                            <label><input type='radio' name='throttleQuota' value='3' checked>
-                                3 Terminbuchungen pro Tag
-                            </label> &nbsp;
+                        <label>Tägliches Buchungskontingent
+                            &nbsp;
+                            <span class='glyphicon glyphicon-question-sign' data-toggle="tooltip" data-placement="top"
+                                title="Diese Funktion kann ein zu schnelles Ausbuchen aller Termine verhindern. Eltern, die
+                                sich erst später um Termine kümmern können, werden dadurch weniger benachteiligt.">
+                            </span>
+                        </label>
+                        <div class="row">
+                            <div class="col-xs-5 col-sm-3">
+                                <select name="throttleQuota" id="throttleQuotaSelect" class="form-control">
+                                    <option value="0">Keine Begrenzung</option>
+                                    <option value="1">1 Terminbuchung pro Tag</option>
+                                    <option value="2">2 Terminbuchungen pro Tag</option>
+                                    <option value="3">3 Terminbuchungen pro Tag</option>
+                                    <option value="4">4 Terminbuchungen pro Tag</option>
+                                    <option value="5">5 Terminbuchungen pro Tag</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-5 col-sm-3" style="padding-left: 0">
+                                <select name="throttleDays" id="throttleDaysSelect" class="hidden form-control">
+                                    <option value="1">nur am ersten Tag</option>
+                                    <option value="2">die ersten 2 Tage</option>
+                                    <option value="3">die ersten 3 Tage</option>
+                                    <option value="4">die ersten 4 Tage</option>
+                                    <option value="5">die ersten 5 Tage</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class='form-group'>
-                            <label><input type='checkbox' name='setActive[]' checked> als aktiven Elternsprechtag
+                        <div class='form-group' style="margin-top: 20px">
+                            <label><input type='checkbox' name='setActive[]' checked> Diesen Sprechtag als aktiven
+                                Elternsprechtag
                                 setzen</label>
                         </div>
 

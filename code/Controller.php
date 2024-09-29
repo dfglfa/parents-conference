@@ -61,7 +61,7 @@ class Controller
         $videoLink = $_REQUEST['videoLink'];
         $breaks = $_REQUEST['breaks'];
         $throttleQuota = $_REQUEST['throttleQuota'];
-        $throttleDays = 3; // make configurable if needed
+        $throttleDays = $_REQUEST['throttleDays'];
 
         $unixTimeFrom = strtotime($date . ' ' . $beginTime);
         $unixTimeTo = strtotime($date . ' ' . $endTime);
