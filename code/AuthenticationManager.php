@@ -2,6 +2,7 @@
 require_once('Util.php');
 require_once('dao/UserDAO.php');
 require_once('dao/LogDAO.php');
+require_once('config.php');
 
 SessionContext::create();
 
@@ -58,11 +59,8 @@ class AuthenticationManager
 
 	private static function _getPasswordFromLDAP($userName)
 	{
-		$ldap_server = "ldap://ldap:1389";
-		$ldap_dn = "cn=admin,dc=example,dc=org";
-		$ldap_password = "adminpassword";
-		$base_dn = "dc=example,dc=org";
-		$ldap_conn = ldap_connect($ldap_server);
+		global $LDAP_HOST, $LDAP_DN, $LDAP_PASSWORD, $LDAP_BASE_DN;
+		$ldap_conn = ldap_connect($LDAP_HOST);
 
 		if (!$ldap_conn) {
 			die("Could not connect to LDAP server.");
@@ -71,11 +69,11 @@ class AuthenticationManager
 		ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);  // Using LDAPv3
 		ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0);         // Disable referrals
 
-		if (@ldap_bind($ldap_conn, $ldap_dn, $ldap_password)) {
+		if (@ldap_bind($ldap_conn, $LDAP_DN, $LDAP_PASSWORD)) {
 			//echo "LDAP bind successful.\n";
 
 			$filter = "(uid=" . $userName . ")";
-			$result = ldap_search($ldap_conn, $base_dn, $filter);
+			$result = ldap_search($ldap_conn, $LDAP_BASE_DN, $filter);
 
 			if ($result) {
 				$entries = ldap_get_entries($ldap_conn, $result);

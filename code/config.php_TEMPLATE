@@ -11,3 +11,9 @@ $SMTP_LOGIN = "";
 $SMTP_FROM = "admin@yourdomain.net";
 $SMTP_PWD = "";
 $SMTP_AUTH = false; // Set to true for prod
+
+// LDAP settings
+$LDAP_HOST = "ldap://ldap:1389";
+$LDAP_DN = "cn=admin,dc=example,dc=org";
+$LDAP_PASSWORD = "adminpassword";
+$LDAP_BASE_DN = "dc=example,dc=org";
