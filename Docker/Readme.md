@@ -1,13 +1,23 @@
-# Docker
+You need to have Docker and Docker Compose installed. Then, run the commands
 
-For a quick-start we now provide a simple docker-compose.yml file. Be aware that this is just for demo purposes. Please do not use this in production as it lacks ssl support. We have plans to add support for let's encrypt, but did not find time for that so far.
+```
+# Copy app config from template
+cp code/config.php_TEMPLATE code/config.php
 
-To get started
+# Create (first time only) and run docker containers
+cd Docker
+docker-compose up -d
+```
 
-1.) Install docker and docker compose
+You can then visit your reunion instance at http://localhost
 
-2.) Download the Docker folder
+The code is mounted into the php-fpm docker container, so all code changes are reflected immediately.
 
-3.) Run docker-compose up -d  
-    On port 80 you will find the speechday login (admin/admin)
-    On port 8080 you will find phpmyadmin, which of course has a link to the speechday database
+To begin, login as admin/admin and start by importing student and teacher data in the "Administration" section. Use the files templates/students.csv and templates/teachers.csv for some initial data.
+All users have the password "password". There are three students by the name of "Müller" with which you can explore the account connection feature for siblings.
+
+Create an Elternsprechtag in the Administration panel.
+
+Login as students/teachers to explore the booking process.
+
+All email will be sent to a "mailcatcher" instance that is running at http://localhost:1080

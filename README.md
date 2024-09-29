@@ -1,65 +1,48 @@
-# Reunion
+# Parent-teacher conference
 
-This project can be used to easily and effectively hold a parent-teacher-reunion in your school.
-The administrator can import data for teachers and students and create a reunion.
-The newsletter filled with the needed access data so that parents can log in and book their desired time slots for the teachers they want to meet can then be created automatically.
+This project can be used to organize a parent-teacher conference at your school.
+
+Students can access the system to view their appointments, as well as those of their brothers and sisters.
+
+Teachers on the other hand can view the booked slots and manage their attendance time (as long as the booking phase has not yet begun).
+Optionally they can cancel a meeting with a student and provide a reason. The student will then be informed by mail as well as in the app.
 
 ## Installation
 
+You need a server with php8 and MySQL installed.
+
+PHP needs the extensions pdo_mysql, zip and ldap.
+
 You can create the needed database with the SQL script provided in the setup folder.
 Furthermore you have to enter your database credentials in the settings.ini file contained in code/dao.
-If you want to quickly try out the tool there is also a SQL script provided in the setup folder which puts some dummy test data in your newly created database.
-
-Be aware that the UI is in german.
 
 ## Usage
 
 As an administrator:
 
 0. Upload the logo of your school
-1. Import teachers via a CSV file.
-2. Import student data via a CSV file.
-3. Upload a newsletter template in ODT format.
+1. Import teachers via a CSV file (example in templates/teachers.csv)
+2. Import student data via a CSV file (example in templates/students.csv)
+3. Optionally: Configure email templates with text according to your wishes.
 4. Create a reunion.
 5. Create the newsletter and distribute it among the students / parents.
 
 As a teacher (optional):
 
-1. Set the time range you are present.
+1. Set the time range you are present (only possible until booking begins).
+2. After booking has begun: View and possibly cancel appointments.
 
 As a student / parent:
 
 1. Log in with the credentials provided on the newsletter.
-2. Book the desired slots for the desired teacher.
+2. Book the desired slots for the desired teacher. If your siblings are connected to your account, you have a unified booking "matrix" for all siblings.
 3. Print your time-table.
 
 ## Online Reunion
 
-We added support to hold the reunion online. When you create a new reunion you can now specify a base URL for a video conferencing service. (E.g. https://meet.jit.si)
-Teachers and students will find an individal link for each booked slot, where they can meet online.
+Online conferences are supported. When creating a conference you can specify a base URL for a video conferencing service. (E.g. https://meet.jit.si)
+Teachers and students will see a unique link for each booked slot.
 
 ## Development
 
-You need to have Docker and Docker Compose installed. Then, run the commands
-
-```
-# Copy app config from template
-cp code/config.php_TEMPLATE code/config.php
-
-# Create (first time only) and run docker containers
-cd Docker
-docker-compose up -d
-```
-
-You can then visit your reunion instance at http://localhost
-
-The code is mounted into the php-fpm docker container, so all code changes are reflected immediately.
-
-To begin, login as admin/admin and start by importing student and teacher data in the "Administration" section. Use the files templates/students.csv and templates/teachers.csv for some initial data.
-All users have the password "password". There are three students by the name of "Müller" with which you can explore the account connection feature for siblings.
-
-Create an Elternsprechtag in the Administration panel.
-
-Login as students/teachers to explore the booking process.
-
-All email will be sent to a "mailcatcher" instance that is running at http://localhost:1080
+Refer to the Readme in the Docker subdirectory.
