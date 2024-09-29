@@ -728,7 +728,6 @@ function addMailTemplateSelectListener() {
   const formElem = $("#templateForm");
   $(selectboxId).on("change", (e) => {
     const val = $(selectboxId).val();
-    console.log("VAL:", val);
     if (!val) {
       $("#emailTemplateFeedback").html("");
       formElem.html("");

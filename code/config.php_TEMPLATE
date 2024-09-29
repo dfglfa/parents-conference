@@ -11,6 +11,3 @@ $SMTP_LOGIN = "";
 $SMTP_FROM = "admin@yourdomain.net";
 $SMTP_PWD = "";
 $SMTP_AUTH = false; // Set to true for prod
-
-// School settings
-$SCHOOL_NAME = "Gymnasium";
