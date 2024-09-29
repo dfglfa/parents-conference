@@ -10,10 +10,14 @@
             </button>
             <a class='navbar-brand' href='redirectUser.php'>
                 <?php if (file_exists("uploads/logo.png")): ?>
-                    <img src="uploads/logo.png" style="display:inline-block; height: 30px; margin-top: -5px">
+                    <img src="uploads/logo.png" style="display:inline-block; height: 30px; margin: -5px 5px 0 0">
                 <?php endif ?>
-                Elternsprechtag
-                <?php echo $SCHOOL_NAME ?></a>
+                <?php if (EventDAO::getActiveEvent() != null):
+                    echo EventDAO::getActiveEvent()->getName(); ?>
+                <?php else: ?>
+                    Elternsprechtag
+                <?php endif ?>
+            </a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
 
