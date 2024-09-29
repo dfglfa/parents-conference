@@ -55,3 +55,11 @@ services:
       - "1080:1080"
       - "1025:1025"
     restart: always
+
+  ldap:
+    image: bitnami/openldap
+    container_name: speechday_ldap
+    ports:
+      - "389:389"
+      - "1389:1389"
+    restart: always
