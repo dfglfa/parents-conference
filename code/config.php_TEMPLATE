@@ -13,6 +13,7 @@ $SMTP_PWD = "";
 $SMTP_AUTH = false; // Set to true for prod
 
 // LDAP settings
+$LDAP_ENABLED = false;
 $LDAP_HOST = "ldap://ldap:1389";
 $LDAP_DN = "cn=admin,dc=example,dc=org";
 $LDAP_PASSWORD = "adminpassword";

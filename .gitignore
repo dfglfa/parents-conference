@@ -2,3 +2,7 @@
 .vscode
 uploads/*
 config.php
+__pycache__
+utils/students.csv
+utils/teachers.csv
+utils/users.ldif

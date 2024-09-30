@@ -14,13 +14,22 @@ class AuthenticationManager
 		if ($user != null) {
 			LogDAO::log($user->getId(), LogDAO::LOG_ACTION_LOGIN, $userName);
 		} else {
+			error_log("User " . $userName . " not found in conference database");
 			return false;
 		}
 
-		$ldapPw = @self::_getPasswordFromLDAP($user->getUserName());
+		global $LDAP_ENABLED;
+		$authenticated = false;
 
-		if ($user != null && password_verify($password, $user->getPasswordHash())) {
-			//if ($user != null && $password == $ldapPw) {
+		// The admin user is not looked up via LDAP
+		if ($userName != "admin" && $LDAP_ENABLED) {
+			$hashedPw = self::_getSSHAFromLDAP($user->getUserName());
+			$authenticated = $hashedPw != null && self::ldap_verify_ssha($password, $hashedPw);
+		} else {
+			$authenticated = password_verify($password, $user->getPasswordHash());
+		}
+
+		if ($authenticated) {
 			$_SESSION['userId'] = $user->getId();
 			$_SESSION['user'] = $user;
 			return true;
@@ -57,7 +66,7 @@ class AuthenticationManager
 		}
 	}
 
-	private static function _getPasswordFromLDAP($userName)
+	private static function _getSSHAFromLDAP($userName)
 	{
 		global $LDAP_HOST, $LDAP_DN, $LDAP_PASSWORD, $LDAP_BASE_DN;
 		$ldap_conn = ldap_connect($LDAP_HOST);
@@ -79,8 +88,11 @@ class AuthenticationManager
 				$entries = ldap_get_entries($ldap_conn, $result);
 				if (count($entries) > 0) {
 					return $entries[0]["userpassword"][0];
+				} else {
+					error_log("Password not found");
 				}
 			} else {
+				error_log("User " . $userName . " not found in LDAP");
 				return null;
 			}
 		} else {
@@ -90,4 +102,21 @@ class AuthenticationManager
 		ldap_close($ldap_conn);
 		return null;
 	}
+
+	private static function ldap_verify_ssha($plain_password, $ldap_ssha_hash)
+	{
+		$hash_base64 = substr($ldap_ssha_hash, 6);
+		$hash_with_salt = base64_decode($hash_base64);
+
+		// The actual SHA1 hash is the first 20 bytes, and the salt is the remaining bytes
+		$hash = substr($hash_with_salt, 0, 20);
+		$salt = substr($hash_with_salt, 20);
+
+		// Recreate the hash by hashing the password + salt
+		$computed_hash = sha1($plain_password . $salt, true);
+
+		// Compare the computed hash with the stored hash
+		return $computed_hash === $hash;
+	}
+
 }

@@ -21,3 +21,21 @@ Create an Elternsprechtag in the Administration panel.
 Login as students/teachers to explore the booking process.
 
 All email will be sent to a "mailcatcher" instance that is running at http://localhost:1080
+
+# Activating LDAP in the docker setup
+
+First, set the config variable `$LDAP_ENABLED` to `true` in the config.php.
+
+Generate a users LDIF file with the script in `utils/generate_users.py`, which will generate three files:
+
+- students.csv
+- teachers.csv
+- users.ldif
+
+The latter can then be added the ldap docker container via
+
+```
+ldapadd -h localhost:1389 -x -D "cn=admin,dc=example,dc=org" -W -f users.ldif
+```
+
+using the admin password `adminpassword`.
