@@ -667,7 +667,7 @@ class ViewController extends Controller
                             <?php
                             $checkAccessData = UserDAO::checkAccessData();
                             $activeEventExists = EventDAO::getActiveEvent() != null;
-                            $filename = 'uploads/newsletter_filled.odt';
+                            $filename = 'newsletter_filled.odt';
                             $fileExists = file_exists($filename);
                             if ($checkAccessData) {
                                 if ($activeEventExists) { ?>
@@ -709,9 +709,16 @@ class ViewController extends Controller
 
                             <?php if ($fileExists): ?>
                                 <div class='newsletterDownload'>
-                                    <p>Rundbrief herunterladen: </p>
-                                    <a href='<?php echo ($filename) ?>' type='application/vnd.oasis.opendocument.text'
-                                        download>Rundbrief</a>
+                                    <p>
+                                        <a href='<?php echo ($filename) ?>' type='application/vnd.oasis.opendocument.text'
+                                            download>Rundbrief jetzt
+                                            herunterladen</a>
+                                    <p>
+                                        <strong>
+                                            Der Rundbrief muss unmittelbar nach dem Download gelöscht werden und darf nicht auf
+                                            dem Server verbleiben!
+                                        </strong>
+                                    </p>
                                 </div>
                             <?php endif; ?>
                         </form>

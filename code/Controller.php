@@ -565,7 +565,7 @@ class Controller
             return false;
         }
 
-        $newFileName = 'uploads/newsletter_filled.odt';
+        $newFileName = 'newsletter_filled.odt';
         copy('uploads/newsletter.odt', $newFileName);
 
         $zip = new ZipArchive;
@@ -597,7 +597,7 @@ class Controller
 
     protected function action_deleteNewsletter()
     {
-        $newsletterPath = 'uploads/newsletter_filled.odt';
+        $newsletterPath = 'newsletter_filled.odt';
 
         if (!file_exists($newsletterPath)) {
             echo 'success';

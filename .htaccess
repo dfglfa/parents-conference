@@ -1,0 +1,24 @@
+<Directory "code">
+Order allow,deny
+Deny from all
+</Directory>
+
+<Directory "Setup">
+Order allow,deny
+Deny from all
+</Directory>
+
+<Directory "uploads">
+Order allow,deny
+Deny from all
+</Directory>
+
+<Directory "utils">
+Order allow,deny
+Deny from all
+</Directory>
+
+<Directory "Docker">
+Order allow,deny
+Deny from all
+</Directory>
