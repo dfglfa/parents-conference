@@ -667,7 +667,7 @@ class ViewController extends Controller
                             <?php
                             $checkAccessData = UserDAO::checkAccessData();
                             $activeEventExists = EventDAO::getActiveEvent() != null;
-                            $filename = 'newsletter_filled.odt';
+                            $filename = 'public/newsletter_filled.odt';
                             $fileExists = file_exists($filename);
                             if ($checkAccessData) {
                                 if ($activeEventExists) { ?>

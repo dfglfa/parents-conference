@@ -158,7 +158,6 @@ class Controller
                             echo 'Ungültiges Dateiformat!';
                             return;
                         }
-                        $this->uploadFileAs('logo.png', $tmpName, "public");
                         echo 'success';
                         return;
                     } else {
@@ -554,7 +553,7 @@ class Controller
         }
 
         $user = AuthenticationManager::getAuthenticatedUser();
-        if ($user->getRole() != "admin") {
+        if ($user == null || $user->getRole() != "admin") {
             echo 'Unauthorized';
             return;
         }
@@ -564,7 +563,7 @@ class Controller
             return false;
         }
 
-        $newFileName = 'newsletter_filled.odt';
+        $newFileName = 'public/newsletter_filled.odt';
         copy('uploads/newsletter.odt', $newFileName);
 
         $zip = new ZipArchive;
@@ -596,7 +595,7 @@ class Controller
 
     protected function action_deleteNewsletter()
     {
-        $newsletterPath = 'newsletter_filled.odt';
+        $newsletterPath = 'public/newsletter_filled.odt';
 
         if (!file_exists($newsletterPath)) {
             echo 'success';
