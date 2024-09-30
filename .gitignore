@@ -1,6 +1,7 @@
 .idea/*
 .vscode
 uploads/*
+public/*
 config.php
 __pycache__
 utils/students.csv

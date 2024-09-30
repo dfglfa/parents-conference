@@ -716,7 +716,7 @@ class ViewController extends Controller
                                     <p>
                                         <strong>
                                             Der Rundbrief muss unmittelbar nach dem Download gelöscht werden und darf nicht auf
-                                            dem Server verbleiben!
+                                            dem Server verbleiben, da er sensible Daten enthält.
                                         </strong>
                                     </p>
                                 </div>

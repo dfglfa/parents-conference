@@ -158,7 +158,7 @@ class Controller
                             echo 'Ungültiges Dateiformat!';
                             return;
                         }
-                        $this->uploadFileAs('logo.png', $tmpName);
+                        $this->uploadFileAs('logo.png', $tmpName, "public");
                         echo 'success';
                         return;
                     } else {
@@ -237,9 +237,8 @@ class Controller
         return $password;
     }
 
-    protected function uploadFileAs($name, $tmpName)
+    protected function uploadFileAs($name, $tmpName, $folder = "uploads")
     {
-        $folder = 'uploads';
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
