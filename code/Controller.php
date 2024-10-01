@@ -158,6 +158,7 @@ class Controller
                             echo 'Ungültiges Dateiformat!';
                             return;
                         }
+                        $this->uploadFileAs('logo.png', $tmpName, "public");
                         echo 'success';
                         return;
                     } else {
