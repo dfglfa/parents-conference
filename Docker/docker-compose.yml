@@ -25,8 +25,8 @@ services:
     build:
       context: ./database
     environment:
-      - MYSQL_DATABASE=speechday
-      - MYSQL_USER=speechday
+      - MYSQL_DATABASE=conference
+      - MYSQL_USER=conference
       - MYSQL_PASSWORD=docker
       - MYSQL_ROOT_PASSWORD=docker
     depends_on:
@@ -58,7 +58,7 @@ services:
 
   ldap:
     image: bitnami/openldap
-    container_name: speechday_ldap
+    container_name: conference_ldap
     ports:
       - "389:389"
       - "1389:1389"

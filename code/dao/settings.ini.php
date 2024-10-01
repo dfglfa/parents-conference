@@ -1,5 +1,5 @@
 <?php return; ?>
-; Database settings for speechday database
+; Database settings for conference database
 ; By default, these are the creds for the docker-based setup.
 ; Replace with the actual creds for production.
 
@@ -7,4 +7,4 @@
 host = database
 user = root
 password = docker
-dbname = speechday
+dbname = conference

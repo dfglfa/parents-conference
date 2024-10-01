@@ -17,10 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `speechday`
+-- Datenbank: `conference`
 --
 
-USE `speechday`;
+USE `conference`;
 
 --
 -- Daten für Tabelle `user`

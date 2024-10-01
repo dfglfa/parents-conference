@@ -1,4 +1,4 @@
-# Parent-teacher conference
+# Parents conference
 
 This project can be used to organize a parent-teacher conference at your school.
 
@@ -13,8 +13,17 @@ You need a server with php8 and MySQL installed.
 
 PHP needs the extensions pdo_mysql, zip and ldap.
 
-You can create the needed database with the SQL script provided in the setup folder.
+You can create the needed database with the SQL script provided in the `Setup` folder.
 Furthermore you have to enter your database credentials in the settings.ini file contained in code/dao.
+
+Rename the config template to serve as the actual config:
+
+```
+mv code/config.php_TEMPLATE code/config.php
+```
+
+Edit this file to match your email and LDAP server settings.
+If you do not intend to use LDAP, leave it unchanged, since by default, LDAP is not enabled.
 
 ## Usage
 
