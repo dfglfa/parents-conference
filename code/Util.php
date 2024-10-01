@@ -105,7 +105,7 @@ function getActionString($actionId)
     }
 }
 
-function getActiveSpeechdayText()
+function getActiveConferenceText()
 {
     $activeEvent = EventDAO::getActiveEvent();
     if ($activeEvent != null) {

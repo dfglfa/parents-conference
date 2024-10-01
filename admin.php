@@ -303,7 +303,7 @@ include_once 'inc/header.php';
             <div id='collapse7' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <button class="btn btn-primary"
-                        onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
+                        onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveConferenceText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne aller Lehrkräfte ausdrucken
                     </button>
 

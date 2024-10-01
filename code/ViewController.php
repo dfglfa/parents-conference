@@ -1023,7 +1023,7 @@ class ViewController extends Controller
             $activeEventId = $event->getId();
         }
         ?>
-                        <p id='activeSpeechdayText'><b>Aktiver Sprechtag:</b>
+                        <p id='activeConferenceText'><b>Aktiver Sprechtag:</b>
                             <?php echo escape($displayText); ?>
                         </p>
                         <input type='hidden' id='activeEventId' value='<?php echo escape($activeEventId); ?>'>
