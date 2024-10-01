@@ -220,6 +220,7 @@ class ViewController extends Controller
                             $timezone = new DateTimeZone('Europe/Berlin');
                             $date->setTimezone($timezone);
                             $hour = $date->format('G');
+                            $dailyQuota = $activeEvent->getThrottleQuota();
                             ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
@@ -229,15 +230,15 @@ class ViewController extends Controller
                                 <?php elseif ($remainingQuota == 1): ?>
                                     <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
                                 <?php else: ?>
-                                    <div class='text-danger'>
-                                        Du hast Dein Kontingent ausgeschöpft und kannst aktuell keine weiteren Termine buchen.
+                                    <div class='text-warning'>
+                                        Das Buchungskontingent ist ausgeschöpft.
                                     </div>
                                 <?php endif; ?>
 
                                 <div class="text-info" style="font-size: 12pt">
                                     Täglich um <?php echo $hour ?> Uhr werden für jeden Schüler
-                                    <?php echo $activeEvent->getThrottleQuota() ?> weitere
-                                    Buchungen ermöglicht.
+                                    <?php echo $dailyQuota == 1 ? 'eine weitere Buchung' : $dailyQuota . ' weitere Buchungen' ?>
+                                    ermöglicht.
                                 </div>
                             </div>
                         <?php endif; ?>
