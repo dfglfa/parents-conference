@@ -275,13 +275,15 @@ class ViewController extends Controller
 
         ?>
 
-                        <div id=" printHeader">
-                            <h3>Termine von
-                                <?php echo ($user->getFirstName() . " " . $user->getLastName()) ?>
-                                am
-                                <?php echo (toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?>
-                            </h3>
-                        </div>
+                        <?php if (count($connectedUsers) == 0): ?>
+                            <div id="printHeader">
+                                <h3>Termine von
+                                    <?php echo ($user->getFirstName() . " " . $user->getLastName()) ?>
+                                    am
+                                    <?php echo (toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?>
+                                </h3>
+                            </div>
+                        <?php endif; ?>
 
                         <table class='table table-hover es-time-table'>
                             <thead>
