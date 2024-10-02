@@ -1,7 +1,14 @@
 $(document).ready(function () {
+  // Preload some data
+  prepareCreateEventForm();
+  loadAllAttendances();
+  loadConnectedUsersForm();
+  loadChangeUserForm("createUser");
+  loadAllConnections();
+
+  // Make accordion sections fetch data on expand
   $("#accordion").on("show.bs.collapse", function (e) {
     var panelId = $(e.target).attr("id");
-    console.log("Panel expanded: " + panelId);
 
     switch (panelId) {
       case "upload":
@@ -27,12 +34,6 @@ $(document).ready(function () {
         addMailTemplateSelectListener();
         break;
     }
-
-    prepareCreateEventForm();
-    loadAllAttendances();
-    loadConnectedUsersForm();
-    loadChangeUserForm("createUser");
-    loadAllConnections();
   });
 
   $(document).on("click", "#btn-create-event", function () {
