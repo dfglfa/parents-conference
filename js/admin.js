@@ -747,7 +747,7 @@ function preparePasswordForm() {
       showConfirmationModal({
         title: "E-Mail-Versand bestätigen",
         content:
-          "<h4>Sind Sie wirklich sicher?</h4><div><strong>ALLE</strong> Lehrer und SuS erhalten eine E-Mail.</div>",
+          "<div class='text-danger'>Sind Sie wirklich sicher?</div><div><strong>ALLE</strong> Lehrer und SuS erhalten eine E-Mail.</div>",
         confirmationCaption: "Ja, Massenversand starten",
         onConfirm,
       });
