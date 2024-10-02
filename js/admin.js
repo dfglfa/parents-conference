@@ -752,4 +752,25 @@ function preparePasswordForm() {
         onConfirm,
       });
     });
+
+  $("#deletePasswords")
+    .off("click")
+    .on("click", () => {
+      const onConfirm = () =>
+        $.ajax({
+          url: "controller.php",
+          type: "POST",
+          data: { action: "deleteAllPasswords" },
+          success: function (data, textStatus, jqXHR) {
+            showMessage($("#passwordFeedback"), "success", "Die Passwörter wurden gelöscht.");
+          },
+        });
+      showConfirmationModal({
+        title: "Löschen bestätigen",
+        content:
+          "<h5 class='text-danger'><strong>Die Passwörter aller Lehrkräfte und SchülerInnen werden gelöscht.</strong></h5>",
+        confirmationCaption: "Ja, Passwörter löschen",
+        onConfirm,
+      });
+    });
 }

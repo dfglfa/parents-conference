@@ -467,7 +467,7 @@ include_once 'inc/header.php';
                         </div>
                         <br>
                         <div>
-                            <button class="btn btn-danger" id="sendAllPasswords">Alle Passwörter per E-Mail
+                            <button class="btn btn-warning" id="sendAllPasswords">Alle Passwörter per E-Mail
                                 versenden</button>
                         </div>
                         <div id="passwordFeedback"></div>

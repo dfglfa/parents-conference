@@ -47,9 +47,14 @@ class Controller
         exit(0); // --> successful termination of script
     }
 
-    //=== USER ACTIONS ===
     protected function action_createEvent()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $name = $_REQUEST['name'];
         $date = $_REQUEST['date'];
         $beginTime = $_REQUEST['beginTime'];
@@ -94,6 +99,11 @@ class Controller
         }
 
         $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() == "student") {
+            echo "Unauthorized";
+            return;
+        }
+
         $event = EventDAO::getActiveEvent();
 
         if ($event == null || $event->getStartPostDate() < time() && $authUser->getRole() != "admin") {
@@ -108,6 +118,12 @@ class Controller
 
     protected function action_uploadFile()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         header('Content-Type: text/html; charset=UTF-8');
@@ -230,6 +246,12 @@ class Controller
 
     protected function uploadFileAs($name, $tmpName, $folder = "uploads")
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
@@ -241,6 +263,12 @@ class Controller
 
     protected function importCSV($role, $targetPath)
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         // import into database
         $filename = $targetPath;
         $fp = fopen($filename, 'r');
@@ -447,6 +475,12 @@ class Controller
 
     protected function action_setActiveEvent()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $eventId = $_REQUEST['eventId'];
 
         $success = EventDAO::setActiveEvent($eventId);
@@ -460,6 +494,12 @@ class Controller
 
     protected function action_deleteEvent()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $eventId = $_REQUEST['eventId'];
 
         $success = EventDAO::deleteEvent($eventId);
@@ -473,6 +513,12 @@ class Controller
 
     protected function action_createUser()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $userName = $_REQUEST['userName'];
         $password = $_REQUEST['password'];
         $firstName = $_REQUEST['firstName'];
@@ -500,6 +546,12 @@ class Controller
 
     protected function action_editUser()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $userId = $_REQUEST['userId'];
         $userName = $_REQUEST['userName'];
         $password = $_REQUEST['password'];
@@ -529,6 +581,12 @@ class Controller
 
     protected function action_deleteUser()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $userId = $_REQUEST['userId'];
 
         $deleteUserResult = UserDAO::deleteUserById($userId);
@@ -540,8 +598,32 @@ class Controller
         }
     }
 
+    protected function action_deleteAllPasswords()
+    {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
+        $deleteStudentsResult = UserDAO::truncateAccessDataForRole("student");
+        $deleteTeachersResult = UserDAO::truncateAccessDataForRole("teacher");
+
+        if ($$deleteStudentsResult && $deleteTeachersResult) {
+            echo 'success';
+        } else {
+            echo 'error';
+        }
+    }
+
     protected function action_deleteStats()
     {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
         $userId = $_REQUEST['userId'];
 
         if ($userId != -1) {
