@@ -440,7 +440,8 @@ class UserDAO extends AbstractDAO
             SELECT uc.userId1, uc.userId2, u1.firstName as firstName1, u1.lastName lastName1, u2.firstName as firstName2, u2.lastName as lastName2
             from userconnection uc
             inner join user u1 on u1.id = uc.userId1
-            inner join user u2 on u2.id = uc.userId2',
+            inner join user u2 on u2.id = uc.userId2
+            ORDER BY u1.lastName, u1.firstName',
             array()
         );
     }
