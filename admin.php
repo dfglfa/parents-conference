@@ -427,7 +427,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='passwords' class='panel-collapse'>
+            <div id='passwords' class='panel-collapse collapse'>
                 <?php
                 global $LDAP_ENABLED;
                 ?>
