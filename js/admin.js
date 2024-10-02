@@ -171,6 +171,8 @@ $(document).on("click", "#btn-upload-file", function (event) {
       ) {
         return;
       }
+    } else if (uploadType == "logo") {
+      setTimeout(() => $("#navLogo").attr("src", "public/logo.png" + "?t=" + new Date().getTime()), 1000);
     }
 
     $("#btn-upload-file").attr("disabled", true).text("Import läuft ...");

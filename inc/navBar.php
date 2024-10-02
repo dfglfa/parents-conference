@@ -9,9 +9,8 @@
                 <span class='icon-bar'></span>
             </button>
             <a class='navbar-brand' href='redirectUser.php'>
-                <?php if (file_exists("public/logo.png")): ?>
-                    <img src="public/logo.png" style="display:inline-block; height: 30px; margin: -5px 5px 0 0">
-                <?php endif ?>
+                <img id="navLogo" src="<?php echo file_exists("public/logo.png") ? "public/logo.png" : "" ?>"
+                    style="display:inline-block; height: 30px; margin: -5px 5px 0 0">
                 <?php if (EventDAO::getActiveEvent() != null):
                     echo EventDAO::getActiveEvent()->getName(); ?>
                 <?php else: ?>
