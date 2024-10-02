@@ -4,7 +4,7 @@ require_once('dao/EventDAO.php');
 
 function escape($string)
 {
-    return nl2br(htmlentities($string));
+    return nl2br(htmlentities($string ?? ""));
 }
 
 class SessionContext

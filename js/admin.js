@@ -27,6 +27,12 @@ $(document).ready(function () {
         addMailTemplateSelectListener();
         break;
     }
+
+    prepareCreateEventForm();
+    loadAllAttendances();
+    loadConnectedUsersForm();
+    loadChangeUserForm("createUser");
+    loadAllConnections();
   });
 
   $(document).on("click", "#btn-create-event", function () {
