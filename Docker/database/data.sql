@@ -30,7 +30,8 @@ USE `conference`;
 CREATE TABLE `accessdata` (
   `id` int(11) NOT NULL,
   `userName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `password` varchar(255) COLLATE utf8_bin NOT NULL
+  `password` varchar(255) COLLATE utf8_bin NOT NULL,
+  `role` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --

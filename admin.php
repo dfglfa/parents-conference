@@ -427,17 +427,25 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='passwords' class='panel-collapse collapse'>
+            <div id='passwords' class='panel-collapse'>
                 <div class='panel-body'>
                     <div>
-                        Wenn Sie allen Schülern die Passwörter in papierener Form zukommen lassen wollen,
-                        können Sie sie hier in kompakter Form ausdrucken.
+                        <div>
+                            Wenn Sie den Benutzern die Passwörter in papierener Form zukommen lassen wollen,
+                            können Sie sie hier in kompakter Form ausdrucken.
+                        </div>
+                        <div>
+                            <h4>Schüler-Passwörter</h4>
+                            <a target="_blank" href="/passwords.php?role=student">Zur Druckansicht aller
+                                Schüler-Passwörter</a> (sortiert nach Klassen)
+                        </div>
+
+                        <div>
+                            <h4>Lehrer-Passwörter</h4>
+                            <a target="_blank" href="/passwords.php?role=teacher">Zur Druckansicht aller
+                                Lehrer-Passwörter</a>
+                        </div>
                     </div>
-                    <div>
-                        Die Passwörter sind nach Klassen sortiert.
-                    </div>
-                    <br>
-                    <a target="_blank" href="/passwords.php">Passwörter drucken</a>
                 </div>
             </div>
         </div>

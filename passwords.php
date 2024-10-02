@@ -54,31 +54,41 @@ AuthenticationManager::checkPrivilege('admin');
 
 <body>
     <?php
-    $users = UserDAO::getStudentsForPasswordPrinting();
+    $role = $_GET["role"];
+
+    if ($role != "student" && $role != "teacher") {
+        echo "Unknown role " . $role;
+        return;
+    }
+
+    $users = UserDAO::getUsersAccessDataForRole($role);
     $activeEvent = EventDAO::getActiveEvent();
     $userIndex = 0;
     $currentClass = null;
+
+    // Insert a page break after n users
+    $BREAK_AFTER_N = 7;
     ?>
 
     <?php foreach ($users as $entry):
-        $student = $entry['student'];
+        $user = $entry['user'];
         ?>
 
-        <?php if ($currentClass != $student->getClass()):
+        <?php if ($role == "student" && $currentClass != $user->getClass()):
             ?>
-            <?php if ($userIndex % 7 != 0):
+            <?php if ($userIndex % $BREAK_AFTER_N != 0):
                 $userIndex = 0;
                 ?>
                 <div class="page-break"></div>
             <?php endif; ?>
 
             <div>
-                <h2>Klasse <?php echo $student->getClass() ?></h2>
+                <h2>Klasse <?php echo $user->getClass() ?></h2>
             </div>
         <?php endif; ?>
 
         <?php
-        $currentClass = $student->getClass();
+        $currentClass = $user->getClass();
         $userIndex += 1;
         ?>
 
@@ -92,15 +102,15 @@ AuthenticationManager::checkPrivilege('admin');
                 <table>
                     <tr>
                         <td><strong>Klasse</strong></td>
-                        <td><?php echo $student->getClass() ?></td>
+                        <td><?php echo $user->getClass() ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Name</strong></td>
-                        <td><?php echo $student->getLastName() . ", " . $student->getFirstName() ?></td>
+                        <td><strong><?php echo $role == "teacher" ? "Lehrkraft" : "Name" ?></strong></td>
+                        <td><?php echo $user->getLastName() . ", " . $user->getFirstName() ?></td>
                     </tr>
                     <tr>
                         <td><strong>Login</strong></td>
-                        <td><?php echo $student->getUserName() ?></td>
+                        <td><?php echo $user->getUserName() ?></td>
                     </tr>
                     <tr>
                         <td><strong>Passwort</strong></td>
@@ -110,7 +120,7 @@ AuthenticationManager::checkPrivilege('admin');
             </div>
         </div>
 
-        <?php if ($userIndex % 7 == 0): ?>
+        <?php if ($userIndex % $BREAK_AFTER_N == 0): ?>
             <div class="page-break"></div>
         <?php endif; ?>
     <?php endforeach; ?>

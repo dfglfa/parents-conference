@@ -66,35 +66,28 @@ class UserDAO extends AbstractDAO
         }
     }
 
-    public static function getStudentsForPasswordPrinting()
+    public static function getUsersAccessDataForRole($role)
     {
         $users = array();
         $con = self::getConnection();
         $res = self::query(
             $con,
             'SELECT u.id, u.userName, a.password, u.firstName, u.lastName, u.email, u.class, u.role, u.title 
-                    FROM user AS u JOIN accessdata AS a ON u.userName = a.userName WHERE role = ? ORDER BY u.class, u.lastName, u.firstName;',
-            array('student')
+                    FROM user AS u JOIN accessdata AS a ON u.userName = a.userName WHERE u.role = ? ORDER BY ' .
+            ($role == "teacher" ? 'u.lastName, u.firstName' : 'u.class, u.lastName, u.firstName')
+            . ";",
+            array($role)
         );
 
         while ($u = self::fetchObject($res)) {
-            if (!isset($u->title)) {
-                //continue;
-            }
             $users[] = array(
-                'student' => new User($u->id, $u->userName, "", $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title),
+                'user' => new User($u->id, $u->userName, "", $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title),
                 'password' => $u->password
             );
         }
 
         self::close($res);
         return $users;
-    }
-
-    public static function deleteAccessData()
-    {
-        $con = self::getConnection();
-        return self::query($con, 'DELETE FROM accessdata;', array(), true)['success'];
     }
 
     public static function getUsers()
@@ -283,12 +276,12 @@ class UserDAO extends AbstractDAO
                 $teacher = UserDAO::getUserForId($userId);
                 SlotDAO::createSlotsForEvent($activeEvent->getId(), array($teacher));
             }
-        } else {
-            if (UserDAO::checkAccessData()) {
-                $accessData = array();
-                $accessData[] = array($userName, $password);
-                UserDAO::bulkInsertAccessData($accessData, false);
-            }
+        }
+
+        if (UserDAO::checkAccessData()) {
+            $accessData = array();
+            $accessData[] = array($userName, $password);
+            UserDAO::bulkInsertAccessData($accessData, $role);
         }
 
         self::getConnection()->commit();
@@ -323,21 +316,24 @@ class UserDAO extends AbstractDAO
         }
     }
 
-    public static function bulkInsertAccessData($accessData, $delete = true)
+    public static function bulkInsertAccessData($accessData, $role)
     {
         $con = self::getConnection();
-        if ($delete) {
-            self::query($con, 'DELETE FROM accessdata;', array());
-        }
-
-        $sth = $con->prepare('INSERT INTO accessdata (userName, password) VALUES (?, ?);');
+        $sth = $con->prepare('INSERT INTO accessdata (userName, password, role) VALUES (?, ?, ?);');
 
         foreach ($accessData as $access) {
             foreach ($access as $attr => $value) {
                 $sth->bindValue($attr + 1, $value);
             }
+            $sth->bindValue(3, $role);
             $sth->execute();
         }
+    }
+
+    public static function truncateAccessDataForRole($role)
+    {
+        $con = self::getConnection();
+        return self::query($con, 'DELETE FROM accessdata WHERE role = ?;', array($role), true)['success'];
     }
 
     public static function update($userId, $userName, $password, $firstName, $lastName, $email, $class, $type)

@@ -283,12 +283,14 @@ class Controller
 
                 if ($role == 'teacher') {
                     $userName = trim($row[4]);
-                    $password = trim($row[5]);
+                    $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
                     if (!$this->checkForUniqueUserName($userName, $userNames)) {
                         fclose($fp);
                         return $duplicateUserError;
                     }
+
+                    $accessData[] = array($userName, $password);
                     $userNames[] = $userName;
                     $title = trim($row[6]);
 
@@ -297,6 +299,8 @@ class Controller
                     if ($roomNumber != '' && $roomName != '') {
                         $rooms[$userName] = array($roomNumber, $roomName);
                     }
+
+
                 } elseif ($role == 'student') {
                     $userName = trim($row[4]);
 
@@ -317,7 +321,6 @@ class Controller
                     $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
                     if (trim($row[6] != '')) {
-                        //error_log("Found sibling " . $row[6] . " of username " . $userName);
                         $userConnections[$userName] = trim($row[6]);
                     }
 
@@ -333,7 +336,7 @@ class Controller
             }
         }
 
-        $deleteExistingDataSuccess = UserDAO::deleteUsersByRole($role);
+        $deleteExistingDataSuccess = UserDAO::deleteUsersByRole($role) && UserDAO::truncateAccessDataForRole($role);
         if ($role == 'teacher') {
             $deleteExistingDataSuccess = $deleteExistingDataSuccess && EventDAO::deleteAllEvents() && RoomDAO::deleteAllRooms();
         } elseif ($role == 'student') {
@@ -350,7 +353,7 @@ class Controller
 
         UserDAO::bulkInsertUsers($users, $rooms);
         if (count($accessData) > 0) {
-            UserDAO::bulkInsertAccessData($accessData);
+            UserDAO::bulkInsertAccessData($accessData, $role);
         }
 
         if ($role == 'student') {
@@ -534,18 +537,6 @@ class Controller
             echo ('success');
         } else {
             echo ('error');
-        }
-    }
-
-
-    protected function action_deleteAccessData()
-    {
-        $deleteSuccess = UserDAO::deleteAccessData();
-
-        if ($deleteSuccess) {
-            echo 'success';
-        } else {
-            echo 'Die Schüler-Zugangsdaten konnten nicht gelöscht werden!';
         }
     }
 
