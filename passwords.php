@@ -64,10 +64,17 @@ AuthenticationManager::checkPrivilege('admin');
         $student = $entry['student'];
         ?>
 
-        <?php if ($currentClass != $student->getClass() && ($userIndex % 7 != 0)):
-            $userIndex = 0;
+        <?php if ($currentClass != $student->getClass()):
             ?>
-            <div class="page-break"></div>
+            <?php if ($userIndex % 7 != 0):
+                $userIndex = 0;
+                ?>
+                <div class="page-break"></div>
+            <?php endif; ?>
+
+            <div>
+                <h2>Klasse <?php echo $student->getClass() ?></h2>
+            </div>
         <?php endif; ?>
 
         <?php
