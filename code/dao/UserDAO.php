@@ -66,20 +66,23 @@ class UserDAO extends AbstractDAO
         }
     }
 
-    public static function getStudentsForNewsletter()
+    public static function getStudentsForPasswordPrinting()
     {
         $users = array();
         $con = self::getConnection();
         $res = self::query(
             $con,
-            'SELECT u.id, u.userName, a.password, u.firstName, u.lastName, u.email, u.class, u.role 
+            'SELECT u.id, u.userName, a.password, u.firstName, u.lastName, u.email, u.class, u.role, u.title 
                     FROM user AS u JOIN accessdata AS a ON u.userName = a.userName WHERE role = ? ORDER BY u.class, u.lastName, u.firstName;',
             array('student')
         );
 
         while ($u = self::fetchObject($res)) {
+            if (!isset($u->title)) {
+                //continue;
+            }
             $users[] = array(
-                'student' => new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title),
+                'student' => new User($u->id, $u->userName, "", $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title),
                 'password' => $u->password
             );
         }

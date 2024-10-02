@@ -62,7 +62,6 @@ $(document).ready(function () {
               showMessage(message, "success", "Der Elternsprechtag wurde erfolgreich angelegt!");
               loadChangeEventsForm();
               displayActiveEvent();
-              updateNewsletterForm(false);
             } else {
               showMessage(message, "danger", "Der Elternsprechtag konnte nicht angelegt werden!");
             }
@@ -94,10 +93,7 @@ function updateUploadInfos() {
 
   var allowedFileTypes = $("#allowed-file-types");
   var uploadDialog = $("#input-file");
-  if (selectedType == "newsletter") {
-    allowedFileTypes.html("Es sind nur ODT Dateien erlaubt.");
-    uploadDialog.attr("accept", ".odt");
-  } else if (["teacher", "student"].indexOf(selectedType) > -1) {
+  if (["teacher", "student"].indexOf(selectedType) > -1) {
     allowedFileTypes.html("Es sind nur CSV Dateien erlaubt.");
     uploadDialog.attr("accept", ".csv");
   } else if (selectedType === "logo") {
@@ -221,7 +217,6 @@ $(document).on("click", "#btn-upload-file", function (event) {
               $("#csv-preview").show();
               displayActiveEvent();
               loadChangeEventsForm();
-              updateNewsletterForm(false);
             });
           }
         } else {
@@ -282,7 +277,6 @@ $(document).on("click", "#btn-delete-event", function (event) {
           showMessage(message, "success", "Der Elternsprechtag wurde erfolgreich gelöscht!");
           loadChangeEventsForm();
           displayActiveEvent();
-          updateNewsletterForm(false);
         } else {
           showMessage(message, "danger", "Der Elternsprechtag konnte nicht gelöscht werden!");
         }
@@ -455,65 +449,6 @@ $(document).on("change", "#selectUserStats", function (event) {
   var userId = user.id;
 
   $("#statistics").load("viewController.php?action=stats&userId=" + userId);
-});
-
-function updateNewsletterForm(successMessage) {
-  $("#newsletterForm").load("viewController.php?action=getNewsletterForm", function () {
-    if (successMessage) {
-      var newMessage = $("#newsletterMessage");
-      showMessage(newMessage, "success", successMessage);
-    }
-  });
-}
-
-$(document).on("click", "#newsletterForm .btn", function (event) {
-  var message = $("#newsletterMessage");
-  var id = $(this).attr("id");
-  var newsletterExists = $("#newsletterExists").val();
-
-  var successMessage = "";
-  var postData;
-
-  if (id === "btn-create-newsletter") {
-    if (
-      newsletterExists &&
-      !confirm("WARNUNG!\n\nEs existiert bereits ein Rundbrief! Soll dieser überschrieben werden?")
-    ) {
-      return;
-    }
-    postData = $.param({ action: "createNewsletter" });
-    successMessage = "Der Rundbrief wurde erfolgreich erstellt!";
-  } else if (id === "btn-delete-newsletter") {
-    if (!confirm("WARNUNG!\n\nSoll der aktuelle Rundbrief wirklich gelöscht werden?")) {
-      return;
-    }
-    postData = $.param({ action: "deleteNewsletter" });
-    successMessage = "Der Rundbrief wurde erfolgreich gelöscht!";
-  } else {
-    if (!confirm("WARNUNG!\n\nSollen die Schüler-Zugangsdaten wirklich gelöscht werden?")) {
-      return;
-    }
-    postData = $.param({ action: "deleteAccessData" });
-    successMessage = "Die Schüler-Zugangsdaten wurden erfolgreich gelöscht!";
-  }
-
-  var formURL = "controller.php";
-  $.ajax({
-    url: formURL,
-    type: "POST",
-    data: postData,
-    success: function (data, textStatus, jqXHR) {
-      if (data.indexOf("success") > -1) {
-        updateNewsletterForm(successMessage);
-        displayActiveEvent();
-      } else {
-        showMessage(message, "danger", data);
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      showMessage(message, "danger", "Der Rundbrief konnte nicht erstellt werden!");
-    },
-  });
 });
 
 $(document).on("click", "#deleteStatisticsForm .btn", function (event) {

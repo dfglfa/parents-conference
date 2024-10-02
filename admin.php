@@ -40,8 +40,6 @@ include_once 'inc/header.php';
                             <select class='form-control' id='inputUploadType' name='uploadType'>
                                 <option value='teacher'>Lehrer</option>
                                 <option value='student'>Schüler</option>
-                                <!-- <option value='subject'>Fächer</option> -->
-                                <option value='newsletter'>Rundbrief</option>
                                 <option value='logo'>Schul-Logo</option>
                             </select>
                         </div>
@@ -424,22 +422,22 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#newsletter'>
-                        Rundbrief
+                    <a data-toggle='collapse' data-parent='#accordion' href='#passwords'>
+                        Passwörter ausdrucken
                     </a>
                 </h4>
             </div>
-            <div id='newsletter' class='panel-collapse collapse'>
+            <div id='passwords' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div>
-                        Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
-                        Papierform zukommen zu lassen.
+                        Wenn Sie allen Schülern die Passwörter in papierener Form zukommen lassen wollen,
+                        können Sie sie hier in kompakter Form ausdrucken.
+                    </div>
+                    <div>
+                        Die Passwörter sind nach Klassen sortiert.
                     </div>
                     <br>
-                    <?php
-                    $viewController = ViewController::getInstance();
-                    $viewController->action_getNewsletterForm();
-                    ?>
+                    <a target="_blank" href="/passwords.php">Passwörter drucken</a>
                 </div>
             </div>
         </div>

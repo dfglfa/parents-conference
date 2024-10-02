@@ -34,7 +34,7 @@ As an administrator:
 2. Import student data via a CSV file (example in templates/students.csv)
 3. Optionally: Configure email templates with text according to your wishes.
 4. Create a reunion.
-5. Create the newsletter and distribute it among the students / parents.
+5. Optionally: Print passwords and distribute them to the students.
 
 As a teacher (optional):
 
@@ -43,7 +43,7 @@ As a teacher (optional):
 
 As a student / parent:
 
-1. Log in with the credentials provided on the newsletter.
+1. Log in with the provided credentials.
 2. Book the desired slots for the desired teacher. If your siblings are connected to your account, you have a unified booking "matrix" for all siblings.
 3. Print your time-table.
 

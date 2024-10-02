@@ -663,70 +663,6 @@ class ViewController extends Controller
                         <?php endif;
     }
 
-    public function action_getNewsletterForm()
-    {
-        ?>
-                        <form id='newsletterForm'>
-                            <?php
-                            $checkAccessData = UserDAO::checkAccessData();
-                            $activeEventExists = EventDAO::getActiveEvent() != null;
-                            $filename = 'public/newsletter_filled.odt';
-                            $fileExists = file_exists($filename);
-                            if ($checkAccessData) {
-                                if ($activeEventExists) { ?>
-                                    <input type='hidden' id='newsletterExists' value='<?php echo (escape($fileExists)) ?>'>
-                                    <button type='button' class='btn btn-primary' id='btn-create-newsletter'>
-                                        Rundbrief erzeugen
-                                    </button>
-                                <?php } else { ?>
-                                    <div class='alert alert-info'>
-                                        INFO: Es ist momentan kein Elternsprechtag als aktiv gesetzt!<br>
-                                        Setze einen Elternsprechtag als aktiv um einen Rundbrief erzeugen zu können!
-                                    </div>
-                                <?php }
-                            } elseif ($fileExists) { ?>
-                                <div class='alert alert-info'>
-                                    INFO: Um einen neuen Rundbrief zu erstellen, müssen zuerst wieder die Schüler importiert
-                                    werden!<br>
-                                    (Falls gewünscht kann zuvor auch eine neue Rundbrief-Vorlage hochgeladen werden.)
-                                </div>
-                            <?php } else { ?>
-                                <div class='alert alert-danger'>
-                                    Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!
-                                </div>
-                            <?php } ?>
-
-                            <?php if ($fileExists): ?>
-                                <button type='button' class='btn btn-primary' id='btn-delete-newsletter'>
-                                    Rundbrief löschen
-                                </button>
-                            <?php endif; ?>
-
-                            <?php if ($checkAccessData): ?>
-                                <button type='button' class='btn btn-primary' id='btn-delete-access-data'>
-                                    Schüler-Zugangsdaten löschen
-                                </button>
-                            <?php endif; ?>
-
-                            <div class='message' id='newsletterMessage'></div>
-
-                            <?php if ($fileExists): ?>
-                                <div class='newsletterDownload'>
-                                    <p>
-                                        <a href='<?php echo ($filename) ?>' type='application/vnd.oasis.opendocument.text'
-                                            download>Rundbrief jetzt
-                                            herunterladen</a>
-                                    <p>
-                                        <strong>
-                                            Der Rundbrief muss unmittelbar nach dem Download gelöscht werden und darf nicht auf
-                                            dem Server verbleiben, da er sensible Daten enthält.
-                                        </strong>
-                                    </p>
-                                </div>
-                            <?php endif; ?>
-                        </form>
-                        <?php
-    }
 
     public function action_csvPreview()
     {
@@ -828,25 +764,6 @@ class ViewController extends Controller
                     </p>';
                 break;
 
-            case 'newsletter':
-                $typeText = 'Rundbrief Vorlage (ODT)';
-                $mimeType = 'application/vnd.oasis.opendocument.text';
-                $filePath = 'templates/newsletter_template.odt';
-                $infos = '<br><br>
-                    <p><b>Infos:</b></p>
-                    <p>
-                    In der Vorlage können folgende Platzhalter verwendet werden:
-                    <ul>
-                        <li>ESTODAY (heutiges Datum)</li> 
-                        <li>ESDATE (Datum des Elternsprechtags)</li>
-                        <li>ESFIRSTNAME (Vorname des Schülers)</li>
-                        <li>ESLASTNAME (Nachname des Schülers)</li>
-                        <li>ESCLASS (Klasse des Schülers)</li>
-                        <li>ESUSERNAME (Benutzername des Schülers)</li>
-                        <li>ES1234567 (Passwort des Schülers)</li>
-                    </ul>
-                    </p>';
-                break;
             default:
                 $typeText = '';
                 $mimeType = 'image/png';

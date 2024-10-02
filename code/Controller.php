@@ -144,15 +144,6 @@ class Controller
                         echo $importCSVResult['success'] ? 'success' : $importCSVResult['message'];
                         return;
 
-                    } else if ($type == 'newsletter') {
-                        if (!$this->validateFileExtension($ext, array('odt'))) {
-                            echo 'Ungültiges Dateiformat!';
-                            return;
-                        }
-                        $this->uploadFileAs('newsletter.' . $ext, $tmpName);
-                        echo 'success';
-                        return;
-
                     } else if ($type == 'logo') {
                         if (!$this->validateFileExtension($ext, array('png'))) {
                             echo 'Ungültiges Dateiformat!';
@@ -546,69 +537,6 @@ class Controller
         }
     }
 
-    protected function action_createNewsletter()
-    {
-        if (!UserDAO::checkAccessData()) {
-            echo 'Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!';
-            return false;
-        }
-
-        $user = AuthenticationManager::getAuthenticatedUser();
-        if ($user == null || $user->getRole() != "admin") {
-            echo 'Unauthorized';
-            return;
-        }
-
-        if (!file_exists('uploads/newsletter.odt')) {
-            echo 'Keine Rundbrief-Vorlage vorhanden! Bitte lade zuerst eine hoch!';
-            return false;
-        }
-
-        $newFileName = 'public/newsletter_filled.odt';
-        copy('uploads/newsletter.odt', $newFileName);
-
-        $zip = new ZipArchive;
-        $fileToModify = 'content.xml';
-        if ($zip->open($newFileName) === TRUE) {
-            //Read contents into memory
-            $oldContents = $zip->getFromName($fileToModify);
-            //Modify contents:
-            $newContents = $this->createNewsletter($oldContents);
-            if ($newContents == null) {
-                echo 'Der Rundbrief konnte nicht erstellt werden, da es keinen aktiven Elternsprechtag gibt!';
-                $zip->close();
-                unlink($newFileName);
-                return false;
-            }
-
-            //Delete the old...
-            $zip->deleteName($fileToModify);
-            //Write the new...
-            $zip->addFromString($fileToModify, $newContents);
-            //And write back to the filesystem.
-            $zip->close();
-
-            echo 'success';
-        } else {
-            echo 'Der Rundbrief konnte nicht geöffnet werden!';
-        }
-    }
-
-    protected function action_deleteNewsletter()
-    {
-        $newsletterPath = 'public/newsletter_filled.odt';
-
-        if (!file_exists($newsletterPath)) {
-            echo 'success';
-            return true;
-        }
-
-        if (unlink($newsletterPath)) {
-            echo 'success';
-        } else {
-            echo 'Der Rundbrief konnte nicht gelöscht werden!';
-        }
-    }
 
     protected function action_deleteAccessData()
     {
@@ -619,69 +547,6 @@ class Controller
         } else {
             echo 'Die Schüler-Zugangsdaten konnten nicht gelöscht werden!';
         }
-    }
-
-    private function createNewsletter($template)
-    {
-        $doc = new DOMDocument('1.0', 'utf-8');
-        $doc->loadXML($template);
-        $root = $doc->documentElement;
-
-        $styles = $root->getElementsByTagName('automatic-styles')->item(0);
-        $styleNode = $doc->createElement('style:style');
-        $styleNode->setAttribute('style:name', 'NewsletterLineBreak');
-        $styleNode->setAttribute('style:family', 'paragraph');
-        $styleNodeChild = $doc->createElement('style:paragraph-properties');
-        $styleNodeChild->setAttribute('fo:break-before', 'page');
-        $styleNode->appendChild($styleNodeChild);
-        $styles->appendChild($styleNode);
-
-        $officeText = $root->getElementsByTagName('text')->item(0);
-        $officeText->setAttribute("text:use-soft-page-breaks", "true");
-
-        $breakNode = $doc->createElement('text:p');
-        $breakNode->setAttribute('text:style-name', 'NewsletterLineBreak');
-        $officeText->appendChild($breakNode);
-
-        // --- student loop ---
-        $copyNodeBackup = $officeText->cloneNode(true);
-        $bodyNode = $root->getElementsByTagName('body')->item(0);
-
-        $activeEvent = EventDAO::getActiveEvent();
-        if ($activeEvent == null) {
-            return null;
-        }
-        $students = UserDAO::getStudentsForNewsletter();
-
-        foreach ($students as $studentInfo) {
-            $student = $studentInfo['student'];
-            $password = $studentInfo['password'];
-            $trans = array(
-                'ESTODAY' => toDate(time(), 'd.m.Y'),
-                'ESDATE' => toDate($activeEvent->getDateFrom(), 'd.m.Y'),
-                'ESFIRSTNAME' => escape($student->getFirstName()),
-                'ESLASTNAME' => escape($student->getLastName()),
-                'ESUSERNAME' => escape($student->getUserName()),
-                'ESCLASS' => escape($student->getClass()),
-                'ESPASSWORD' => escape($password)
-            );
-
-            $copyNode = $copyNodeBackup->cloneNode(true);
-
-            $part = $doc->saveXML($copyNode);
-            $part = strtr($part, $trans);
-
-            $newPart = $doc->createDocumentFragment();
-            $newPart->appendXML($part);
-
-            $bodyNode->appendChild($newPart);
-        }
-        // --- student loop ---
-
-        $doc->formatOutput = TRUE;
-        $newFile = $doc->saveXML();
-
-        return $newFile;
     }
 
     protected function action_deleteStats()
