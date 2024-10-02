@@ -945,13 +945,22 @@ class ViewController extends Controller
                                 $right = $rightColumn[$i];
                                 ?>
                                 <tr>
-                                    <td><?php echo $left['lastName'] ?>, <?php echo $left['firstName'] ?></td>
+                                    <td>
+                                        <span id="teacher_<?php echo $left['teacherId'] ?>" class="selectableName">
+                                            <?php echo $left['lastName'] ?>,
+                                            <?php echo $left['firstName'] ?>
+                                        </span>
+                                    </td>
                                     <td>
                                         <?php echo toDate($left['from'], 'H:i') ?>-<?php echo toDate($left['to'], 'H:i') ?>
                                         Uhr
                                     </td>
                                     <td class="secondColumnStart">
-                                        <?php echo $right['lastName'] ?>, <?php echo $right['firstName'] ?>
+                                        <span id="teacher_<?php echo $right['teacherId'] ?>" class="selectableName">
+                                            <?php echo $right['lastName'] ?>,
+                                            <?php echo $right['firstName'] ?>
+                                        </span>
+
                                     </td>
                                     <td>
                                         <?php echo toDate($right['from'], 'H:i') ?>-<?php echo toDate($right['to'], 'H:i') ?>
@@ -962,7 +971,12 @@ class ViewController extends Controller
                             <?php if ($isOdd):
                                 $lastEntry = $attendances[$middleIndex - 1]; ?>
                                 <tr>
-                                    <td><?php echo $lastEntry['lastName'] ?>, <?php echo $lastEntry['firstName'] ?></td>
+                                    <td>
+                                        <span id="teacher_<?php echo $lastEntry['teacherId'] ?>" class="selectableName">
+                                            <?php echo $lastEntry['lastName'] ?>,
+                                            <?php echo $lastEntry['firstName'] ?>
+                                        </span>
+                                    </td>
                                     <td>
                                         <?php echo toDate($lastEntry['from'], 'H:i') ?>-<?php echo toDate($lastEntry['to'], 'H:i') ?>
                                         Uhr

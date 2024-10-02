@@ -584,20 +584,19 @@ function loadTimeTable(typeId) {
 }
 
 function displayAttendance() {
-  var teacherSelect = $("#selectTeacher");
+  const teacherSelect = $("#selectTeacher");
 
-  var selectedTeacher = teacherSelect.find("option:selected");
+  const selectedTeacher = teacherSelect.find("option:selected");
 
   if (!selectedTeacher || !selectedTeacher.val()) {
     return;
   }
 
-  var user = $.parseJSON(selectedTeacher.val());
-  var userId = user.id;
-  var eventId = $("#activeEventId").val();
+  const teacherId = selectedTeacher.val();
+  const eventId = $("#activeEventId").val();
 
   $("#changeAttendanceTime").load(
-    "viewController.php?action=changeAttendance&userId=" + userId + "&eventId=" + eventId
+    "viewController.php?action=changeAttendance&userId=" + teacherId + "&eventId=" + eventId
   );
 }
 
@@ -695,7 +694,7 @@ function toggleUserConnection(userId1, userId2, successFeedback) {
 }
 
 $(document).on("change", "#selectTeacher", function (event) {
-  displayAttendance();
+  displayActiveEvent();
 });
 
 $(document).on("click", "#btn-change-attendance", function () {
@@ -742,6 +741,11 @@ function loadAllAttendances() {
     dataType: "html",
     success: (data) => {
       section.html(data);
+      $(".selectableName").click((e) => {
+        const teacherId = e.target.id.split("teacher_")[1];
+        $("#selectTeacher").val(teacherId).change();
+        document.getElementById("attendances").scrollIntoView({ behavior: "smooth" });
+      });
     },
     error: () => {
       section.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");

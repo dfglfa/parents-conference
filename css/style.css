@@ -182,6 +182,11 @@ td.selectedTeacher {
   padding: 5px 10px 0 0;
 }
 
+.selectableName:hover {
+  cursor: pointer;
+  color: blue;
+}
+
 /* ------- print ------- */
 
 @media print {

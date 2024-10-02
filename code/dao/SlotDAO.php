@@ -81,7 +81,7 @@ class SlotDAO extends AbstractDAO
 
         $attendances = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT firstName, lastName, MIN(dateFrom) AS `from`, MAX(dateTo) AS `to` 
+        $res = self::query($con, 'SELECT teacherId, firstName, lastName, MIN(dateFrom) AS `from`, MAX(dateTo) AS `to` 
                                                      FROM slot 
                                                      INNER JOIN user on slot.teacherId = user.id
                                                      WHERE eventId = ? AND available = 1 
@@ -90,6 +90,7 @@ class SlotDAO extends AbstractDAO
 
         while ($a = self::fetchObject($res)) {
             $attendances[] = array(
+                'teacherId' => $a->teacherId,
                 'firstName' => $a->firstName,
                 'lastName' => $a->lastName,
                 'date' => $event->getDateFrom(),

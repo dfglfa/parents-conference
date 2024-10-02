@@ -268,10 +268,7 @@ include_once 'inc/header.php';
                             <?php
                             $teachers = UserDAO::getUsersForRole('teacher');
                             foreach ($teachers as $teacher): ?>
-                                <?php
-                                $val = $teacher->__toString();
-                                ?>
-                                <option value='<?php echo (escape($val)) ?>'>
+                                <option value='<?php echo $teacher->getId() ?>'>
                                     <?php echo (escape($teacher->getLastName() . ' ' . $teacher->getFirstName())) ?>
                                 </option>
                             <?php endforeach; ?>
