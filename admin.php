@@ -27,12 +27,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse2'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#upload'>
                         Daten importieren
                     </a>
                 </h4>
             </div>
-            <div id='collapse2' class='panel-collapse collapse'>
+            <div id='upload' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <form id='uploadFileForm'>
                         <div class='form-group'>
@@ -68,12 +68,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse1'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#planConference'>
                         Sprechtag planen
                     </a>
                 </h4>
             </div>
-            <div id='collapse1' class='panel-collapse collapse'>
+            <div id='planConference' class='panel-collapse collapse'>
                 <div class='panel-body'>
 
                     <form id='createEventForm'>
@@ -230,12 +230,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse3'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#conferenceOverview'>
                         Geplante Sprechtage
                     </a>
                 </h4>
             </div>
-            <div id='collapse3' class='panel-collapse collapse'>
+            <div id='conferenceOverview' class='panel-collapse collapse'>
                 <div class='panel-body'>
 
                     <?php
@@ -251,12 +251,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapseTimeManagement'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#attendances'>
                         Anwesenheitszeiten
                     </a>
                 </h4>
             </div>
-            <div id='collapseTimeManagement' class='panel-collapse collapse'>
+            <div id='attendances' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div id="activeEventContainer"></div>
                     <hr>
@@ -295,12 +295,12 @@ include_once 'inc/header.php';
         <div id="print-panel" class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse7'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#printSchedules'>
                         Zeitpläne ausdrucken
                     </a>
                 </h4>
             </div>
-            <div id='collapse7' class='panel-collapse collapse'>
+            <div id='printSchedules' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <button class="btn btn-primary"
                         onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveConferenceText()); ?>')">
@@ -315,12 +315,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse4'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#userManagement'>
                         Benutzer
                     </a>
                 </h4>
             </div>
-            <div id='collapse4' class='panel-collapse collapse'>
+            <div id='userManagement' class='panel-collapse collapse'>
                 <div class='panel-body'>
 
                     <form id='editUsersForm'>
@@ -350,12 +350,12 @@ include_once 'inc/header.php';
         <div id="user-connection" class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse8'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#userConnections'>
                         Verknüpfte Konten
                     </a>
                 </h4>
             </div>
-            <div id='collapse8' class='panel-collapse collapse'>
+            <div id='userConnections' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div id='connectedUsersForm'></div>
                     <div id='connectedUsersFeedback'></div>
@@ -367,12 +367,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapseMailTemplates'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#mailTemplates'>
                         E-Mail-Vorlagen
                     </a>
                 </h4>
             </div>
-            <div id='collapseMailTemplates' class='panel-collapse collapse'>
+            <div id='mailTemplates' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div class="form-group">
                         <label for="selectMailTemplate" class="col-sm-2 control-label"
@@ -427,12 +427,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse5'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#newsletter'>
                         Rundbrief
                     </a>
                 </h4>
             </div>
-            <div id='collapse5' class='panel-collapse collapse'>
+            <div id='newsletter' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div>
                         Der Rundbrief kann verwendet werden, um allen Schülerinnen und Schülern ihre Zugangsdaten in
@@ -450,12 +450,12 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
-                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse6'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#statistics'>
                         Statistik
                     </a>
                 </h4>
             </div>
-            <div id='collapse6' class='panel-collapse collapse'>
+            <div id='statistics' class='panel-collapse collapse'>
                 <div class='panel-body'>
 
                     <form id='statisticsForm'>

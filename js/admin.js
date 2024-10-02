@@ -1,12 +1,33 @@
 $(document).ready(function () {
-  prepareCreateEventForm();
-  loadChangeUserForm("createUser");
-  displayActiveEvent();
-  updateUploadInfos();
-  loadConnectedUsersForm();
-  loadAllAttendances();
-  loadAllConnections();
-  addMailTemplateSelectListener();
+  $("#accordion").on("show.bs.collapse", function (e) {
+    var panelId = $(e.target).attr("id");
+    console.log("Panel expanded: " + panelId);
+
+    switch (panelId) {
+      case "upload":
+        updateUploadInfos();
+        break;
+      case "planConference":
+        prepareCreateEventForm();
+        break;
+      case "conferenceOverview":
+        displayActiveEvent();
+        break;
+      case "attendances":
+        loadAllAttendances();
+        break;
+      case "userManagement":
+        loadChangeUserForm("createUser");
+        break;
+      case "userConnections":
+        loadConnectedUsersForm();
+        loadAllConnections();
+        break;
+      case "mailTemplates":
+        addMailTemplateSelectListener();
+        break;
+    }
+  });
 
   $(document).on("click", "#btn-create-event", function () {
     validateForm();
