@@ -33,6 +33,9 @@ $(document).ready(function () {
       case "mailTemplates":
         addMailTemplateSelectListener();
         break;
+      case "passwords":
+        preparePasswordForm();
+        break;
     }
   });
 
@@ -726,4 +729,27 @@ function addMailTemplateSelectListener() {
       });
     }
   });
+}
+
+function preparePasswordForm() {
+  $("#sendAllPasswords")
+    .off("click")
+    .on("click", () => {
+      const onConfirm = () =>
+        $.ajax({
+          url: "controller.php",
+          type: "POST",
+          data: { action: "sendAllPasswords" },
+          success: function (data, textStatus, jqXHR) {
+            showMessage($("#passwordFeedback"), "success", "Die E-Mails wurden versandt.");
+          },
+        });
+      showConfirmationModal({
+        title: "E-Mail-Versand bestätigen",
+        content:
+          "<h4>Sind Sie wirklich sicher?</h4><div><strong>ALLE</strong> Lehrer und SuS erhalten eine E-Mail.</div>",
+        confirmationCaption: "Ja, Massenversand starten",
+        onConfirm,
+      });
+    });
 }

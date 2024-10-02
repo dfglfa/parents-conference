@@ -423,29 +423,55 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#passwords'>
-                        Passwörter ausdrucken
+                        Passwörter
                     </a>
                 </h4>
             </div>
             <div id='passwords' class='panel-collapse'>
+                <?php
+                global $LDAP_ENABLED;
+                ?>
                 <div class='panel-body'>
-                    <div>
+                    <?php if ($LDAP_ENABLED): ?>
                         <div>
-                            Wenn Sie den Benutzern die Passwörter in papierener Form zukommen lassen wollen,
-                            können Sie sie hier in kompakter Form ausdrucken.
+                            Die Passwörter werden über LDAP verwaltet, daher ist dieser Bereich nicht relevant.
+                            <br>
+                            Falls dies nicht gewünscht ist, muss in der <strong>config.php</strong> die Variable
+                            <strong>$LDAP_ENABLED</strong> auf <i>false</i> gesetzt werden.
+                        </div>
+                    <?php else: ?>
+                        <div>
+                            <h4>Passwörter ausdrucken</h4>
+                            <div>
+                                Wenn Sie den Benutzern die Passwörter in papierener Form zukommen lassen wollen,
+                                können Sie sie hier in kompakter Form ausdrucken.
+                            </div>
+                            <div>
+                                <h5>Schüler-Passwörter</h5>
+                                <a target="_blank" href="/passwords.php?role=student">Zur Druckansicht aller
+                                    Schüler-Passwörter</a> (sortiert nach Klassen)
+                            </div>
+                            <div>
+                                <h5>Lehrer-Passwörter</h5>
+                                <a target="_blank" href="/passwords.php?role=teacher">Zur Druckansicht aller
+                                    Lehrer-Passwörter</a>
+                            </div>
+                        </div>
+                        <br>
+                        <div>
+                            <h4>Passwörter per E-Mail zusenden</h4>
                         </div>
                         <div>
-                            <h4>Schüler-Passwörter</h4>
-                            <a target="_blank" href="/passwords.php?role=student">Zur Druckansicht aller
-                                Schüler-Passwörter</a> (sortiert nach Klassen)
+                            Sie können, sofern Sie es datenschutztechnisch vertreten können, auch alle Passwörter
+                            an alle Benutzer (Schüler und Lehrer) versenden.
                         </div>
-
+                        <br>
                         <div>
-                            <h4>Lehrer-Passwörter</h4>
-                            <a target="_blank" href="/passwords.php?role=teacher">Zur Druckansicht aller
-                                Lehrer-Passwörter</a>
+                            <button class="btn btn-danger" id="sendAllPasswords">Alle Passwörter per E-Mail
+                                versenden</button>
                         </div>
-                    </div>
+                        <div id="passwordFeedback"></div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

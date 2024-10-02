@@ -666,7 +666,6 @@ class Controller
 
         $templateId = $_REQUEST['templateId'];
         $data = array(
-
             "subject" => $_REQUEST['subject'],
             "content" => $_REQUEST['content']
         );
@@ -680,5 +679,26 @@ class Controller
         $filePath = "uploads/" . $templateId . ".json";
 
         file_put_contents($filePath, $jsonData);
+    }
+
+    public function action_sendAllPasswords()
+    {
+        $students = UserDAO::getUsersAccessDataForRole("student");
+        foreach ($students as $s) {
+            $student = $s["user"];
+            $body = "<div>Hallo "
+                . $student->getFirstName() . " " . $student->getLastName() . ",</div><br><div>Dies sind Deine Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
+                . $student->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $s["password"] . "</div>";
+            sendMail($student->getEmail(), "Zugangsdaten Elternsprechtag", $body);
+        }
+
+        $teachers = UserDAO::getUsersAccessDataForRole("teacher");
+        foreach ($teachers as $t) {
+            $teacher = $t["user"];
+            $body = "<div>Hallo "
+                . $teacher->getFirstName() . " " . $teacher->getLastName() . ",</div><br><div>Dies sind Ihre Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
+                . $teacher->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $t["password"] . "</div>";
+            sendMail($teacher->getEmail(), "Zugangsdaten Elternsprechtag", $body);
+        }
     }
 }
