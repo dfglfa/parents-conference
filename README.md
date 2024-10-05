@@ -3,7 +3,7 @@
 _This project started off as a fork of the project [speechday](https://github.com/gymdb/speechday) which was developed at the Gymnasium Dachsberg in Austria.
 Credits and thanks to our Austrian colleagues, who saved us a lot of work. The original code base has been extended by several features, while some features have been removed._
 
-The project can be help with the organization of a parent-teacher conference at your school by providing an online booking system.
+The project can help with the organization of a parent-teacher conference at your school by providing an online booking system.
 
 Students/Parents can access the system to view/change their appointments in a unified booking matrix for all siblings.
 
@@ -16,7 +16,7 @@ You need a server with php8 and MySQL installed.
 
 PHP needs the extensions pdo_mysql, zip and ldap.
 
-You can initialize the database with the SQL script provided in the `Setup` folder.
+You can initialize the database with the SQL script provided in the **Setup** folder.
 Furthermore you have to enter your database credentials in the **settings.ini** file contained in code/dao.
 
 For all other configuration, you need to rename the config template:
