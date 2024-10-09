@@ -505,6 +505,15 @@ function prepareCreateEventForm() {
       $("#throttleDaysSelect").removeClass("hidden");
     }
   });
+  $("#datePickerBookingStart").datetimepicker({
+    format: "dd.mm.yyyy hh:ii",
+    language: "de",
+  });
+
+  $("#datePickerBookingEnd").datetimepicker({
+    format: "dd.mm.yyyy hh:ii",
+    language: "de",
+  });
 }
 
 function loadTimeTable(typeId) {

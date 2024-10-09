@@ -71,10 +71,12 @@ class Controller
         $unixTimeFrom = strtotime($date . ' ' . $beginTime);
         $unixTimeTo = strtotime($date . ' ' . $endTime);
 
-        // Making the bootstrap datepicker tz-aware is just too much hassle ... 
-        // We assume the we are in timezone Europe/Berlin in winter time, so we subtract one hour.
-        $startPostDate = strtotime($startBookingDate) - 3600;
-        $finalPostDate = strtotime($endBookingDate) - 3600;
+        $timezone = new DateTimeZone('Europe/Berlin');
+        $startDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $startBookingDate, $timezone);
+        $endDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $endBookingDate, $timezone);
+
+        $startPostDate = $startDateWithTimezone->getTimestamp();
+        $finalPostDate = $endDateWithTimezone->getTimestamp();
 
         if (!$unixTimeFrom || !$unixTimeTo) {
             return;

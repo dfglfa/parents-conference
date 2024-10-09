@@ -9,12 +9,12 @@ include_once 'inc/header.php';
 <script type='text/javascript' src='js/admin.js'></script>
 <script type='text/javascript' src='js/validation.min.js'></script>
 
-<link href='libs/bootstrap/css/bootstrap-datepicker3.min.css' rel='stylesheet'>
-<link href='libs/bootstrap/css/bootstrap-datetimepicker.css' rel='stylesheet'>
 <script src='libs/bootstrap/js/bootstrap-datepicker.min.js'></script>
 <script src='libs/bootstrap/locales/bootstrap-datepicker.de.min.js'></script>
 <script type="text/javascript" src="libs/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 <script type="text/javascript" src="libs/bootstrap/js/bootstrap-datetimepicker.de.js" charset="UTF-8"></script>
+<link href='libs/bootstrap/css/bootstrap-datepicker3.min.css' rel='stylesheet'>
+<link href='libs/bootstrap/css/bootstrap-datetimepicker.css' rel='stylesheet'>
 
 <p id='pageName' hidden>Admin</p>
 
@@ -71,7 +71,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='planConference' class='panel-collapse collapse'>
+            <div id='planConference' class='panel-collapse'>
                 <div class='panel-body'>
 
                     <form id='createEventForm'>
@@ -133,12 +133,6 @@ include_once 'inc/header.php';
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
-                        <script>
-                            $('#datePickerBookingStart').datetimepicker({
-                                format: 'dd.mm.yyyy hh:ii',
-                                language: 'de',
-                            });
-                        </script>
 
                         <div class='form-group'>
                             <label for='inputDate'>Buchungsende</label>
@@ -147,12 +141,6 @@ include_once 'inc/header.php';
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
-                        <script>
-                            $('#datePickerBookingEnd').datetimepicker({
-                                format: 'dd.mm.yyyy hh:ii',
-                                language: 'de',
-                            });
-                        </script>
 
                         <div class='form-group'>
                             <label for='inputVideoLink'>Videolink</label>
