@@ -71,7 +71,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='planConference' class='panel-collapse'>
+            <div id='planConference' class='panel-collapse collapse'>
                 <div class='panel-body'>
 
                     <form id='createEventForm'>
