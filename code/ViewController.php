@@ -219,8 +219,13 @@ class ViewController extends Controller
                             $date->setTimestamp($activeEvent->getStartPostDate());
                             $timezone = new DateTimeZone('Europe/Berlin');
                             $date->setTimezone($timezone);
-                            $hour = $date->format('G');
+                            $hour = $date->format('G:i');
                             $dailyQuota = $activeEvent->getThrottleQuota();
+
+                            $throttleEndDate = new DateTime();
+                            $throttleEndDate->setTimestamp(getThrottleEndTime());
+                            $timezone = new DateTimeZone('Europe/Berlin');
+                            $throttleEndDate->setTimezone($timezone);
                             ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
@@ -231,14 +236,17 @@ class ViewController extends Controller
                                     <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
                                 <?php else: ?>
                                     <div class='text-warning'>
-                                        Das Buchungskontingent ist ausgeschöpft.
+                                        Dein Buchungskontingent ist momentan ausgeschöpft.
                                     </div>
                                 <?php endif; ?>
 
                                 <div class="text-info" style="font-size: 12pt">
                                     Täglich um <?php echo $hour ?> Uhr werden für jeden Schüler
                                     <?php echo $dailyQuota == 1 ? 'eine weitere Buchung' : $dailyQuota . ' weitere Buchungen' ?>
-                                    ermöglicht.
+                                    ermöglicht. Ab dem
+                                    <?php echo $throttleEndDate->format('d.m.') . " um " . $throttleEndDate->format('G:i') ?> Uhr
+                                    entfällt die
+                                    Einschränkung.
                                 </div>
                             </div>
                         <?php endif; ?>

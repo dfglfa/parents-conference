@@ -128,15 +128,23 @@ function getMaximumNumberOfBookableSlotsUntilCurrentTime()
         return -1;
     }
 
-    // Check if throttling is finished 
-    $throttleEndTime = $activeEvent->getStartPostDate() + $activeEvent->getThrottleDays() * 86400;
-    if ($throttleEndTime < time()) {
+    if (getThrottleEndTime() < time()) {
         return -1;
     }
 
     $startTime = $activeEvent->getStartPostDate();
     $fullDaysPassed = floor((time() - $startTime) / 86400);
     return $activeEvent->getThrottleQuota() * (1 + $fullDaysPassed);
+}
+
+function getThrottleEndTime()
+{
+    $activeEvent = EventDAO::getActiveEvent();
+    if ($activeEvent == null || $activeEvent->getThrottleQuota() == 0) {
+        return null;
+    }
+
+    return $activeEvent->getStartPostDate() + $activeEvent->getThrottleDays() * 86400;
 }
 
 function getDataForMailTemplate($templateId)
