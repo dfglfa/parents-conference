@@ -107,7 +107,7 @@ function _sendCancellationNotificationMail($slotId, $reasonText, $recipientIsStu
 
 function getSlotTimeReadable($date)
 {
-    return toDate($date, "H:i") . " Uhr";
+    return toDate($date, "H:i");
 }
 
 function sendMail($to, $subject, $body)
