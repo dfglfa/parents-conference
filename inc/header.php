@@ -1,6 +1,6 @@
 <?php
 
-require_once('code/Config.php');
+require_once('code/config.php');
 require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 require_once('code/AuthenticationManager.php');

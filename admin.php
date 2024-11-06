@@ -436,12 +436,12 @@ include_once 'inc/header.php';
                             </div>
                             <div>
                                 <h5>Schüler-Passwörter</h5>
-                                <a target="_blank" href="/passwords.php?role=student">Zur Druckansicht aller
+                                <a target="_blank" href="passwords.php?role=student">Zur Druckansicht aller
                                     Schüler-Passwörter</a> (sortiert nach Klassen)
                             </div>
                             <div>
                                 <h5>Lehrer-Passwörter</h5>
-                                <a target="_blank" href="/passwords.php?role=teacher">Zur Druckansicht aller
+                                <a target="_blank" href="passwords.php?role=teacher">Zur Druckansicht aller
                                     Lehrer-Passwörter</a>
                             </div>
                         </div>
