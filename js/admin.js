@@ -625,7 +625,7 @@ function checkUserConnection() {
 function toggleUserConnection(userId1, userId2, successFeedback) {
   const connectedUsersFeedback = $("#connectedUsersFeedback");
   $.ajax({
-    url: "viewController.php?action=toggleUserConnection",
+    url: "controller.php?action=toggleUserConnection",
     type: "POST",
     data: { userId1, userId2 },
     success: () => {
