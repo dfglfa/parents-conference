@@ -23,8 +23,7 @@ class AuthenticationManager
 
 		// The admin user is not looked up via LDAP
 		if ($userName != "admin" && $LDAP_ENABLED) {
-			$hashedPw = self::_getSSHAFromLDAP($user->getUserName());
-			$authenticated = $hashedPw != null && self::ldap_verify_ssha($password, $hashedPw);
+			$authenticated = self::authenticateLdap($userName, $password);
 		} else {
 			$authenticated = password_verify($password, $user->getPasswordHash());
 		}
@@ -66,57 +65,35 @@ class AuthenticationManager
 		}
 	}
 
-	private static function _getSSHAFromLDAP($userName)
+	private static function authenticateLdap($userName, $password)
 	{
-		global $LDAP_HOST, $LDAP_DN, $LDAP_PASSWORD, $LDAP_BASE_DN;
+		global $LDAP_HOST, $LDAP_BASE_DN, $LDAP_BIND_USER, $LDAP_BIND_USER_PWD;
+		global $LDAP_USER_OBJECT_CLASS, $LDAP_USERID_REF;
+
 		$ldap_conn = ldap_connect($LDAP_HOST);
 
 		if (!$ldap_conn) {
 			die("Could not connect to LDAP server.");
 		}
 
-		ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);  // Using LDAPv3
-		ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0);         // Disable referrals
-
-		if (@ldap_bind($ldap_conn, $LDAP_DN, $LDAP_PASSWORD)) {
-			//echo "LDAP bind successful.\n";
-
-			$filter = "(uid=" . $userName . ")";
-			$result = ldap_search($ldap_conn, $LDAP_BASE_DN, $filter);
-
-			if ($result) {
-				$entries = ldap_get_entries($ldap_conn, $result);
-				if (count($entries) > 0) {
-					return $entries[0]["userpassword"][0];
-				} else {
-					error_log("Password not found");
-				}
-			} else {
-				error_log("User " . $userName . " not found in LDAP");
-				return null;
-			}
-		} else {
-			echo "LDAP bind failed.";
+		if (!ldap_bind($ldap_conn, $LDAP_BIND_USER, $LDAP_BIND_USER_PWD)) {
+			return false;
 		}
 
-		ldap_close($ldap_conn);
-		return null;
+		ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0);
+
+		$username = ldap_escape($userName, "", LDAP_ESCAPE_FILTER);
+		$filter = "(&(objectClass=$LDAP_USER_OBJECT_CLASS)($LDAP_USERID_REF=$username))";
+		$search = @ldap_search($ldap_conn, $LDAP_BASE_DN, $filter);
+
+		if (!$search || !ldap_count_entries($ldap_conn, $search) === 1) {
+			return false;
+		}
+
+		$userEntry = ldap_first_entry($ldap_conn, $search);
+		$dn = ldap_get_dn($ldap_conn, $userEntry);
+
+		return @ldap_bind($ldap_conn, $dn, $password);
 	}
-
-	private static function ldap_verify_ssha($plain_password, $ldap_ssha_hash)
-	{
-		$hash_base64 = substr($ldap_ssha_hash, 6);
-		$hash_with_salt = base64_decode($hash_base64);
-
-		// The actual SHA1 hash is the first 20 bytes, and the salt is the remaining bytes
-		$hash = substr($hash_with_salt, 0, 20);
-		$salt = substr($hash_with_salt, 20);
-
-		// Recreate the hash by hashing the password + salt
-		$computed_hash = sha1($plain_password . $salt, true);
-
-		// Compare the computed hash with the stored hash
-		return $computed_hash === $hash;
-	}
-
 }

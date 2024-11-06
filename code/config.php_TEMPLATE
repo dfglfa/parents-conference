@@ -15,6 +15,8 @@ $SMTP_AUTH = false; // Set to true for prod
 // LDAP settings
 $LDAP_ENABLED = false;
 $LDAP_HOST = "ldap://ldap:1389";
-$LDAP_DN = "cn=admin,dc=example,dc=org";
-$LDAP_PASSWORD = "adminpassword";
 $LDAP_BASE_DN = "dc=example,dc=org";
+$LDAP_BIND_USER = "cn=binduser";
+$LDAP_BIND_USER_PWD = "binduserpassword";
+$LDAP_USER_OBJECT_CLASS = "person";
+$LDAP_USERID_REF = "uid";
