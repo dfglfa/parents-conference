@@ -92,6 +92,11 @@ class AuthenticationManager
 		}
 
 		$userEntry = ldap_first_entry($ldap_conn, $search);
+
+		if (!$userEntry) {
+			return false;
+		}
+
 		$dn = ldap_get_dn($ldap_conn, $userEntry);
 
 		return @ldap_bind($ldap_conn, $dn, $password);
