@@ -437,6 +437,7 @@ class ViewController extends Controller
 
     private function printTableForTeacher($teacher, $isFullView, $adminPrint = false)
     {
+        global $TEACHER_BREAKS_MAX;
         $activeEvent = EventDAO::getActiveEvent();
         $headerText = "Meine Termine";
         if ($adminPrint) {
@@ -460,7 +461,12 @@ class ViewController extends Controller
                         }
 
                         $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $teacher->getId());
-
+                        $bookedForSelf = 0;
+                        foreach ($bookedSlots as $s) {
+                            if ($s['studentId'] == $teacher->getId()) {
+                                $bookedForSelf++;
+                            }
+                        }
                         $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
 
                         ?>
@@ -503,7 +509,7 @@ class ViewController extends Controller
                                                     <?php echo ($timeTd) ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo ($teacherAvailable ? '' : ($isReservedSlot ? 'RESERVIERT' : $bookedSlots[$fromDate]['studentName'])) ?>
+                                                    <?php echo ($teacherAvailable ? '' : ($isReservedSlot ? 'RESERVIERT / PAUSE' : $bookedSlots[$fromDate]['studentName'])) ?>
                                                 </td>
                                                 <?php if (!empty($activeEvent->getVideoLink())):
                                                     $getParam = escape('#userInfo.displayName=%22' . $teacher->getFirstName() . " " . $teacher->getLastName() . "%22"); ?>
@@ -527,7 +533,7 @@ class ViewController extends Controller
                                                             Termin verschieben
                                                         </button>
 
-                                                    <?php else: ?>
+                                                    <?php elseif ($bookedForSelf < $TEACHER_BREAKS_MAX): ?>
                                                         <button class="btn btn-warning es-button-reserve no-print"
                                                             id="reserve_<?php echo $slot->getId() ?>" data-slotId="<?php echo $slot->getId() ?>"
                                                             data-eventId="<?php echo $activeEvent->getId() ?>">
