@@ -1026,7 +1026,7 @@ class ViewController extends Controller
             return "Unauthorized";
         }
 
-        $users = UserDAO::getUsers();
+        $users = UserDAO::getUsersForRole("student");
         ?>
                         <div>
                             Wähle zwei Benutzer aus, um ihre Konten zu verknüpfen oder zu trennen.
@@ -1037,7 +1037,7 @@ class ViewController extends Controller
                                 <div class="col-xs-4">
                                     <label for='selectUser1'>Benutzer 1</label>
                                     <select class='form-control userconnectionSelect' id='selectUser1' name='user1'>
-                                        <option value="-1">Wähle Benutzer 1</option>
+                                        <option value="-1">Wähle Benutzer</option>
                                         <?php foreach ($users as $user): ?>
                                             <option value='<?php echo $user->getId() ?>'>
                                                 <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
@@ -1048,13 +1048,18 @@ class ViewController extends Controller
                                 <div class="col-xs-4">
                                     <label for='selectUser2'>Benutzer 2</label>
                                     <select class='form-control userconnectionSelect' id='selectUser2' name='user2'>
-                                        <option value="-1">Wähle Benutzer 2</option>
+                                        <option value="-1">Wähle Benutzer</option>
                                         <?php foreach ($users as $user): ?>
                                             <option value='<?php echo $user->getId() ?>'>
                                                 <?php echo (escape($user->getLastName() . ' ' . $user->getFirstName())) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <div>
+                                        <input style="padding: 10px 5px 0 0; margin: 5px 5px 0 0;" type="checkbox"
+                                            id="filterSameName" name="filterSameName" />
+                                        <label for="filterSameName">nur gleiche Nachnamen</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

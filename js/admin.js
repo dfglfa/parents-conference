@@ -572,11 +572,40 @@ function loadConnectedUsersForm() {
     type: "GET",
     success: function (data, textStatus, jqXHR) {
       connectedUsersForm.html(data);
-      $(".userconnectionSelect").change(() => checkUserConnection());
+      $("#selectUser1").change(() => checkUserConnection(true));
+      $("#selectUser2").change(() => checkUserConnection(false));
+      $("#filterSameName").change(() => updateUser2Select());
     },
     error: function (jqXHR, textStatus, errorThrown) {
       connectedUsersForm.html("<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>");
     },
+  });
+}
+
+function updateUser2Select() {
+  const doFilter = $("#filterSameName").is(":checked");
+  const selectedUserValue = +$("#selectUser1 option:selected").val();
+  const selectedUserLastName =
+    selectedUserValue !== -1 ? $("#selectUser1 option:selected").text().trim().split(" ")[0] : null;
+
+  const allOptions = [];
+  $("#selectUser1 option").each(function () {
+    allOptions.push({ text: $(this).text(), value: +$(this).val() });
+  });
+
+  let secondUserOptions = [];
+  if (doFilter && selectedUserLastName) {
+    secondUserOptions = allOptions.filter(({ text, value }) => {
+      return value === -1 || (text.trim().split(" ")[0] === selectedUserLastName && value !== selectedUserValue);
+    });
+  } else {
+    secondUserOptions = allOptions;
+  }
+
+  $("#selectUser2").empty();
+
+  secondUserOptions.forEach((option) => {
+    $("#selectUser2").append($("<option>", { value: option.value, text: option.text }));
   });
 }
 
@@ -602,7 +631,7 @@ function loadAllConnections() {
   });
 }
 
-function checkUserConnection() {
+function checkUserConnection(updateBoth) {
   const userId1 = $("#selectUser1").val();
   const userId2 = $("#selectUser2").val();
   const connectedUsersFeedback = $("#connectedUsersFeedback");
@@ -616,6 +645,7 @@ function checkUserConnection() {
       type: "GET",
       success: function (data, textStatus, jqXHR) {
         connectedUsersFeedback.html(data);
+        updateBoth && updateUser2Select();
         $("#userconnectionAction").click(() => toggleUserConnection(userId1, userId2));
       },
     });
