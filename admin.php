@@ -338,7 +338,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='userConnections' class='panel-collapse'>
+            <div id='userConnections' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div id='connectedUsersForm'></div>
                     <div id='connectedUsersFeedback'></div>
