@@ -565,6 +565,9 @@ function displayActiveEvent() {
 }
 
 function loadConnectedUsersForm() {
+  $("#selectUser1").off("change");
+  $("#selectUser2").off("change");
+  $("#filterSameName").off("change");
   var connectedUsersForm = $("#connectedUsersForm");
   $.ajax({
     url: "viewController.php?action=getConnectedUsersForm",
@@ -638,7 +641,7 @@ function checkUserConnection(updateBoth) {
 
   if (userId1 != -1 && userId1 === userId2) {
     connectedUsersFeedback.html("<span class='text-danger'>Bitte zwei unterschiedliche Benutzer auswählen!</span>");
-  } else if (userId1 != -1 && userId2 != -1) {
+  } else if (userId1 != -1) {
     $.ajax({
       url: `viewController.php?action=checkUserConnection&userId1=${userId1}&userId2=${userId2}`,
       dataType: "html",
