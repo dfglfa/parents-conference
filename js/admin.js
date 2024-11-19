@@ -599,7 +599,7 @@ function updateUser2Select() {
   let secondUserOptions = [];
   if (doFilter && selectedUserLastName) {
     secondUserOptions = allOptions.filter(({ text, value }) => {
-      return value === -1 || (text.trim().split(" ")[0] === selectedUserLastName && value !== selectedUserValue);
+      return value !== -1 && text.trim().split(" ")[0] === selectedUserLastName && value !== selectedUserValue;
     });
   } else {
     secondUserOptions = allOptions;
