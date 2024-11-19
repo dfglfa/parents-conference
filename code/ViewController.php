@@ -82,6 +82,7 @@ class ViewController extends Controller
         $teacher = UserDAO::getUserForId($_REQUEST['teacherId']);
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
+        $teacherBookedByUser = array();
 
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($teacher == null || $user == null || $activeEvent == null) {
@@ -90,7 +91,7 @@ class ViewController extends Controller
 
         $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
         $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
-        $teacherNotYetBooked = !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlots);
+        $teacherBookedByUser[$user->getId()] = $this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlots);
         $room = RoomDAO::getRoomForTeacherId($teacher->getId());
 
         if (count($slots) <= 0) {
@@ -104,7 +105,7 @@ class ViewController extends Controller
         $bookedSlotsCount = count($bookedSlots);
         foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
-            $teacherNotYetBooked = $teacherNotYetBooked && !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlotsForConnectedUser[$cUser->getId()]);
+            $teacherBookedByUser[$cUser->getId()] = $this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlotsForConnectedUser[$cUser->getId()]);
             $bookedSlotsCount += count($bookedSlotsForConnectedUser[$cUser->getId()]);
         }
 
@@ -166,7 +167,7 @@ class ViewController extends Controller
                                     <td><?php echo ($timeTd) ?></td>
                                     <td><?php echo ($teacherAvailable ? '' : 'belegt') ?></td>
                                     <td <?php echo !$studentAvailable && $bookedSlots[$fromDate]['teacherName'] == $teacherFullName ? 'class="selectedTeacher"' : '' ?>">
-                                <?php if ($teacherAvailable && $studentAvailable && $teacherNotYetBooked && !$quotaExceeded): ?>
+                                <?php if ($teacherAvailable && $studentAvailable && !$teacherBookedByUser[$user->getId()] && !$quotaExceeded): ?>
                                     <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                                         value='<?php echo ($bookJson) ?>'>buchen
                                     </button>
@@ -180,7 +181,7 @@ class ViewController extends Controller
                                     ?>
                                     <td
                                         class="<?php echo $connectedUserSlotData[$connUser->getId()] == $teacherFullName ? 'selectedTeacher' : '' ?>">
-                                        <?php if ($connectedUserSlotData[$connUser->getId()] == '' && $teacherAvailable && $teacherNotYetBooked && !$quotaExceeded): ?>
+                                        <?php if ($connectedUserSlotData[$connUser->getId()] == '' && $teacherAvailable && !$teacherBookedByUser[$connUser->getId()] && !$quotaExceeded): ?>
                                             <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                                                 value='<?php echo ($bookJson) ?>'>buchen
                                             </button>
