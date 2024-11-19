@@ -16,7 +16,7 @@ function showMessage(element, type, message) {
 function PrintElem(elem, pageTitle) {
   var data = $(elem).html();
 
-  var printWindow = window.open(window.location.host, pageTitle, "");
+  var printWindow = window.open(window.location.href, pageTitle, "");
   var doc = printWindow.document;
   doc.write("<html><head><title>" + pageTitle + "</title>");
   doc.write("<link href='css/print.css' rel='stylesheet' type='text/css' media='print' />");
