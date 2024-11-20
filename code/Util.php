@@ -74,7 +74,7 @@ function getTeacherOptions()
 {
     $teachers = UserDAO::getUsersForRole('teacher');
 
-    $options = '<option value="-1">Bitte wähle einen Lehrer aus ...</option>';
+    $options = '<option value="-1">Bitte wähle eine(n) Lehrer(in) aus ...</option>';
     foreach ($teachers as $teacher) {
         $options .= sprintf('<option value="%s" %s>%s</option>', $teacher->getId(), ($teacher->isAbsent() == 1 ? 'disabled' : ''), $teacher->getLastName() . ' ' . $teacher->getTitle() . " " . $teacher->getFirstName() . ' ' . ($teacher->isAbsent() == 1 ? ' - abwesend' : ''));
     }
