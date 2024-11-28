@@ -126,8 +126,8 @@ class Controller
             return;
         }
 
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
+        //error_reporting(E_ALL);
+        //ini_set('display_errors', 1);
         header('Content-Type: text/html; charset=UTF-8');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -168,6 +168,14 @@ class Controller
                             return;
                         }
                         $this->uploadFileAs('logo.png', $tmpName, "public");
+                        echo 'success';
+                        return;
+                    } else if ($type == 'map') {
+                        if (!$this->validateFileExtension($ext, array('png'))) {
+                            echo 'Ungültiges Dateiformat!';
+                            return;
+                        }
+                        $this->uploadFileAs('map.png', $tmpName, "public");
                         echo 'success';
                         return;
                     } else {

@@ -24,6 +24,9 @@
                 <?php if ($user->getRole() == 'student'): ?>
                     <li id='navTabHome'><a href='home.php'>Meine Termine</a></li>
                     <li id='navTabBook'><a href='book.php'>Termine buchen</a></li>
+                    <?php if (file_exists("public/map.png")): ?>
+                        <li id='navTabMap'><a href='map.php'>Lageplan</a></li>
+                    <?php endif ?>
                 <?php endif ?>
                 <?php if ($user->getRole() == 'teacher') { ?>
                     <li id='navTabTeacher'><a href='teacher.php'>Übersicht</a></li>

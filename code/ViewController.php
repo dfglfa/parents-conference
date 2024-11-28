@@ -779,11 +779,23 @@ class ViewController extends Controller
                     </p>';
                 break;
 
+            case 'logo':
+                $typeText = '';
+                $filePath = '';
+                $mimeType = 'image/png';
+                $infos = 'Das Logo wird auf 30px Höhe herunterskaliert.';
+                break;
+            case 'map':
+                $typeText = '';
+                $filePath = '';
+                $mimeType = 'image/png';
+                $infos = 'Nach dem Upload sehen die SchülerInnen und Eltern den Navigationspunkt "Lageplan", unter dem der Plan zu finden ist.';
+                break;
             default:
                 $typeText = '';
-                $mimeType = 'image/png';
+                $mimeType = '';
                 $filePath = '';
-                $infos = 'Das Logo wird auf 30px Höhe herunterskaliert.';
+                $infos = 'Auswahl nicht definiert.';
         }
 
         ?>

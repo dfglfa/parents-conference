@@ -41,6 +41,7 @@ include_once 'inc/header.php';
                                 <option value='teacher'>Lehrer</option>
                                 <option value='student'>Schüler</option>
                                 <option value='logo'>Schul-Logo</option>
+                                <option value='map'>Lageplan</option>
                             </select>
                         </div>
 

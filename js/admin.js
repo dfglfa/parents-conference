@@ -102,6 +102,9 @@ function updateUploadInfos() {
   } else if (selectedType === "logo") {
     allowedFileTypes.html("Es sind nur PNG-Dateien erlaubt.");
     uploadDialog.attr("accept", ".png");
+  } else if (selectedType === "map") {
+    allowedFileTypes.html("Es sind nur PNG-Dateien erlaubt.");
+    uploadDialog.attr("accept", ".png");
   }
 
   $("#templateDownloadAlertContainer").load("viewController.php?action=templateDownloadAlert&type=" + selectedType);
@@ -200,6 +203,8 @@ $(document).on("click", "#btn-upload-file", function (event) {
       }
     } else if (uploadType == "logo") {
       setTimeout(() => $("#navLogo").attr("src", "public/logo.png" + "?t=" + new Date().getTime()), 1000);
+    } else if (uploadType == "map") {
+      successMessage = "Der Lageplan wurde erfolgreich hochgeladen.";
     }
 
     $("#btn-upload-file").attr("disabled", true).text("Import läuft ...");
