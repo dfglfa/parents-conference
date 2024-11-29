@@ -267,6 +267,10 @@ class ViewController extends Controller
             return;
         }
 
+        // When we're after the event start time, actions are no longer possible,
+        // also improving the overview appearance some more.
+        $pastEventStartTime = $activeEvent->getDateFrom() < time();
+
         $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
 
         $slots = SlotDAO::calculateSlots($activeEvent, true);
@@ -304,7 +308,9 @@ class ViewController extends Controller
                                     <?php foreach ($connectedUsers as $cu): ?>
                                         <th width='15%'><?php echo $cu->getFirstName() ?></th>
                                     <?php endforeach; ?>
-                                    <th width='8%' class='no-print'>Aktion</th>
+                                    <?php if (!$pastEventStartTime): ?>
+                                        <th width='8%' class='no-print'>Aktion</th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -372,37 +378,39 @@ class ViewController extends Controller
                                                     </td>
                                                 <?php endforeach ?>
 
-                                                <td class='no-print'>
-                                                    <?php if (!$studentAvailable):
-                                                        $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
-                                                        ?>
-                                                        <button type='button' class='btn btn-danger btn-delete'
-                                                            id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                            value='<?php echo ($deleteJson) ?>'>Termin <?php if (count($connectedUsers) > 0): ?>
-                                                                von <?php echo $user->getFirstName() ?>
-                                                            <?php endif ?> stornieren
-
-                                                        </button>
-                                                        <?php if (!empty($activeEvent->getVideoLink())):
-                                                            $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
-                                                            <a class="btn btn-primary btn-delete"
-                                                                href="<?php echo ($activeEvent->getVideoLink() . md5($bookedSlots[$fromDate]['id']) . $getParam) ?>"
-                                                                target="_blank"> Zum Videomeeting</a>
-                                                        <?php endif; ?>
-                                                    <?php endif; ?>
-                                                    <?php foreach ($connectedUsers as $connUser): ?>
-                                                        <?php if (isset($connectedUserSlotInfo[$connUser->getId()])):
-                                                            $connUserSlot = $connectedUserSlotInfo[$connUser->getId()];
-                                                            $deleteJson = escape(json_encode(array('userId' => $connUser->getId(), 'slotId' => $connUserSlot['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
+                                                <?php if (!$pastEventStartTime): ?>
+                                                    <td class='no-print'>
+                                                        <?php if (!$studentAvailable):
+                                                            $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                             ?>
-                                                            <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
+                                                            <button type='button' class='btn btn-danger btn-delete'
                                                                 id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                                value='<?php echo ($deleteJson) ?>'>Termin von
-                                                                <?php echo $connUser->getFirstName() ?> stornieren
+                                                                value='<?php echo ($deleteJson) ?>'>Termin <?php if (count($connectedUsers) > 0): ?>
+                                                                    von <?php echo $user->getFirstName() ?>
+                                                                <?php endif ?> stornieren
+
                                                             </button>
-                                                        <?php endif ?>
-                                                    <?php endforeach ?>
-                                                </td>
+                                                            <?php if (!empty($activeEvent->getVideoLink())):
+                                                                $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
+                                                                <a class="btn btn-primary btn-delete"
+                                                                    href="<?php echo ($activeEvent->getVideoLink() . md5($bookedSlots[$fromDate]['id']) . $getParam) ?>"
+                                                                    target="_blank"> Zum Videomeeting</a>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                        <?php foreach ($connectedUsers as $connUser): ?>
+                                                            <?php if (isset($connectedUserSlotInfo[$connUser->getId()])):
+                                                                $connUserSlot = $connectedUserSlotInfo[$connUser->getId()];
+                                                                $deleteJson = escape(json_encode(array('userId' => $connUser->getId(), 'slotId' => $connUserSlot['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
+                                                                ?>
+                                                                <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
+                                                                    id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
+                                                                    value='<?php echo ($deleteJson) ?>'>Termin von
+                                                                    <?php echo $connUser->getFirstName() ?> stornieren
+                                                                </button>
+                                                            <?php endif ?>
+                                                        <?php endforeach ?>
+                                                    </td>
+                                                <?php endif; ?>
                                             </tr>
                                         <?php endif; ?>
                                     <?php endif; ?>
