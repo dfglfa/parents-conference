@@ -40,7 +40,7 @@ $activeEvent = EventDAO::getActiveEvent();
                     Daher sollte vermieden werden, zwei aufeinander folgende Termine zu buchen.
                     <br><br>
                     Veuillez noter que des trajets à pied plus longs peuvent être nécessaires entre deux rendez-vous. Il est
-                    donc conseillé d’éviter de réserver deux rendez-vous consécutifs.
+                    donc conseillé d'éviter de réserver deux rendez-vous consécutifs.
                 </div>
                 <br>
                 <form id='chooseTeacherForm'>
