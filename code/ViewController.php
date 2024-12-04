@@ -230,8 +230,9 @@ class ViewController extends Controller
                             ?>
                             <div style="padding-bottom: 20px; font-size:16pt;">
                                 <?php if ($remainingQuota > 1): ?>
-                                    <div>Du kannst noch <strong class='text-success'><?php echo $remainingQuota ?> Termine</strong>
-                                        buchen.
+                                    <div>Es sind noch <strong class='text-success'><?php echo $remainingQuota ?>
+                                            Terminbuchungen</strong>
+                                        möglich.
                                     </div>
                                 <?php elseif ($remainingQuota == 1): ?>
                                     <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
