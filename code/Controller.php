@@ -158,8 +158,11 @@ class Controller
                             return;
                         }
                         $targetPath = $this->uploadFileAs($name, $tmpName);
+                        $oldTimeout = ini_get('max_execution_time');
+                        ini_set('max_execution_time', '240');
                         $importCSVResult = $this->importCSV($type, $targetPath);
                         echo $importCSVResult['success'] ? 'success' : $importCSVResult['message'];
+                        ini_set('max_execution_time', $oldTimeout);
                         return;
 
                     } else if ($type == 'logo') {
@@ -324,6 +327,7 @@ class Controller
                     $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
                     if (!$this->checkForUniqueUserName($userName, $userNames)) {
+                        error_log("Doppelt: " . $userName);
                         fclose($fp);
                         return $duplicateUserError;
                     }
@@ -350,6 +354,7 @@ class Controller
                         } while ((!$this->checkForUniqueUserName($userName, $userNames)) && ($tries < 500));
                     }
                     if (!$this->checkForUniqueUserName($userName, $userNames)) {
+                        error_log("Doppelt: " . $userName);
                         fclose($fp);
                         return $duplicateUserError;
                     }
