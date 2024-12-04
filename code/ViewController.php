@@ -235,7 +235,7 @@ class ViewController extends Controller
                                         möglich.
                                     </div>
                                 <?php elseif ($remainingQuota == 1): ?>
-                                    <div>Du kannst noch <strong class='text-success'>einen Termin</strong> buchen.</div>
+                                    <div>Es ist noch <strong class='text-success'>eine Terminbuchung</strong> möglich.</div>
                                 <?php else: ?>
                                     <div class='text-warning'>
                                         Dein Buchungskontingent ist momentan ausgeschöpft.
