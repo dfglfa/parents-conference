@@ -27,7 +27,7 @@ $activeEvent = EventDAO::getActiveEvent();
                 $date = new DateTime("@$timestamp");
                 $berlinTimezone = new DateTimeZone('Europe/Berlin');
                 $date->setTimezone($berlinTimezone);
-                $formattedDate = $date->format('d.m.Y h:i') . " Uhr";
+                $formattedDate = $date->format('d.m.Y H:i') . " Uhr";
                 ?>
                 <h3>Buchungen sind erst ab dem <?php echo $formattedDate ?>
                     möglich </h3>
