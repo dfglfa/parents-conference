@@ -895,7 +895,9 @@ class ViewController extends Controller
                             <th>Anwesenheit</th>
                             <?php for ($i = 0; $i < $middleIndex - 1; $i++):
                                 $left = $leftColumn[$i];
+                                $isCustomAttendanceLeft = $event->getDateFrom() != $left['from'] || $event->getDateTo() != $left['to'];
                                 $right = $rightColumn[$i];
+                                $isCustomAttendanceRight = $event->getDateFrom() != $right['from'] || $event->getDateTo() != $right['to'];
                                 ?>
                                 <tr>
                                     <td>
@@ -904,7 +906,7 @@ class ViewController extends Controller
                                             <?php echo $left['firstName'] ?>
                                         </span>
                                     </td>
-                                    <td>
+                                    <td style="<?php echo $isCustomAttendanceLeft ? 'font-weight: bold' : ''; ?>">
                                         <?php echo toDate($left['from'], 'H:i') ?>-<?php echo toDate($left['to'], 'H:i') ?>
                                         Uhr
                                     </td>
@@ -915,7 +917,7 @@ class ViewController extends Controller
                                         </span>
 
                                     </td>
-                                    <td>
+                                    <td style="<?php echo $isCustomAttendanceRight ? 'font-weight: bold' : ''; ?>">
                                         <?php echo toDate($right['from'], 'H:i') ?>-<?php echo toDate($right['to'], 'H:i') ?>
                                         Uhr
                                     </td>
