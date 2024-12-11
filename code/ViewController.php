@@ -373,7 +373,9 @@ class ViewController extends Controller
                                                             <?php echo $_teacher["teacherName"] ?>
                                                             <br>
                                                             <span class="room">
-                                                                <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                                <?php if ($_room != null): ?>
+                                                                    <?php echo $_room->getRoomNumber() . " " . escape($_room->getName()) ?>
+                                                                <?php endif ?>
                                                             </span>
                                                         <?php endif ?>
                                                     </td>
