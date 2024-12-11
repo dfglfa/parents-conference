@@ -352,9 +352,9 @@ class ViewController extends Controller
                                                     <?php echo ($timeTd); ?>
                                                 </td>
                                                 <td>
-                                                    <?php if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)):
+                                                    <?php if (!$studentAvailable):
                                                         $_teacher = $bookedSlots[$fromDate];
-                                                        $_room = $rooms[$_teacher['teacherId']];
+                                                        $_room = array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms) ? $rooms[$_teacher['teacherId']] : null;
                                                         $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                         ?>
                                                         <?php echo $_teacher['teacherName'] ?>
@@ -370,7 +370,7 @@ class ViewController extends Controller
                                                     <td>
                                                         <?php if (isset($connectedUserSlotInfo[$connUser->getId()])):
                                                             $_teacher = $connectedUserSlotInfo[$connUser->getId()];
-                                                            $_room = $rooms[$_teacher["teacherId"]];
+                                                            $_room = array_key_exists($_teacher["teacherId"], $rooms) ? $rooms[$_teacher["teacherId"]] : null;
                                                             ?>
                                                             <?php echo $_teacher["teacherName"] ?>
                                                             <br>
