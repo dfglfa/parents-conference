@@ -183,6 +183,15 @@ td.selectedTeacher {
   color: blue;
 }
 
+@media (max-width: 425px) {
+  .custom-nav {
+    max-width: 350px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
 /* ------- print ------- */
 
 @media print {
