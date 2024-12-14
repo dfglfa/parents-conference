@@ -388,12 +388,12 @@ class ViewController extends Controller
                                                         <?php if (!$studentAvailable):
                                                             $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                             ?>
-                                                            <button type='button' class='btn btn-danger btn-delete'
+                                                            <button type='button' class='btn btn-warning btn-delete'
                                                                 id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                                value='<?php echo ($deleteJson) ?>'>Termin <?php if (count($connectedUsers) > 0): ?>
-                                                                    von <?php echo $user->getFirstName() ?>
-                                                                <?php endif ?> stornieren
-
+                                                                value='<?php echo ($deleteJson) ?>'>stornieren
+                                                                <?php if (count($connectedUsers) > 0): ?>
+                                                                    (<?php echo $user->getFirstName() ?>)
+                                                                <?php endif ?>
                                                             </button>
                                                             <?php if (!empty($activeEvent->getVideoLink())):
                                                                 $getParam = escape('#userInfo.displayName=%22' . $user->getFirstName() . ' ' . $user->getLastName() . '%22') ?>
@@ -407,10 +407,10 @@ class ViewController extends Controller
                                                                 $connUserSlot = $connectedUserSlotInfo[$connUser->getId()];
                                                                 $deleteJson = escape(json_encode(array('userId' => $connUser->getId(), 'slotId' => $connUserSlot['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
                                                                 ?>
-                                                                <button type='button' class='btn btn-danger btn-delete' style="margin-top: 5px"
+                                                                <button type='button' class='btn btn-warning btn-delete' style="margin-top: 5px"
                                                                     id='btn-delete-<?php echo ($bookedSlots[$fromDate]['id']) ?>'
-                                                                    value='<?php echo ($deleteJson) ?>'>Termin von
-                                                                    <?php echo $connUser->getFirstName() ?> stornieren
+                                                                    value='<?php echo ($deleteJson) ?>'>stornieren
+                                                                    (<?php echo $connUser->getFirstName() ?>)
                                                                 </button>
                                                             <?php endif ?>
                                                         <?php endforeach ?>
