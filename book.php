@@ -38,13 +38,6 @@ $activeEvent = EventDAO::getActiveEvent();
                 <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php else: ?>
                 <div id="quotaInformation"></div>
-                <div class="alert alert-info">
-                    Bitte beachten Sie, dass zwischen zwei Terminen längere Fußwege anfallen können.
-                    Daher sollte vermieden werden, zwei aufeinander folgende Termine zu buchen.
-                    <br><br>
-                    Veuillez noter que des trajets à pied plus longs peuvent être nécessaires entre deux rendez-vous. Il est
-                    donc conseillé d'éviter de réserver deux rendez-vous consécutifs.
-                </div>
                 <br>
                 <form id='chooseTeacherForm'>
                     <div class='form-group'>
