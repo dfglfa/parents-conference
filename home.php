@@ -7,18 +7,6 @@ include_once 'code/Util.php';
 
 <p id='pageName' hidden>Home</p>
 <div class='container'>
-
-    <div style="padding-bottom: 20px;">
-        <span class="text-info" style="font-size: 14pt; font-weight: bold">Questions / Fragen? </span> <span
-            class="glyphicon glyphicon-arrow-right" style="margin: 0px 10px"></span>
-        <a href="https://ent.dfglfa.net/doku/pdf/Elternsprechtag_Anleitung_2024_Eltern_fr.pdf" target="_blank"
-            class="btn btn-default"><span class="glyphicon glyphicon-book"></span>
-            Instructions
-            françaises</a>
-        <a href="https://ent.dfglfa.net/doku/pdf/Elternsprechtag_Anleitung_2024_Eltern_de.pdf" target="_blank"
-            class="btn btn-default"><span class="glyphicon glyphicon-book"></span> Anleitung deutsch</a>
-    </div>
-
     <div id='tabs-1'>
         <?php
         printAlertForTemplate("studentOverview");
