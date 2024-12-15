@@ -33,6 +33,9 @@ $(document).ready(function () {
       case "mailTemplates":
         addMailTemplateSelectListener();
         break;
+      case "textTemplates":
+        addTextTemplateSelectListener();
+        break;
       case "passwords":
         preparePasswordForm();
         break;
@@ -765,6 +768,44 @@ function addMailTemplateSelectListener() {
     } else {
       $.ajax({
         url: "viewController.php?action=mailTemplateForm&templateId=" + val,
+        type: "GET",
+        dataType: "html",
+        success: (data) => {
+          formElem.html(data);
+        },
+        error: () => {
+          formElem.html("<span class='text-danger'>Es ist ein Fehler aufgetreten.</span>");
+        },
+      });
+    }
+  });
+}
+
+function saveTextTemplate() {
+  const templateId = $("#textTemplateId").val();
+  const content = $("#textTemplateContent").val().replace(/\n/g, "<br>");
+
+  $.ajax({
+    url: "controller.php",
+    type: "POST",
+    data: { action: "saveTextTemplate", templateId, content },
+    success: function (data, textStatus, jqXHR) {
+      showMessage($("#textTemplateFeedback"), "success", "Der Hiweistext wurde gespeichert.");
+    },
+  });
+}
+
+function addTextTemplateSelectListener() {
+  const selectboxId = "#selectArea";
+  const formElem = $("#textTemplateForm");
+  $(selectboxId).on("change", (e) => {
+    const val = $(selectboxId).val();
+    if (!val) {
+      $("#textTemplateFeedback").html("");
+      formElem.html("");
+    } else {
+      $.ajax({
+        url: "viewController.php?action=textTemplateForm&templateId=" + val,
         type: "GET",
         dataType: "html",
         success: (data) => {

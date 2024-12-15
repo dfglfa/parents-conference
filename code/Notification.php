@@ -27,7 +27,7 @@ function sendCreationNotificationMail($slotId)
     );
 
     // Mail to student
-    $studentMailData = getDataForMailTemplate("bookSlotMailToStudent");
+    $studentMailData = getDataForJsonTemplate("bookSlotMailToStudent");
     $emailContentStudent = $studentMailData["content"];
     $emailContentStudent = strtr($emailContentStudent, $trans);
     $emailSubjectStudent = $studentMailData["subject"];
@@ -40,7 +40,7 @@ function sendCreationNotificationMail($slotId)
     }
 
     // Mail to teacher
-    $teacherMailData = getDataForMailTemplate("bookSlotMailToTeacher");
+    $teacherMailData = getDataForJsonTemplate("bookSlotMailToTeacher");
     $emailContentTeacher = $teacherMailData["content"];
     $emailContentTeacher = strtr($emailContentTeacher, $trans);
     $emailSubjectTeacher = $teacherMailData["subject"];
@@ -79,7 +79,7 @@ function _sendCancellationNotificationMail($slotId, $reasonText, $recipientIsStu
     );
 
     if ($recipientIsStudent) {
-        $studentMailData = getDataForMailTemplate("slotCancelledByTeacherMailToStudent");
+        $studentMailData = getDataForJsonTemplate("slotCancelledByTeacherMailToStudent");
         $emailContentStudent = $studentMailData["content"];
         $emailContentStudent = strtr($emailContentStudent, $trans);
         $emailSubjectStudent = $studentMailData["subject"];
@@ -92,7 +92,7 @@ function _sendCancellationNotificationMail($slotId, $reasonText, $recipientIsStu
         }
     } else {
         // Mail to teacher
-        $teacherMailData = getDataForMailTemplate("slotCancelledByStudentMailToTeacher");
+        $teacherMailData = getDataForJsonTemplate("slotCancelledByStudentMailToTeacher");
         $emailContentTeacher = $teacherMailData["content"];
         $emailContentTeacher = strtr($emailContentTeacher, $trans);
         $emailSubjectTeacher = $teacherMailData["subject"];

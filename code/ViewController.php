@@ -1164,7 +1164,7 @@ class ViewController extends Controller
         }
 
         $templateId = $_REQUEST['templateId'];
-        $data = getDataForMailTemplate($templateId);
+        $data = getDataForJsonTemplate($templateId);
 
         if ($data == null) {
             return;
@@ -1194,6 +1194,39 @@ class ViewController extends Controller
                             </div>
                         </div>
                         <button class="btn btn-primary" id="saveTemplateButton" onClick="saveEmailTemplate()">Vorlage
+                            speichern</button>
+                        <?php
+    }
+
+    public function action_textTemplateForm()
+    {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        if ($user->getRole() != "admin") {
+            return "Unauthorized";
+        }
+
+        $templateId = $_REQUEST['templateId'];
+        $data = getDataForJsonTemplate($templateId);
+
+        if ($data == null) {
+            error_log("Template not found: " . $templateId);
+            return;
+        }
+
+        ?>
+                        <div>
+                            <input type="hidden" name="textTemplateId" id="textTemplateId" value="<?php echo $templateId ?>" />
+                            <div class="form-group">
+                                <label for="body" class="col-sm-2 control-label" style="margin-top: 5px">Hinweistext
+                                    <br><span style="font-weight: normal; font-size: small">(HTML erlaubt)</span>
+                                </label>
+                                <div class="col-sm-10" style="padding-bottom: 20px">
+                                    <textarea class="form-control" id="textTemplateContent" rows="8" name="textTemplateContent"
+                                        placeholder="Hinweistext eingeben"><?php echo str_replace("<br>", "\n", $data['content']) ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="saveTextTemplateButton" onClick="saveTextTemplate()">Hinweistext
                             speichern</button>
                         <?php
     }

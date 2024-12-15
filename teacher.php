@@ -13,6 +13,10 @@ include_once 'inc/header.php';
 
 <div class='container'>
 
+    <?php
+    printAlertForTemplate("teacherOverview");
+    ?>
+
     <h1>Meine Übersicht</h1>
 
     <div class='panel-group' id='accordion'>

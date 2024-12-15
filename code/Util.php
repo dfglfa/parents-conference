@@ -147,11 +147,11 @@ function getThrottleEndTime()
     return $activeEvent->getStartPostDate() + $activeEvent->getThrottleDays() * 86400;
 }
 
-function getDataForMailTemplate($templateId)
+function getDataForJsonTemplate($templateId)
 {
     $template_filename = "uploads/" . $templateId . ".json";
     if (!file_exists($template_filename)) {
-        $template_filename = "templates/email/" . $templateId . ".json";
+        $template_filename = "templates/json/" . $templateId . ".json";
 
         if (!file_exists($template_filename)) {
             echo "Cannot resolve file for template ID " . $templateId;
@@ -161,4 +161,14 @@ function getDataForMailTemplate($templateId)
 
     $file_content = file_get_contents($template_filename);
     return json_decode($file_content, true);
+}
+
+function printAlertForTemplate($templateId)
+{
+    $data = getDataForJsonTemplate($templateId);
+    if ($data["content"]) {
+        print ("<div style='padding-bottom: 10px'><div class='alert alert-info'>");
+        print ($data["content"]);
+        print ("</div></div>");
+    }
 }

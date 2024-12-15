@@ -411,6 +411,41 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#textTemplates'>
+                        Hinweistexte
+                    </a>
+                </h4>
+            </div>
+            <div id='textTemplates' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <div class="form-group">
+                        <label for="selectArea" class="col-sm-2 control-label" style="margin-top: 5px">Bereich</label>
+                        <div class="col-sm-10">
+                            <select class='form-control' id='selectArea'>
+                                <option value="">Kein Bereich ausgewählt</option>
+                                <option value="studentOverview">Übersichtsseite Schüler/Eltern</option>
+                                <option value="booking">Terminbuchungen Schüler/Eltern</option>
+                                <option value="teacherOverview">Übersichtsseite Lehrkräfte</option>
+                            </select>
+                        </div>
+                        <br><br>
+
+                        <div id="textTemplateForm"></div>
+                        <div id="textTemplateFeedback"></div>
+
+                        <div>
+                            <div style="padding: 20px 0">
+                                Die Hinweistexte erscheinen oben auf den jeweiligen Seiten.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#passwords'>
                         Passwörter
                     </a>

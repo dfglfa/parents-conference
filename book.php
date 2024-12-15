@@ -10,6 +10,9 @@ include_once 'inc/header.php';
 
 <div class='container'>
     <div id='tabs-1'>
+        <?php
+        printAlertForTemplate("booking");
+        ?>
         <h1>Termine buchen</h1>
         <?php include_once 'inc/notifications.php'; ?>
     </div>

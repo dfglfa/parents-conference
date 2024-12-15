@@ -767,7 +767,31 @@ class Controller
             "content" => $_REQUEST['content']
         );
 
-        if (getDataForMailTemplate($templateId) == null) {
+        if (getDataForJsonTemplate($templateId) == null) {
+            echo "Unknown template ID: " . $templateId;
+            return;
+        }
+
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+        $filePath = "uploads/" . $templateId . ".json";
+
+        file_put_contents($filePath, $jsonData);
+    }
+
+    public function action_saveTextTemplate()
+    {
+        $authUser = AuthenticationManager::getAuthenticatedUser();
+        if ($authUser->getRole() != "admin") {
+            echo "Unauthorized";
+            return;
+        }
+
+        $templateId = $_REQUEST['templateId'];
+        $data = array(
+            "content" => $_REQUEST['content']
+        );
+
+        if (getDataForJsonTemplate($templateId) == null) {
             echo "Unknown template ID: " . $templateId;
             return;
         }

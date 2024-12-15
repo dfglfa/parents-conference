@@ -1,5 +1,6 @@
 <?php
 include_once 'inc/header.php';
+include_once 'code/Util.php';
 ?>
 
 <script type='text/javascript' src='js/mySlots.js'></script>
@@ -19,6 +20,9 @@ include_once 'inc/header.php';
     </div>
 
     <div id='tabs-1'>
+        <?php
+        printAlertForTemplate("studentOverview");
+        ?>
         <h1>Meine Termine</h1>
         <div id="siblingsHint"></div>
         <?php include_once 'inc/notifications.php'; ?>
