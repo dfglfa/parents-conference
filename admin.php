@@ -434,8 +434,9 @@ include_once 'inc/header.php';
                         <div id="textTemplateFeedback"></div>
 
                         <div>
-                            <div style="padding: 20px 0">
-                                Die Hinweistexte erscheinen oben auf den jeweiligen Seiten.
+                            <div style="padding-top: 20px">
+                                Die Hinweistexte erscheinen als blauer Kasten oben auf den jeweiligen Seiten. Wenn das
+                                Textfeld leer bleibt, wird nichts angezeigt.
                             </div>
                         </div>
                     </div>
