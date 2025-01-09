@@ -456,10 +456,11 @@ class ViewController extends Controller
         $headerText = "Meine Termine";
         if ($adminPrint) {
             $headerText = "Termine für " . $teacher->getTitle() . " " . $teacher->getFirstName() . " " . $teacher->getLastName();
-            $room = RoomDAO::getRoomForTeacherId($teacher->getId());
-            if ($room != null) {
-                $headerText .= " (Raum: " . $room->getRoomNumber() . " | " . $room->getName() . ")";
-            }
+        }
+
+        $room = RoomDAO::getRoomForTeacherId($teacher->getId());
+        if ($room != null) {
+            $headerText .= " (Raum: " . $room->getRoomNumber() . " | " . $room->getName() . ")";
         }
 
         ?>
