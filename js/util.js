@@ -35,7 +35,7 @@ function PrintElem(elem, pageTitle) {
     }
   }
 
-  show();
+  setTimeout(show, 1000);
 }
 
 function showConfirmationModal({ title, content, confirmationCaption, onConfirm }) {
