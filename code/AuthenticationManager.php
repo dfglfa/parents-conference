@@ -21,10 +21,12 @@ class AuthenticationManager
 		global $LDAP_ENABLED;
 		$authenticated = false;
 
-		// The admin user is not looked up via LDAP
-		if ($userName != "admin" && $LDAP_ENABLED) {
+		if ($LDAP_ENABLED) {
 			$authenticated = self::authenticateLdap($userName, $password);
-		} else {
+		}
+
+		// Use local DB in case a) LDAP is not used or b) LDAP auth failed (fallback to local DB)
+		if (!$authenticated) {
 			$authenticated = password_verify($password, $user->getPasswordHash());
 		}
 
