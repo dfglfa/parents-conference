@@ -13,12 +13,4 @@ foreach ($messages as $msg) {
     <?php endif; ?>
 <?php
 }
-
-$event = EventDAO::getActiveEvent();
-if ($event != null) {
-    $remainingDays = (int) (($event->getFinalPostDate() - time()) / 86400);
-    if ($remainingDays >= 0 && $remainingDays < 6) {
-        print ("<div class='alert alert-warning'>Bitte beachten Sie, dass Terminbuchungen nur noch bis zum " . (toDate($event->getFinalPostDate(), 'd.m.')) . " möglich sind!</div>");
-    }
-}
 ?>

@@ -32,12 +32,13 @@ If you do not intend to use LDAP, leave the LDAP section unchanged, since by def
 
 As an administrator:
 
-0. Upload the logo of your school
 1. Import teachers via a CSV file (example in templates/teachers.csv)
 2. Import student data via a CSV file (example in templates/students.csv)
 3. Optionally: Configure email templates with text according to your wishes.
 4. Create a conference.
 5. Optionally: Print passwords and distribute them to the students.
+6. Optionally: Upload the logo of your school (PNG)
+7. Optionally: Upload a map of the school area/rooms (PNG)
 
 As a teacher (optional):
 

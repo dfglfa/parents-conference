@@ -38,15 +38,25 @@ $activeEvent = EventDAO::getActiveEvent();
                 <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php else: ?>
                 <div id="quotaInformation"></div>
+
+                <?php
+                $timestamp = $activeEvent->getFinalPostDate();
+                $date = new DateTime("@$timestamp");
+                $berlinTimezone = new DateTimeZone('Europe/Berlin');
+                $date->setTimezone($berlinTimezone);
+                $formattedDate = $date->format('d.m.Y H:i') . " Uhr";
+                print ("<div style='font-size: 12pt'>Ende des Buchungszeitraums: <strong>" . $formattedDate . "</strong></div>");
+                ?>
+
                 <br>
                 <form id='chooseTeacherForm'>
                     <div class='form-group'>
-                        <label for='selectTeacher'>Lehrer / Lehrerin</label>
                         <select class='form-control' id='selectTeacher' name='teacher'>
                             <?php echo (getTeacherOptions()); ?>
                         </select>
                     </div>
                 </form>
+
                 <div id='timeTable'></div>
             <?php endif; ?>
         <?php else: ?>
