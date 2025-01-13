@@ -30,22 +30,27 @@ If you do not intend to use LDAP, leave the LDAP section unchanged, since by def
 
 ## Usage
 
-As an administrator:
+### As an administrator:
 
 1. Import teachers via a CSV file (example in templates/teachers.csv)
 2. Import student data via a CSV file (example in templates/students.csv)
-3. Optionally: Configure email templates with text according to your wishes.
-4. Create a conference.
-5. Optionally: Print passwords and distribute them to the students.
-6. Optionally: Upload the logo of your school (PNG)
-7. Optionally: Upload a map of the school area/rooms (PNG)
+3. Create a conference.
 
-As a teacher (optional):
+Optional steps:
+
+- Configure email templates with text according to your wishes.
+- Add explanatory text boxes (your custom text / HTML) for each page
+- Print passwords and distribute them to the students.
+- Link/unlink student accounts for siblings (only necessary if not linked in CSV file)
+- Upload the logo of your school (PNG)
+- Optionally: Upload a map of the school area/rooms (PNG)
+
+### As a teacher:
 
 1. Set the time range you are present (only possible until booking begins).
 2. After booking has begun: View and possibly cancel appointments.
 
-As a student / parent:
+### As a student / parent:
 
 1. Log in with the provided credentials.
 2. Book the desired slots for the desired teacher. If your siblings are connected to your account, you have a unified booking "matrix" for all siblings.
