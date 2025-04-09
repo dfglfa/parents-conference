@@ -11,815 +11,843 @@ require_once('Notification.php');
 
 class Controller
 {
-    // request wide singleton
-    protected static $instance = false;
+  // request wide singleton
+  protected static $instance = false;
 
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new Controller();
-        }
-        return self::$instance;
+  public static function getInstance()
+  {
+    if (!self::$instance) {
+      self::$instance = new Controller();
+    }
+    return self::$instance;
+  }
+
+  public function handlePostRequest()
+  {
+    //check request method
+    if (($_SERVER['REQUEST_METHOD'] != 'POST') || (!isset($_REQUEST['action']))) {
+      return;
     }
 
-    public function handlePostRequest()
-    {
-        //check request method
-        if (($_SERVER['REQUEST_METHOD'] != 'POST') || (!isset($_REQUEST['action']))) {
+    //execute action
+    $method = 'action_' . $_REQUEST['action'];
+    $this->$method();
+  }
+
+  protected function forward($errors = null, $target = null)
+  {
+    if ($target == null) {
+      if (!isset($_REQUEST['page'])) {
+        throw new Exception('Missing target for forward!');
+      }
+      $target = strtok($_REQUEST['page'], '?');
+    }
+    // forward request to target
+    require($_SERVER['DOCUMENT_ROOT'] . $target);
+    exit(0); // --> successful termination of script
+  }
+
+  protected function action_createEvent()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
+    }
+
+    $name = $_REQUEST['name'];
+    $date = $_REQUEST['date'];
+    $beginTime = $_REQUEST['beginTime'];
+    $endTime = $_REQUEST['endTime'];
+    $slotDuration = $_REQUEST['slotDuration'];
+    $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
+    $startBookingDate = $_REQUEST['startBookingDate'];
+    $endBookingDate = $_REQUEST['endBookingDate'];
+    $videoLink = $_REQUEST['videoLink'];
+    $breaks = $_REQUEST['breaks'];
+    $throttleQuota = $_REQUEST['throttleQuota'];
+    $throttleDays = $_REQUEST['throttleDays'];
+
+    $unixTimeFrom = strtotime($date . ' ' . $beginTime);
+    $unixTimeTo = strtotime($date . ' ' . $endTime);
+
+    $timezone = new DateTimeZone('Europe/Berlin');
+    $startDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $startBookingDate, $timezone);
+    $endDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $endBookingDate, $timezone);
+
+    $startPostDate = $startDateWithTimezone->getTimestamp();
+    $finalPostDate = $endDateWithTimezone->getTimestamp();
+
+    if (!$unixTimeFrom || !$unixTimeTo) {
+      return;
+    }
+
+    $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota);
+    if ($eventId > 0) {
+      echo 'success';
+    }
+  }
+
+  protected function action_changeAttendance()
+  {
+    $fromTime = $_REQUEST['inputFromTime'];
+    $toTime = $_REQUEST['inputToTime'];
+    $userId = $_REQUEST['userId'];
+    $eventId = $_REQUEST['eventId'];
+
+    if ($toTime < $fromTime) {
+      echo 'failure';
+      return;
+    }
+
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() == "student") {
+      echo "Unauthorized";
+      return;
+    }
+
+    $event = EventDAO::getActiveEvent();
+
+    if ($event == null || $event->getStartPostDate() < time() && $authUser->getRole() != "admin") {
+      echo "Changes forbidden, booking already started!";
+      return;
+    }
+
+    SlotDAO::changeAttendanceForUser($userId, $eventId, $fromTime, $toTime);
+
+    echo 'success';
+  }
+
+  protected function action_uploadFile()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
+    }
+
+    //error_reporting(E_ALL);
+    //ini_set('display_errors', 1);
+    header('Content-Type: text/html; charset=UTF-8');
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      if (!array_key_exists('file-0', $_FILES)) {
+        echo 'Es wurde keine Datei ausgewählt!';
+        return;
+      }
+
+      $name = $_FILES['file-0']['name'];
+      $tmpName = $_FILES['file-0']['tmp_name'];
+      $error = $_FILES['file-0']['error'];
+      $size = $_FILES['file-0']['size'];
+      $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+      switch ($error) {
+        case UPLOAD_ERR_OK:
+          //validate file size
+          if ($size / 1024 / 1024 > 2) {
+            echo 'Die Datei überschreitet die Maximalgröße!';
             return;
-        }
+          }
 
-        //execute action
-        $method = 'action_' . $_REQUEST['action'];
-        $this->$method();
-    }
-
-    protected function forward($errors = null, $target = null)
-    {
-        if ($target == null) {
-            if (!isset($_REQUEST['page'])) {
-                throw new Exception('Missing target for forward!');
+          //upload file
+          $type = $_REQUEST['uploadType'];
+          if (in_array($type, array('student', 'teacher', 'subject'))) {
+            if (!$this->validateFileExtension($ext, array('csv'))) {
+              echo 'Ungültiges Dateiformat!';
+              return;
             }
-            $target = strtok($_REQUEST['page'], '?');
-        }
-        // forward request to target
-        require($_SERVER['DOCUMENT_ROOT'] . $target);
-        exit(0); // --> successful termination of script
-    }
-
-    protected function action_createEvent()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
+            $targetPath = $this->uploadFileAs($name, $tmpName);
+            $oldTimeout = ini_get('max_execution_time');
+            ini_set('max_execution_time', '240');
+            $importCSVResult = $this->importCSV($type, $targetPath);
+            echo $importCSVResult['success'] ? 'success' : $importCSVResult['message'];
+            ini_set('max_execution_time', $oldTimeout);
             return;
-        }
-
-        $name = $_REQUEST['name'];
-        $date = $_REQUEST['date'];
-        $beginTime = $_REQUEST['beginTime'];
-        $endTime = $_REQUEST['endTime'];
-        $slotDuration = $_REQUEST['slotDuration'];
-        $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
-        $startBookingDate = $_REQUEST['startBookingDate'];
-        $endBookingDate = $_REQUEST['endBookingDate'];
-        $videoLink = $_REQUEST['videoLink'];
-        $breaks = $_REQUEST['breaks'];
-        $throttleQuota = $_REQUEST['throttleQuota'];
-        $throttleDays = $_REQUEST['throttleDays'];
-
-        $unixTimeFrom = strtotime($date . ' ' . $beginTime);
-        $unixTimeTo = strtotime($date . ' ' . $endTime);
-
-        $timezone = new DateTimeZone('Europe/Berlin');
-        $startDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $startBookingDate, $timezone);
-        $endDateWithTimezone = DateTime::createFromFormat('d.m.Y H:i', $endBookingDate, $timezone);
-
-        $startPostDate = $startDateWithTimezone->getTimestamp();
-        $finalPostDate = $endDateWithTimezone->getTimestamp();
-
-        if (!$unixTimeFrom || !$unixTimeTo) {
-            return;
-        }
-
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota);
-        if ($eventId > 0) {
+          } else if ($type == 'logo') {
+            if (!$this->validateFileExtension($ext, array('png'))) {
+              echo 'Ungültiges Dateiformat!';
+              return;
+            }
+            $this->uploadFileAs('logo.png', $tmpName, "public");
             echo 'success';
-        }
-    }
-
-    protected function action_changeAttendance()
-    {
-        $fromTime = $_REQUEST['inputFromTime'];
-        $toTime = $_REQUEST['inputToTime'];
-        $userId = $_REQUEST['userId'];
-        $eventId = $_REQUEST['eventId'];
-
-        if ($toTime < $fromTime) {
-            echo 'failure';
             return;
-        }
-
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() == "student") {
-            echo "Unauthorized";
-            return;
-        }
-
-        $event = EventDAO::getActiveEvent();
-
-        if ($event == null || $event->getStartPostDate() < time() && $authUser->getRole() != "admin") {
-            echo "Changes forbidden, booking already started!";
-            return;
-        }
-
-        SlotDAO::changeAttendanceForUser($userId, $eventId, $fromTime, $toTime);
-
-        echo 'success';
-    }
-
-    protected function action_uploadFile()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
-
-        //error_reporting(E_ALL);
-        //ini_set('display_errors', 1);
-        header('Content-Type: text/html; charset=UTF-8');
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (!array_key_exists('file-0', $_FILES)) {
-                echo 'Es wurde keine Datei ausgewählt!';
-                return;
+          } else if ($type == 'map') {
+            if (!$this->validateFileExtension($ext, array('png'))) {
+              echo 'Ungültiges Dateiformat!';
+              return;
             }
-
-            $name = $_FILES['file-0']['name'];
-            $tmpName = $_FILES['file-0']['tmp_name'];
-            $error = $_FILES['file-0']['error'];
-            $size = $_FILES['file-0']['size'];
-            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-
-            switch ($error) {
-                case UPLOAD_ERR_OK:
-                    //validate file size
-                    if ($size / 1024 / 1024 > 2) {
-                        echo 'Die Datei überschreitet die Maximalgröße!';
-                        return;
-                    }
-
-                    //upload file
-                    $type = $_REQUEST['uploadType'];
-                    if (in_array($type, array('student', 'teacher', 'subject'))) {
-                        if (!$this->validateFileExtension($ext, array('csv'))) {
-                            echo 'Ungültiges Dateiformat!';
-                            return;
-                        }
-                        $targetPath = $this->uploadFileAs($name, $tmpName);
-                        $oldTimeout = ini_get('max_execution_time');
-                        ini_set('max_execution_time', '240');
-                        $importCSVResult = $this->importCSV($type, $targetPath);
-                        echo $importCSVResult['success'] ? 'success' : $importCSVResult['message'];
-                        ini_set('max_execution_time', $oldTimeout);
-                        return;
-
-                    } else if ($type == 'logo') {
-                        if (!$this->validateFileExtension($ext, array('png'))) {
-                            echo 'Ungültiges Dateiformat!';
-                            return;
-                        }
-                        $this->uploadFileAs('logo.png', $tmpName, "public");
-                        echo 'success';
-                        return;
-                    } else if ($type == 'map') {
-                        if (!$this->validateFileExtension($ext, array('png'))) {
-                            echo 'Ungültiges Dateiformat!';
-                            return;
-                        }
-                        $this->uploadFileAs('map.png', $tmpName, "public");
-                        echo 'success';
-                        return;
-                    } else {
-                        echo 'Ungültiger Typ!';
-                        return;
-                    }
-
-                case UPLOAD_ERR_INI_SIZE:
-                case UPLOAD_ERR_FORM_SIZE:
-                    echo 'Die Datei überschreitet die Maximalgröße!';
-                    return;
-
-                case UPLOAD_ERR_PARTIAL:
-                    echo 'Die Datei konnte nicht vollständig hochgeladen werden!';
-                    return;
-
-                case UPLOAD_ERR_NO_FILE:
-                    echo 'Es wurde keine Datei ausgewählt!';
-                    return;
-
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    echo 'Kein Ordner für den Dateiupload verfügbar!';
-                    return;
-
-                case UPLOAD_ERR_CANT_WRITE:
-                    echo 'Die Datei konnte nicht auf den Server geschrieben werden!';
-                    return;
-
-                case UPLOAD_ERR_EXTENSION:
-                    echo 'Der Dateiupload wurde durch eine Erweiterung abgebrochen!';
-                    return;
-
-                default:
-                    echo 'Die Datei konnte nicht hochgeladen werden!';
-                    return;
-            }
-        }
-    }
-
-    private function checkCSVHeader($type, $row)
-    {
-        $constraints['teacher'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
-        $constraints['student'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Geschwister');
-        $constraints['subject'] = array('ToDo');
-
-        $constraintPart = implode('', $constraints[$type]);
-        $length = strlen($constraintPart);
-        if (substr(implode('', $row), 0 - $length) == substr($constraintPart, 0 - $length)) {
-            return true;
-        } else {
-            echo (substr(implode('', $row), 0 - $length) . " / " . substr($constraintPart, 0 - $length));
-            return false;
-        }
-    }
-
-    private function removeSpecials($string)
-    {
-        $search = array('ç', 'æ', 'œ', 'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ÿ', 'â', 'ê', 'î', 'ô', 'û', 'å', 'ø', 'ß', 'Ä', 'Ö', 'Ü');
-        $replace = array('c', 'ae', 'oe', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'ae', 'e', 'i', 'oe', 'ue', 'y', 'a', 'e', 'i', 'o', 'u', 'a', 'o', 'ss', 'Ae', 'Oe', 'Ue');
-        return str_replace($search, $replace, $string);
-    }
-
-    private function generateUserName($firstName, $lastName, $digits = 3)
-    {
-        $randomDigit = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
-        $firstName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $firstName)));
-        $lastName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $lastName)));
-
-        return substr($lastName, 0, 3) . substr($firstName, 0, 3) . $randomDigit;
-    }
-
-    private function generateRandomPassword($length = 10)
-    {
-        $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789!@#$%&*()_-=+,.?';
-        $password = substr(str_shuffle($chars), 0, $length);
-        return $password;
-    }
-
-    protected function uploadFileAs($name, $tmpName, $folder = "uploads")
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
+            $this->uploadFileAs('map.png', $tmpName, "public");
+            echo 'success';
             return;
-        }
+          } else {
+            echo 'Ungültiger Typ!';
+            return;
+          }
 
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
-        }
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+          echo 'Die Datei überschreitet die Maximalgröße!';
+          return;
 
-        $targetPath = $folder . DIRECTORY_SEPARATOR . $name;
-        move_uploaded_file($tmpName, $targetPath);
-        return $targetPath;
+        case UPLOAD_ERR_PARTIAL:
+          echo 'Die Datei konnte nicht vollständig hochgeladen werden!';
+          return;
+
+        case UPLOAD_ERR_NO_FILE:
+          echo 'Es wurde keine Datei ausgewählt!';
+          return;
+
+        case UPLOAD_ERR_NO_TMP_DIR:
+          echo 'Kein Ordner für den Dateiupload verfügbar!';
+          return;
+
+        case UPLOAD_ERR_CANT_WRITE:
+          echo 'Die Datei konnte nicht auf den Server geschrieben werden!';
+          return;
+
+        case UPLOAD_ERR_EXTENSION:
+          echo 'Der Dateiupload wurde durch eine Erweiterung abgebrochen!';
+          return;
+
+        default:
+          echo 'Die Datei konnte nicht hochgeladen werden!';
+          return;
+      }
+    }
+  }
+
+  private function checkCSVHeader($type, $row)
+  {
+    $constraints['teacher'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
+    $constraints['student'] = array('Vorname', 'Nachname', 'E-Mail', 'Klasse', 'Benutzername', 'Passwort', 'Geschwister');
+    $constraints['subject'] = array('ToDo');
+
+    $constraintPart = implode('', $constraints[$type]);
+    $length = strlen($constraintPart);
+    if (substr(implode('', $row), 0 - $length) == substr($constraintPart, 0 - $length)) {
+      return true;
+    } else {
+      echo (substr(implode('', $row), 0 - $length) . " / " . substr($constraintPart, 0 - $length));
+      return false;
+    }
+  }
+
+  private function removeSpecials($string)
+  {
+    $search = array('ç', 'æ', 'œ', 'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ÿ', 'â', 'ê', 'î', 'ô', 'û', 'å', 'ø', 'ß', 'Ä', 'Ö', 'Ü');
+    $replace = array('c', 'ae', 'oe', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'ae', 'e', 'i', 'oe', 'ue', 'y', 'a', 'e', 'i', 'o', 'u', 'a', 'o', 'ss', 'Ae', 'Oe', 'Ue');
+    return str_replace($search, $replace, $string);
+  }
+
+  private function generateUserName($firstName, $lastName, $digits = 3)
+  {
+    $randomDigit = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
+    $firstName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $firstName)));
+    $lastName = strtolower($this->removeSpecials(preg_replace('/\s/', '', $lastName)));
+
+    return substr($lastName, 0, 3) . substr($firstName, 0, 3) . $randomDigit;
+  }
+
+  private function generateRandomPassword($length = 10)
+  {
+    $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789!@#$%&*()_-=+,.?';
+    $password = substr(str_shuffle($chars), 0, $length);
+    return $password;
+  }
+
+  protected function uploadFileAs($name, $tmpName, $folder = "uploads")
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    protected function importCSV($role, $targetPath)
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    if (!file_exists($folder)) {
+      mkdir($folder, 0777, true);
+    }
 
-        // import into database
-        $filename = $targetPath;
-        $fp = fopen($filename, 'r');
+    $targetPath = $folder . DIRECTORY_SEPARATOR . $name;
+    move_uploaded_file($tmpName, $targetPath);
+    return $targetPath;
+  }
 
-        //parse the csv file row by row
-        $firstRow = true;
-        $users = array();
-        $accessData = array();
-        $rooms = array();
-        $userNames = array();
-        $userConnections = array();
+  protected function importCSV($role, $targetPath)
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
+    }
 
-        $duplicateUserError = array(
+    // import into database
+    $filename = $targetPath;
+    $fp = fopen($filename, 'r');
+
+    //parse the csv file row by row
+    $firstRow = true;
+    $users = array();
+    $accessData = array();
+    $rooms = array();
+    $userNames = array();
+    $userConnections = array();
+
+    $duplicateUserError = array(
+      'success' => false,
+      'message' => 'Die Benutzernamen sind nicht eindeutig! Bitte vergib eindeutige Benutzernamen!'
+    );
+
+    $csv = file_get_contents($filename);
+    $isUTF8 = mb_detect_encoding($csv, mb_detect_order(), TRUE) == 'UTF-8';
+
+    while (($row = fgetcsv($fp, 0, ';')) != FALSE) {
+      if (!$isUTF8) {
+        $row = array_map('utf8_encode', $row);
+      }
+
+      if ($firstRow) {
+        if (!$this->checkCSVHeader($role, $row)) {
+          fclose($fp);
+          return array(
             'success' => false,
-            'message' => 'Die Benutzernamen sind nicht eindeutig! Bitte vergib eindeutige Benutzernamen!'
-        );
-
-        $csv = file_get_contents($filename);
-        $isUTF8 = mb_detect_encoding($csv, mb_detect_order(), TRUE) == 'UTF-8';
-
-        while (($row = fgetcsv($fp, 0, ';')) != FALSE) {
-            if (!$isUTF8) {
-                $row = array_map('utf8_encode', $row);
-            }
-
-            if ($firstRow) {
-                if (!$this->checkCSVHeader($role, $row)) {
-                    fclose($fp);
-                    return array(
-                        'success' => false,
-                        'message' => 'Die Spalten der CSV Datei passen nicht zum gewählten Typ!'
-                    );
-                } else {
-                    $firstRow = false;
-                }
-            } else {
-                //insert csv data into mysql table
-                $email = trim($row[2]);
-                $class = trim($row[3]) != '' ? trim($row[3]) : null;
-
-                if ($role == 'teacher') {
-                    $userName = trim($row[4]);
-                    $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
-
-                    if (!$this->checkForUniqueUserName($userName, $userNames)) {
-                        error_log("Doppelt: " . $userName);
-                        fclose($fp);
-                        return $duplicateUserError;
-                    }
-
-                    $accessData[] = array($userName, $password);
-                    $userNames[] = $userName;
-                    $title = trim($row[6]);
-
-                    $roomNumber = trim($row[7]);
-                    $roomName = trim($row[8]);
-                    if ($roomNumber != '' && $roomName != '') {
-                        $rooms[$userName] = array($roomNumber, $roomName);
-                    }
-
-
-                } elseif ($role == 'student') {
-                    $userName = trim($row[4]);
-
-                    $tries = 0;
-                    if ($userName == '') {
-                        do {
-                            $userName = $this->generateUserName(trim($row[0]), trim($row[1]));
-                            $tries++;
-                        } while ((!$this->checkForUniqueUserName($userName, $userNames)) && ($tries < 500));
-                    }
-                    if (!$this->checkForUniqueUserName($userName, $userNames)) {
-                        error_log("Doppelt: " . $userName);
-                        fclose($fp);
-                        return $duplicateUserError;
-                    }
-                    $userNames[] = $userName;
-                    $title = '';
-
-                    $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
-
-                    if (trim($row[6] != '')) {
-                        $userConnections[$userName] = trim($row[6]);
-                    }
-
-                    $accessData[] = array($userName, $password);
-                } else {
-                    return array(
-                        'success' => false,
-                        'message' => 'Unbekannter Typ "' . $role . '"'
-                    );
-                }
-
-                $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $email, $class, $role, $title);
-            }
+            'message' => 'Die Spalten der CSV Datei passen nicht zum gewählten Typ!'
+          );
+        } else {
+          $firstRow = false;
         }
+      } else {
+        //insert csv data into mysql table
+        $email = trim($row[2]);
+        $class = trim($row[3]) != '' ? trim($row[3]) : null;
 
-        $deleteExistingDataSuccess = UserDAO::deleteUsersByRole($role) && UserDAO::truncateAccessDataForRole($role);
         if ($role == 'teacher') {
-            $deleteExistingDataSuccess = $deleteExistingDataSuccess && EventDAO::deleteAllEvents() && RoomDAO::deleteAllRooms();
-        } elseif ($role == 'student') {
-            $deleteExistingDataSuccess = $deleteExistingDataSuccess && UserDAO::deleteAllConnections();
-        }
+          $userName = trim($row[4]);
+          $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
-        if (!$deleteExistingDataSuccess) {
+          if (!$this->checkForUniqueUserName($userName, $userNames)) {
+            error_log("Doppelt: " . $userName);
             fclose($fp);
-            return array(
-                'success' => false,
-                'message' => 'Die bestehenden Einträge des gewählten Typs konnten nicht gelöscht werden!'
-            );
-        }
+            return $duplicateUserError;
+          }
 
-        UserDAO::bulkInsertUsers($users, $rooms);
-        if (count($accessData) > 0) {
-            UserDAO::bulkInsertAccessData($accessData, $role);
-        }
+          $accessData[] = array($userName, $password);
+          $userNames[] = $userName;
+          $title = trim($row[6]);
 
-        if ($role == 'student') {
-            UserDAO::bulkConnectUsers($userConnections);
-        }
+          $roomNumber = trim($row[7]);
+          $roomName = trim($row[8]);
+          if ($roomNumber != '' && $roomName != '') {
+            $rooms[$userName] = array($roomNumber, $roomName);
+          }
+        } elseif ($role == 'student') {
+          $userName = trim($row[4]);
 
-        fclose($fp);
-        return array(
-            'success' => true,
-            'message' => 'Die CSV Datei wurde erfolgreich importiert!'
-        );
-    }
+          $tries = 0;
+          if ($userName == '') {
+            do {
+              $userName = $this->generateUserName(trim($row[0]), trim($row[1]));
+              $tries++;
+            } while ((!$this->checkForUniqueUserName($userName, $userNames)) && ($tries < 500));
+          }
+          if (!$this->checkForUniqueUserName($userName, $userNames)) {
+            error_log("Doppelt: " . $userName);
+            fclose($fp);
+            return $duplicateUserError;
+          }
+          $userNames[] = $userName;
+          $title = '';
 
-    private function checkForUniqueUserName($userName, $userNames)
-    {
-        return !in_array($userName, $userNames);
-    }
+          $password = trim($row[5]) == '' ? $this->generateRandomPassword() : trim($row[5]);
 
-    protected function validateFileExtension($ext, $allowed)
-    {
-        if (!in_array($ext, $allowed)) {
-            return false;
-        }
+          if (trim($row[6] != '')) {
+            $userConnections[$userName] = trim($row[6]);
+          }
 
-        return true;
-    }
-
-    protected function action_changeSlot()
-    {
-        $slotId = $_REQUEST['slotId'];
-        $userId = $_REQUEST['userId'];
-        $eventId = $_REQUEST['eventId'];
-
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getId() != $userId) {
-            // Possibly unauthorized. Sibling access might be allowed
-            $isSibling = false;
-            foreach (UserDAO::getConnectedUsersForUserId($authUser->getId()) as $cu) {
-                if ($cu->getId() == $userId) {
-                    // connected sibling found => OK
-                    $isSibling = true;
-                    break;
-                }
-            }
-            if (!$isSibling) {
-                echo "Unauthorized!";
-                return;
-            }
-        }
-
-        $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
-        LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
-
-        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
-        if ($result['success']) {
-            if ($result['rowCount'] > 0) {
-                sendCreationNotificationMail($slotId);
-                echo ('success');
-            } else {
-                echo ('dirtyRead');
-            }
+          $accessData[] = array($userName, $password);
         } else {
-            echo ('error');
+          return array(
+            'success' => false,
+            'message' => 'Unbekannter Typ "' . $role . '"'
+          );
         }
+
+        $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $email, $class, $role, $title);
+      }
     }
 
-    protected function action_deleteSlot()
-    {
-        $slotId = $_REQUEST['slotId'];
-        $eventId = $_REQUEST['eventId'];
-
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-
-        $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
-        LogDAO::log($authUser->getId(), LogDAO::LOG_ACTION_DELETE_SLOT, $info);
-
-        if ($authUser->getRole() == "teacher") {
-            $reasonText = $_REQUEST['reasonText'];
-            sendCancellationNotificationMailToStudent($slotId, $reasonText);
-        } else {
-            sendCancellationNotificationMailToTeacher($slotId);
-        }
-        $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
-
-        if ($success) {
-            echo ('success');
-        } else {
-            echo ('error');
-        }
+    $deleteExistingDataSuccess = UserDAO::deleteUsersByRole($role) && UserDAO::truncateAccessDataForRole($role);
+    if ($role == 'teacher') {
+      $deleteExistingDataSuccess = $deleteExistingDataSuccess && EventDAO::deleteAllEvents() && RoomDAO::deleteAllRooms();
+    } elseif ($role == 'student') {
+      $deleteExistingDataSuccess = $deleteExistingDataSuccess && UserDAO::deleteAllConnections();
     }
 
-    protected function action_setActiveEvent()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
-
-        $eventId = $_REQUEST['eventId'];
-
-        $success = EventDAO::setActiveEvent($eventId);
-
-        if ($success) {
-            echo ('success');
-        } else {
-            echo ('error');
-        }
+    if (!$deleteExistingDataSuccess) {
+      fclose($fp);
+      return array(
+        'success' => false,
+        'message' => 'Die bestehenden Einträge des gewählten Typs konnten nicht gelöscht werden!'
+      );
     }
 
-    protected function action_deleteEvent()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
-
-        $eventId = $_REQUEST['eventId'];
-
-        $success = EventDAO::deleteEvent($eventId);
-
-        if ($success) {
-            echo ('success');
-        } else {
-            echo ('error');
-        }
+    UserDAO::bulkInsertUsers($users, $rooms);
+    if (count($accessData) > 0) {
+      UserDAO::bulkInsertAccessData($accessData, $role);
     }
 
-    protected function action_createUser()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
-
-        $userName = $_REQUEST['userName'];
-        $password = $_REQUEST['password'];
-        $firstName = $_REQUEST['firstName'];
-        $lastName = $_REQUEST['lastName'];
-        $email = $_REQUEST['email'];
-        $class = $_REQUEST['class'];
-        $type = $_REQUEST['type'];
-        $roomNumber = $_REQUEST['roomNumber'];
-        $roomName = $_REQUEST['roomName'];
-
-        $userId = UserDAO::register($userName, $password, $firstName, $lastName, $email, $class, $type);
-        $updateRoomResult = true;
-        if ($roomNumber != '' && $roomName != '') {
-            $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
-        }
-
-        if (($userId > 0) && $updateRoomResult) {
-            echo ('success');
-        } else if ($userId == -1) {
-            echo ('Der Benutzer existiert bereits!');
-        } else {
-            echo ('Das Passwort muss mindestens ' . UserDAO::MIN_PASSWORD_LENGTH . ' Zeichen lang sein!');
-        }
+    if ($role == 'student') {
+      UserDAO::bulkConnectUsers($userConnections);
     }
 
-    protected function action_editUser()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    fclose($fp);
+    return array(
+      'success' => true,
+      'message' => 'Die CSV Datei wurde erfolgreich importiert!'
+    );
+  }
 
-        $userId = $_REQUEST['userId'];
-        $userName = $_REQUEST['userName'];
-        $password = $_REQUEST['password'];
-        $firstName = $_REQUEST['firstName'];
-        $lastName = $_REQUEST['lastName'];
-        $email = $_REQUEST['email'];
-        $class = $_REQUEST['class'];
-        $type = $_REQUEST['type'];
-        $roomNumber = $_REQUEST['roomNumber'];
-        $roomName = $_REQUEST['roomName'];
+  private function checkForUniqueUserName($userName, $userNames)
+  {
+    return !in_array($userName, $userNames);
+  }
 
-        $updateUserResult = UserDAO::update($userId, $userName, $password, $firstName, $lastName, $email, $class, $type);
-        $updateRoomResult = true;
-        if ($roomNumber != '' && $roomName != '') {
-            $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
-        }
-        if (isset($_REQUEST['absent'])) {
-            UserDAO::updateAbsent($userId, true);
-        }
-
-        if ($updateUserResult && $updateRoomResult) {
-            echo ('success');
-        } else {
-            echo ('error');
-        }
+  protected function validateFileExtension($ext, $allowed)
+  {
+    if (!in_array($ext, $allowed)) {
+      return false;
     }
 
-    protected function action_deleteUser()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
+    return true;
+  }
+
+  protected function action_changeSlot()
+  {
+    $slotId = $_REQUEST['slotId'];
+    $userId = $_REQUEST['userId'];
+    $eventId = $_REQUEST['eventId'];
+
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getId() != $userId) {
+      // Possibly unauthorized. Sibling access might be allowed
+      $isSibling = false;
+      foreach (UserDAO::getConnectedUsersForUserId($authUser->getId()) as $cu) {
+        if ($cu->getId() == $userId) {
+          // connected sibling found => OK
+          $isSibling = true;
+          break;
         }
-
-        $userId = $_REQUEST['userId'];
-
-        $deleteUserResult = UserDAO::deleteUserById($userId);
-
-        if ($deleteUserResult) {
-            echo ('success');
-        } else {
-            echo ('error');
-        }
+      }
+      if (!$isSibling) {
+        echo "Unauthorized!";
+        return;
+      }
     }
 
-    protected function action_deleteAllPasswords()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
+    LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
-        $deleteStudentsResult = UserDAO::truncateAccessDataForRole("student");
-        $deleteTeachersResult = UserDAO::truncateAccessDataForRole("teacher");
+    $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
+    if ($result['success']) {
+      if ($result['rowCount'] > 0) {
+        sendCreationNotificationMail($slotId);
+        echo ('success');
+      } else {
+        echo ('dirtyRead');
+      }
+    } else {
+      echo ('error');
+    }
+  }
 
-        if ($$deleteStudentsResult && $deleteTeachersResult) {
-            echo 'success';
-        } else {
-            echo 'error';
-        }
+  protected function action_deleteSlot()
+  {
+    $slotId = $_REQUEST['slotId'];
+    $eventId = $_REQUEST['eventId'];
+
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+
+    $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
+    LogDAO::log($authUser->getId(), LogDAO::LOG_ACTION_DELETE_SLOT, $info);
+
+    if ($authUser->getRole() == "teacher") {
+      $reasonText = $_REQUEST['reasonText'];
+      sendCancellationNotificationMailToStudent($slotId, $reasonText);
+    } else {
+      sendCancellationNotificationMailToTeacher($slotId);
+    }
+    $success = SlotDAO::deleteStudentFromSlot($eventId, $slotId);
+
+    if ($success) {
+      echo ('success');
+    } else {
+      echo ('error');
+    }
+  }
+
+  protected function action_setActiveEvent()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    protected function action_deleteStats()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    $eventId = $_REQUEST['eventId'];
 
-        $userId = $_REQUEST['userId'];
+    $success = EventDAO::setActiveEvent($eventId);
 
-        if ($userId != -1) {
-            $success = LogDAO::deleteStatsForUser($userId);
-        } else {
-            $success = LogDAO::deleteAllStats();
-        }
+    if ($success) {
+      echo ('success');
+    } else {
+      echo ('error');
+    }
+  }
 
-        if ($success) {
-            echo 'success';
-        } else {
-            echo 'failure';
-        }
+  protected function action_deleteEvent()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    protected function action_createCancellationMessage()
-    {
-        $teacherId = $_REQUEST['teacherId'];
-        $studentId = $_REQUEST['studentId'];
-        $slotId = $_REQUEST['slotId'];
-        $reasonText = $_REQUEST['reasonText'];
+    $eventId = $_REQUEST['eventId'];
 
-        $slot = SlotDAO::getSlotForId($slotId);
+    $success = EventDAO::deleteEvent($eventId);
 
-        if ($slot->getTeacherId() != $_SESSION['userId']) {
-            echo 'Unauthorized';
-            return;
-        }
+    if ($success) {
+      echo ('success');
+    } else {
+      echo ('error');
+    }
+  }
 
-        $teacher = UserDAO::getUserForId($teacherId);
-        $messageText = $teacher->getFirstName() . " " . $teacher->getLastName() . " möchte den Termin mit Ihnen verschieben. ";
-
-        if (!empty($reasonText)) {
-            $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <strong>\"" . $reasonText . "</strong>\"";
-        } else {
-            $messageText .= " Es wurde keine Begründung angegeben.";
-        }
-
-        MessageDAO::createMessage($teacherId, $studentId, $messageText);
-
-        ?>
-
-        <td colspan="3">
-            Der Termin wurde abgesagt. Der Schüler wird per E-Mail informiert.
-        </td>
-
-        <?php
+  protected function action_createUser()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    protected function action_dismissMessage()
-    {
-        $messageId = $_REQUEST['messageId'];
-        $receiverId = $_REQUEST['receiverId'];
+    $userName = $_REQUEST['userName'];
+    $password = $_REQUEST['password'];
+    $firstName = $_REQUEST['firstName'];
+    $lastName = $_REQUEST['lastName'];
+    $email = $_REQUEST['email'];
+    $class = $_REQUEST['class'];
+    $type = $_REQUEST['type'];
+    $roomNumber = $_REQUEST['roomNumber'];
+    $roomName = $_REQUEST['roomName'];
 
-        if ($receiverId != $_SESSION['userId']) {
-            echo "Unauthorized";
-            return;
-        }
-
-        MessageDAO::deleteMessageForReceiverId($messageId, $receiverId);
+    $userId = UserDAO::register($userName, $password, $firstName, $lastName, $email, $class, $type);
+    $updateRoomResult = true;
+    if ($roomNumber != '' && $roomName != '') {
+      $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
     }
 
-    private function normalize($s)
-    {
-        return strtolower(str_replace(str_replace($s, " ", ""), "-", ""));
+    if (($userId > 0) && $updateRoomResult) {
+      echo ('success');
+    } else if ($userId == -1) {
+      echo ('Der Benutzer existiert bereits!');
+    } else {
+      echo ('Das Passwort muss mindestens ' . UserDAO::MIN_PASSWORD_LENGTH . ' Zeichen lang sein!');
+    }
+  }
+
+  protected function action_editUser()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    protected function action_reserveSlot()
-    {
-        $user = AuthenticationManager::getAuthenticatedUser();
-        $slotId = $_REQUEST['slotId'];
-        $eventId = $_REQUEST['eventId'];
+    $userId = $_REQUEST['userId'];
+    $userName = $_REQUEST['userName'];
+    $password = $_REQUEST['password'];
+    $firstName = $_REQUEST['firstName'];
+    $lastName = $_REQUEST['lastName'];
+    $email = $_REQUEST['email'];
+    $class = $_REQUEST['class'];
+    $type = $_REQUEST['type'];
+    $roomNumber = $_REQUEST['roomNumber'];
+    $roomName = $_REQUEST['roomName'];
 
-        if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
-            error_log("Slot access denied");
-            return;
-        }
-
-        SlotDAO::setStudentToSlot($eventId, $slotId, $user->getId());
+    $updateUserResult = UserDAO::update($userId, $userName, $password, $firstName, $lastName, $email, $class, $type);
+    $updateRoomResult = true;
+    if ($roomNumber != '' && $roomName != '') {
+      $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
+    }
+    if (isset($_REQUEST['absent'])) {
+      UserDAO::updateAbsent($userId, true);
     }
 
-    protected function action_releaseSlot()
-    {
-        $user = AuthenticationManager::getAuthenticatedUser();
-        $slotId = $_REQUEST['slotId'];
-        $eventId = $_REQUEST['eventId'];
+    if ($updateUserResult && $updateRoomResult) {
+      echo ('success');
+    } else {
+      echo ('error');
+    }
+  }
 
-        if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
-            error_log("Slot access denied");
-            return;
-        }
-
-        SlotDAO::deleteStudentFromSlot($eventId, $slotId);
+  protected function action_deleteUser()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    public function action_toggleUserConnection()
-    {
-        $user = AuthenticationManager::getAuthenticatedUser();
-        if ($user->getRole() != "admin") {
-            return "Unauthorized";
-        }
+    $userId = $_REQUEST['userId'];
 
-        $userId1 = $_REQUEST['userId1'];
-        $userId2 = $_REQUEST['userId2'];
+    $deleteUserResult = UserDAO::deleteUserById($userId);
 
-        $directConnection = UserDAO::areUsersDirectlyConnected($userId1, $userId2);
+    if ($deleteUserResult) {
+      echo ('success');
+    } else {
+      echo ('error');
+    }
+  }
 
-        if ($directConnection) {
-            UserDAO::disconnectUsers($userId1, $userId2);
-        } else {
-            UserDAO::connectUsers($userId1, $userId2);
-        }
+  protected function action_deleteAllPasswords()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    public function action_saveEmailTemplate()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    $deleteStudentsResult = UserDAO::truncateAccessDataForRole("student");
+    $deleteTeachersResult = UserDAO::truncateAccessDataForRole("teacher");
 
-        $templateId = $_REQUEST['templateId'];
-        $data = array(
-            "subject" => $_REQUEST['subject'],
-            "content" => $_REQUEST['content']
-        );
+    if ($$deleteStudentsResult && $deleteTeachersResult) {
+      echo 'success';
+    } else {
+      echo 'error';
+    }
+  }
 
-        if (getDataForJsonTemplate($templateId) == null) {
-            echo "Unknown template ID: " . $templateId;
-            return;
-        }
-
-        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-        $filePath = "uploads/" . $templateId . ".json";
-
-        file_put_contents($filePath, $jsonData);
+  protected function action_deleteStats()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
     }
 
-    public function action_saveTextTemplate()
-    {
-        $authUser = AuthenticationManager::getAuthenticatedUser();
-        if ($authUser->getRole() != "admin") {
-            echo "Unauthorized";
-            return;
-        }
+    $userId = $_REQUEST['userId'];
 
-        $templateId = $_REQUEST['templateId'];
-        $data = array(
-            "content" => $_REQUEST['content']
-        );
-
-        if (getDataForJsonTemplate($templateId) == null) {
-            echo "Unknown template ID: " . $templateId;
-            return;
-        }
-
-        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-        $filePath = "uploads/" . $templateId . ".json";
-
-        file_put_contents($filePath, $jsonData);
+    if ($userId != -1) {
+      $success = LogDAO::deleteStatsForUser($userId);
+    } else {
+      $success = LogDAO::deleteAllStats();
     }
 
-    public function action_sendAllPasswords()
-    {
-        $students = UserDAO::getUsersAccessDataForRole("student");
-        foreach ($students as $s) {
-            $student = $s["user"];
-            $body = "<div>Hallo "
-                . $student->getFirstName() . " " . $student->getLastName() . ",</div><br><div>Dies sind Deine Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
-                . $student->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $s["password"] . "</div>";
-            sendMail($student->getEmail(), "Zugangsdaten Elternsprechtag", $body);
-        }
-
-        $teachers = UserDAO::getUsersAccessDataForRole("teacher");
-        foreach ($teachers as $t) {
-            $teacher = $t["user"];
-            $body = "<div>Hallo "
-                . $teacher->getFirstName() . " " . $teacher->getLastName() . ",</div><br><div>Dies sind Ihre Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
-                . $teacher->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $t["password"] . "</div>";
-            sendMail($teacher->getEmail(), "Zugangsdaten Elternsprechtag", $body);
-        }
+    if ($success) {
+      echo 'success';
+    } else {
+      echo 'failure';
     }
+  }
+
+  protected function action_createCancellationMessage()
+  {
+    $teacherId = $_REQUEST['teacherId'];
+    $studentId = $_REQUEST['studentId'];
+    $slotId = $_REQUEST['slotId'];
+    $reasonText = $_REQUEST['reasonText'];
+
+    $slot = SlotDAO::getSlotForId($slotId);
+
+    if ($slot->getTeacherId() != $_SESSION['userId']) {
+      echo 'Unauthorized';
+      return;
+    }
+
+    $teacher = UserDAO::getUserForId($teacherId);
+    $messageText = $teacher->getFirstName() . " " . $teacher->getLastName() . " möchte den Termin mit Ihnen verschieben. ";
+
+    if (!empty($reasonText)) {
+      $messageText .= "Es wurde folgender Kommentar von der Lehrkraft hinterlegt: <strong>\"" . $reasonText . "</strong>\"";
+    } else {
+      $messageText .= " Es wurde keine Begründung angegeben.";
+    }
+
+    MessageDAO::createMessage($teacherId, $studentId, $messageText);
+
+?>
+
+    <td colspan="3">
+      Der Termin wurde abgesagt. Der Schüler wird per E-Mail informiert.
+    </td>
+
+<?php
+  }
+
+  protected function action_dismissMessage()
+  {
+    $messageId = $_REQUEST['messageId'];
+    $receiverId = $_REQUEST['receiverId'];
+
+    if ($receiverId != $_SESSION['userId']) {
+      echo "Unauthorized";
+      return;
+    }
+
+    MessageDAO::deleteMessageForReceiverId($messageId, $receiverId);
+  }
+
+  private function normalize($s)
+  {
+    return strtolower(str_replace(str_replace($s, " ", ""), "-", ""));
+  }
+
+  protected function action_reserveSlot()
+  {
+    $user = AuthenticationManager::getAuthenticatedUser();
+    $slotId = $_REQUEST['slotId'];
+    $eventId = $_REQUEST['eventId'];
+
+    if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
+      error_log("Slot access denied");
+      return;
+    }
+
+    SlotDAO::setStudentToSlot($eventId, $slotId, $user->getId());
+  }
+
+  protected function action_releaseSlot()
+  {
+    $user = AuthenticationManager::getAuthenticatedUser();
+    $slotId = $_REQUEST['slotId'];
+    $eventId = $_REQUEST['eventId'];
+
+    if (SlotDAO::getSlotForId($slotId)->getTeacherId() != $user->getId()) {
+      error_log("Slot access denied");
+      return;
+    }
+
+    SlotDAO::deleteStudentFromSlot($eventId, $slotId);
+  }
+
+  public function action_toggleUserConnection()
+  {
+    $user = AuthenticationManager::getAuthenticatedUser();
+    if ($user->getRole() != "admin") {
+      return "Unauthorized";
+    }
+
+    $userId1 = $_REQUEST['userId1'];
+    $userId2 = $_REQUEST['userId2'];
+
+    $directConnection = UserDAO::areUsersDirectlyConnected($userId1, $userId2);
+
+    if ($directConnection) {
+      UserDAO::disconnectUsers($userId1, $userId2);
+    } else {
+      UserDAO::connectUsers($userId1, $userId2);
+    }
+  }
+
+  public function action_saveEmailTemplate()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
+    }
+
+    $templateId = $_REQUEST['templateId'];
+    $data = array(
+      "subject" => $_REQUEST['subject'],
+      "content" => $_REQUEST['content']
+    );
+
+    if (getDataForJsonTemplate($templateId) == null) {
+      echo "Unknown template ID: " . $templateId;
+      return;
+    }
+
+    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+    $filePath = "uploads/" . $templateId . ".json";
+
+    file_put_contents($filePath, $jsonData);
+  }
+
+  public function action_saveTextTemplate()
+  {
+    $authUser = AuthenticationManager::getAuthenticatedUser();
+    if ($authUser->getRole() != "admin") {
+      echo "Unauthorized";
+      return;
+    }
+
+    $templateId = $_REQUEST['templateId'];
+    $data = array(
+      "content" => $_REQUEST['content']
+    );
+
+    if (getDataForJsonTemplate($templateId) == null) {
+      echo "Unknown template ID: " . $templateId;
+      return;
+    }
+
+    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+    $filePath = "uploads/" . $templateId . ".json";
+
+    file_put_contents($filePath, $jsonData);
+  }
+
+  public function action_sendAllPasswords()
+  {
+    $students = UserDAO::getUsersAccessDataForRole("student");
+    foreach ($students as $s) {
+      $student = $s["user"];
+      $body = "<div>Hallo "
+        . $student->getFirstName() . " " . $student->getLastName() . ",</div><br><div>Dies sind Deine Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
+        . $student->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $s["password"] . "</div>";
+      sendMail($student->getEmail(), "Zugangsdaten Elternsprechtag", $body);
+    }
+
+    $teachers = UserDAO::getUsersAccessDataForRole("teacher");
+    foreach ($teachers as $t) {
+      $teacher = $t["user"];
+      $body = "<div>Hallo "
+        . $teacher->getFirstName() . " " . $teacher->getLastName() . ",</div><br><div>Dies sind Ihre Zugangsdaten für den Elternsprechtag:</div><br><div><strong>Login:</strong> "
+        . $teacher->getUserName() . "</div><br><div><strong>Passwort:</strong> " . $t["password"] . "</div>";
+      sendMail($teacher->getEmail(), "Zugangsdaten Elternsprechtag", $body);
+    }
+  }
+
+  public function action_changePassword()
+  {
+    $oldPassword = $_REQUEST["oldPassword"];
+    $newPassword = $_REQUEST["newPassword"];
+
+    $user = AuthenticationManager::getAuthenticatedUser();
+
+    $oldPasswordCorrect = password_verify($oldPassword, $user->getPasswordHash());
+
+    if (!$oldPasswordCorrect) {
+      echo "incorrect password";
+      return;
+    }
+
+    $type = $user->getRole();
+    error_log("Type: " . $type);
+
+    $updateUserResult = UserDAO::update(
+      $user->getId(),
+      $user->getUserName(),
+      $newPassword,
+      $user->getFirstName(),
+      $user->getLastName(),
+      $user->getEmail(),
+      $user->getClass(),
+      $type
+    );
+
+    echo $updateUserResult ? "success" : "error";
+  }
 }

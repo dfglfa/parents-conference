@@ -21,36 +21,35 @@ function submitPassword() {
 
     let problem = "";
     if (newPassword !== newPasswordConfirm) {
-      problem = "Die Passwörter stimmen nicht überein! " + newPassword + " " + newPasswordConfirm;
+      problem = "Die Passwörter stimmen nicht überein!";
     } else {
       problem = checkPasswordStrength(newPassword);
     }
 
+    const feedback = $("#passwordFeedback");
     if (problem) {
-      $("#passwordFeedback").html(problem);
+      feedback.html(problem);
       return;
     } else {
-      $("#passwordFeedback").html("");
+      feedback.html("");
     }
 
-    var formURL = "controller.php";
     $.ajax({
-      url: formURL,
+      url: "controller.php",
       type: "POST",
-      data: postData,
+      data: {action: "changePassword", oldPassword, newPassword},
       success: function (data, textStatus, jqXHR) {
-        var message = $("#message");
         if (data.indexOf("success") > -1) {
-          $("#attendance").load("viewController.php?action=attendance");
-
-          showMessage(message, "success", "Die Anwesenheit wurde erfolgreich geändert!");
-          loadTimeTable();
+          showMessage(feedback, "success", "Das Passwort wurde geändert!");
+          $("input").val("");
+        } else if (data.indexOf("incorrect") > -1) {
+          showMessage(feedback, "danger", "Das aktuelle Passwort ist nicht korrekt!");
         } else {
-          showMessage(message, "danger", "Die Anwesenheit konnte nicht geändert werden!");
+          showMessage(feedback, "danger", "Das Passwort konnte nicht geändert werden! (" + data + ")");
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showMessage(message, "danger", "Die Anwesenheit konnte nicht geändert werden!");
+        showMessage(feedback, "danger", "Das Passwort konnte nicht geändert werden!");
       },
     });  
 
