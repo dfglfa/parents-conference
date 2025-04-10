@@ -59,15 +59,9 @@ function getRoleInGerman($role)
     </div>
   <?php endif; ?>
 
-
-  <div style="padding: 20px 0 100px 0">
-    <h2>Passwort ändern</h2>
-    <?php if ($LDAP_ENABLED): ?>
-      <div>
-        Passwörter werden per LDAP verwaltet, daher kann das Passwort hier nicht geändert werden.
-      </div>
-    <?php else: ?>
-
+  <?php if (!$LDAP_ENABLED): ?>
+    <div style="padding: 20px 0 100px 0">
+      <h2>Passwort ändern</h2>
       <div class='form-group'>
         <label for='passwordOld'>Aktuelles Passwort:</label>
         <div class='input-group' id='passwordOldLine'>
@@ -100,7 +94,7 @@ function getRoleInGerman($role)
       <div id="passwordFeedback" class="text-danger"></div>
 
     <?php endif; ?>
-  </div>
+    </div>
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
