@@ -23,7 +23,13 @@ class UserDAO extends AbstractDAO
   {
     $user = null;
     $con = self::getConnection();
-    $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title  FROM user WHERE lower(userName) = lower(?);', array($userName));
+    
+    global $AUTH_CASE_SENSITIVE;
+    if ($AUTH_CASE_SENSITIVE) {
+      $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title  FROM user WHERE userName = ?;', array($userName));
+    } else {
+      $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title  FROM user WHERE lower(userName) = lower(?);', array($userName));
+    }
 
     if ($u = self::fetchObject($res)) {
       $user = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);

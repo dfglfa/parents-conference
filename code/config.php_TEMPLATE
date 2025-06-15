@@ -20,3 +20,6 @@ $LDAP_BIND_USER = "cn=binduser";
 $LDAP_BIND_USER_PWD = "binduserpassword";
 $LDAP_USER_OBJECT_CLASS = "person";
 $LDAP_USERID_REF = "uid";
+
+// Auth settings
+$AUTH_CASE_SENSITIVE = true; // username will be case-insensitive on login if set to false

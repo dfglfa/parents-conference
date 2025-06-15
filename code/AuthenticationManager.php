@@ -10,20 +10,19 @@ class AuthenticationManager
 {
   public static function authenticate($userName, $password)
   {
-    $username_lower = strtolower($userName);
-    $user = UserDAO::getUserForUserName($username_lower);
+    $user = UserDAO::getUserForUserName($userName);
+    
     if ($user != null) {
       LogDAO::log($user->getId(), LogDAO::LOG_ACTION_LOGIN, $userName);
     } else {
-      error_log("User " . $username_lower . " not found in conference database");
+      error_log("User " . $userName . " not found in conference database.");
       return false;
     }
 
-    global $LDAP_ENABLED;
     $authenticated = false;
-
+    global $LDAP_ENABLED;
     if ($LDAP_ENABLED) {
-      $authenticated = self::authenticateLdap($username_lower, $password);
+      $authenticated = self::authenticateLdap($userName, $password);
     }
 
     // Use local DB in case a) LDAP is not used or b) LDAP auth failed (fallback to local DB)
