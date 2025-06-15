@@ -522,6 +522,24 @@ function prepareCreateEventForm() {
     format: "dd.mm.yyyy hh:ii",
     language: "de",
   });
+
+  $("#individualBreaks div").hide();
+  $("#commonBreaks div").hide();
+
+  $("#noBreaks input[value='none']").click(() => {
+    $("#individualBreaks div").hide();
+    $("#commonBreaks div").hide();
+  });
+
+  $("input[value='individual']").click(() => {
+    $("#commonBreaks div").hide();
+    $("#individualBreaks div").show();
+  });
+
+  $("input[value='common']").click(() => {
+    $("#commonBreaks div").show();
+    $("#individualBreaks div").hide();
+  });
 }
 
 function loadTimeTable(typeId) {

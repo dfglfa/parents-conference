@@ -119,13 +119,7 @@ class Event extends Entity
     private $breaks;
     private $throttleDays;
     private $throttleQuota;
-    const NOBREAK = 0;
-    const HALFHOUR = 1;
-    const FULLHOUR = 2;
-    const BREAKTHREE = 3;
-    const BREAKFOUR = 4;
-    const BREAKFIVE = 5;
-
+    
     public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $isActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota)
     {
         parent::__construct($id);
@@ -201,6 +195,10 @@ class Event extends Entity
     public function getThrottleQuota()
     {
         return $this->throttleQuota;
+    }
+
+    public function getMaxIndividualBreaks() {
+      return $this->breaks > 0 ? $this->breaks : 0;
     }
 }
 

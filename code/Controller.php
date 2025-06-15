@@ -64,9 +64,17 @@ class Controller
     $startBookingDate = $_REQUEST['startBookingDate'];
     $endBookingDate = $_REQUEST['endBookingDate'];
     $videoLink = $_REQUEST['videoLink'];
-    $breaks = $_REQUEST['breaks'];
     $throttleQuota = $_REQUEST['throttleQuota'];
     $throttleDays = $_REQUEST['throttleDays'];
+    $breakType = $_REQUEST['breaktype'];
+    $breaks = 0; // default: no breaks
+    if ($breakType == 'individual') {
+      $breaks = (int) $_REQUEST['limit'];
+    } else if ($breakType == 'common') {
+      $interval = (int) $_REQUEST['interval'];
+      // represent interval breaks as negative numbers
+      $breaks = -1 * $interval;
+    }
 
     $unixTimeFrom = strtotime($date . ' ' . $beginTime);
     $unixTimeTo = strtotime($date . ' ' . $endTime);

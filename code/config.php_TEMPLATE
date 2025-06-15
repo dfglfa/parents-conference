@@ -20,6 +20,3 @@ $LDAP_BIND_USER = "cn=binduser";
 $LDAP_BIND_USER_PWD = "binduserpassword";
 $LDAP_USER_OBJECT_CLASS = "person";
 $LDAP_USERID_REF = "uid";
-
-// Other settings
-$TEACHER_BREAKS_MAX = 3;

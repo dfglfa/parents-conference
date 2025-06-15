@@ -183,6 +183,10 @@ td.selectedTeacher {
   color: blue;
 }
 
+#breakConfig label {
+  margin-bottom: 8px;
+}
+
 @media (max-width: 425px) {
   .custom-nav {
     max-width: 350px;

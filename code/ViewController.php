@@ -453,13 +453,13 @@ class ViewController extends Controller
 
           private function printTableForTeacher($teacher, $isFullView, $adminPrint = false)
           {
-            global $TEACHER_BREAKS_MAX;
             $activeEvent = EventDAO::getActiveEvent();
-
+            
             if ($activeEvent == null) {
               echo "Derzeit ist kein Sprechtag geplant!";
               return;
             }
+            $maxIndividualBreaks = $activeEvent->getMaxIndividualBreaks();
 
             // When we're after the event start time, actions are no longer possible,
             // also improving the overview appearance some more.
@@ -564,7 +564,7 @@ class ViewController extends Controller
                                 Termin verschieben
                               </button>
 
-                            <?php elseif ($bookedForSelf < $TEACHER_BREAKS_MAX): ?>
+                            <?php elseif ($bookedForSelf < $maxIndividualBreaks): ?>
                               <button class="btn btn-warning es-button-reserve no-print"
                                 id="reserve_<?php echo $slot->getId() ?>" data-slotId="<?php echo $slot->getId() ?>"
                                 data-eventId="<?php echo $activeEvent->getId() ?>">
