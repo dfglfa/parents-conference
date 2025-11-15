@@ -102,15 +102,16 @@ class ViewController extends Controller
           // Fetch user data and booked slots for connected accounts, if any
           $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
           $bookedSlotsForConnectedUser = [];
-          $bookedSlotsCount = count($bookedSlots);
+          $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
+          
+          // Mapping from userId to boolean, indicating whether individual quota is exceeded
+          $quotaExceededForUser = [$user->getId() => $bookingQuota != -1 && count($bookedSlots) >= $bookingQuota];
+
           foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
             $teacherBookedByUser[$cUser->getId()] = $this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlotsForConnectedUser[$cUser->getId()]);
-            $bookedSlotsCount += count($bookedSlotsForConnectedUser[$cUser->getId()]);
+            $quotaExceededForUser[$cUser->getId()] = $bookingQuota != -1 && count($bookedSlotsForConnectedUser[$cUser->getId()]) >= $bookingQuota;
           }
-
-          $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
-          $quotaExceeded = $bookingQuota != -1 && $bookingQuota * (count($connectedUsers) + 1) - $bookedSlotsCount <= 0;
 
           $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();
 
@@ -167,7 +168,7 @@ class ViewController extends Controller
                                     <td><?php echo ($timeTd) ?></td>
                                     <td><?php echo ($teacherAvailable ? '' : 'belegt') ?></td>
                                     <td <?php echo !$studentAvailable && $bookedSlots[$fromDate]['teacherName'] == $teacherFullName ? 'class="selectedTeacher"' : '' ?>">
-                <?php if ($teacherAvailable && $studentAvailable && !$teacherBookedByUser[$user->getId()] && !$quotaExceeded): ?>
+                <?php if ($teacherAvailable && $studentAvailable && !$teacherBookedByUser[$user->getId()] && !$quotaExceededForUser[$user->getId()]): ?>
                   <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                     value='<?php echo ($bookJson) ?>'>buchen
                   </button>
@@ -181,7 +182,7 @@ class ViewController extends Controller
                 ?>
                   <td
                     class="<?php echo $connectedUserSlotData[$connUser->getId()] == $teacherFullName ? 'selectedTeacher' : '' ?>">
-                    <?php if ($connectedUserSlotData[$connUser->getId()] == '' && $teacherAvailable && !$teacherBookedByUser[$connUser->getId()] && !$quotaExceeded): ?>
+                    <?php if ($connectedUserSlotData[$connUser->getId()] == '' && $teacherAvailable && !$teacherBookedByUser[$connUser->getId()] && !$quotaExceededForUser[$connUser->getId()]): ?>
                       <button type='button' class='btn btn-primary btn-book' id='btn-book-<?php echo ($slot->getId()) ?>'
                         value='<?php echo ($bookJson) ?>'>buchen
                       </button>
@@ -243,7 +244,7 @@ class ViewController extends Controller
                 <?php endif; ?>
 
                 <div style="font-size: 12pt">
-                  Täglich um <?php echo $hour ?> Uhr werden für jeden Schüler
+                  Täglich um <?php echo $hour ?> Uhr werden für jede/n Schüler/in
                   <?php echo $dailyQuota == 1 ? 'eine weitere Buchung' : $dailyQuota . ' weitere Buchungen' ?>
                   ermöglicht. Ab dem
                   <strong>
@@ -345,7 +346,9 @@ class ViewController extends Controller
                           <?php echo ($timeTd) ?>
                         </td>
                         <td colspan='<?php echo 1 + count($connectedUsers) ?>'>PAUSE</td>
-                        <td class='no-print'></td>
+                        <?php if (!$pastEventStartTime): ?>
+                          <td class='no-print'></td>
+                        <?php endif; ?>
                       </tr>
                     <?php else: ?>
                       <tr
