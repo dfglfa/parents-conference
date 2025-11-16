@@ -504,7 +504,7 @@ class ViewController extends Controller
               <thead>
                 <tr>
                   <th class='col1'>Uhrzeit</th>
-                  <th class='col2'>Schüler</th>
+                  <th class='col2'>Schüler/in</th>
                   <?php if (!empty($activeEvent->getVideoLink())): ?>
                     <th width='10%'>VideoLink</th>
                   <?php endif; ?>

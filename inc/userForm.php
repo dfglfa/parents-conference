@@ -33,9 +33,9 @@
 <div class='form-group'>
     <label for='selectType'>Typ</label>
     <select class='form-control' id='selectType' name='type'>
-        <option value='student'>Schüler</option>
-        <option value='teacher'>Lehrer</option>
-        <option value='admin'>Administrator</option>
+        <option value='student'>Schüler/in</option>
+        <option value='teacher'>Lehrkraft</option>
+        <option value='admin'>Administrator/in</option>
     </select>
 </div>
 

@@ -38,8 +38,8 @@ include_once 'inc/header.php';
             <div class='form-group'>
               <label for='inputUploadType'>Typ</label>
               <select class='form-control' id='inputUploadType' name='uploadType'>
-                <option value='teacher'>Lehrer</option>
-                <option value='student'>Schüler</option>
+                <option value='teacher'>Lehrkräfte</option>
+                <option value='student'>Schüler/innen</option>
                 <option value='logo'>Schul-Logo</option>
                 <option value='map'>Lageplan</option>
               </select>
