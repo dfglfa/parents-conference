@@ -23,3 +23,6 @@ $LDAP_USERID_REF = "uid";
 
 // Auth settings
 $AUTH_CASE_SENSITIVE = true; // username will be case-insensitive on login if set to false
+
+// Misc control settings
+$ATTENDANCES_FROZEN = false; // if set to true, teachers cannot change their attendance times
