@@ -20,6 +20,7 @@ include_once 'inc/header.php';
 
 <?php
 $activeEvent = EventDAO::getActiveEvent();
+$user = AuthenticationManager::getAuthenticatedUser();
 ?>
 
 <div class='container'>
@@ -31,9 +32,26 @@ $activeEvent = EventDAO::getActiveEvent();
                 $berlinTimezone = new DateTimeZone('Europe/Berlin');
                 $date->setTimezone($berlinTimezone);
                 $formattedDate = $date->format('d.m.Y H:i') . " Uhr";
+                $teacherIdsWithInvitations = UserDAO::getTeachersWhoInvitedMe($user->getId());
+                foreach ($teacherIdsWithInvitations as $t) {
+                  echo "Einladung von ID " . $t;
+                }
                 ?>
                 <h3>Buchungen sind erst ab dem <?php echo $formattedDate ?>
                     möglich </h3>
+
+                <?php if (count($teacherIdsWithInvitations) > 0): ?>
+                  <div>Sie wurden aber von den folgenden Lehrkräften eingeladen:</div>
+                  <br>
+                  <form id='chooseTeacherForm'>
+                      <div class='form-group'>
+                          <select class='form-control' id='selectTeacher' name='teacher'>
+                              <?php echo (getTeacherOptions($teacherIdsWithInvitations)); ?>
+                          </select>
+                      </div>
+                  </form>
+                  <div id='timeTable'></div>
+                <?php endif; ?>
             <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
                 <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php else: ?>
@@ -52,7 +70,7 @@ $activeEvent = EventDAO::getActiveEvent();
                 <form id='chooseTeacherForm'>
                     <div class='form-group'>
                         <select class='form-control' id='selectTeacher' name='teacher'>
-                            <?php echo (getTeacherOptions()); ?>
+                            <?php echo (getTeacherOptions(null)); ?>
                         </select>
                     </div>
                 </form>

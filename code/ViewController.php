@@ -102,6 +102,8 @@ class ViewController extends Controller
           // Fetch user data and booked slots for connected accounts, if any
           $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
           $bookedSlotsForConnectedUser = [];
+
+          // TODO: Booking quota should be ignored if invitations exist.
           $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
           
           // Mapping from userId to boolean, indicating whether individual quota is exceeded

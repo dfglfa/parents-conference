@@ -127,6 +127,17 @@ CREATE TABLE `userconnection` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `invitation`
+--
+CREATE TABLE `invitation` (
+  `teacherId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `createdAt` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Daten für Tabelle `user`
 -- Standardpasswort für den Administrator: admin
 --
