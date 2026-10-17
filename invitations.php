@@ -3,6 +3,7 @@ include_once 'inc/header.php';
 include_once 'code/dao/InvitationDAO.php';
 include_once 'code/dao/EventDAO.php';
 include_once 'code/dao/UserDAO.php';
+include_once 'code/dao/SlotDAO.php';
 require_once('code/AuthenticationManager.php');
 
 $user = AuthenticationManager::getAuthenticatedUser();
@@ -46,6 +47,7 @@ $isLimitReached = count($invitations) >= $invitationLimit;
 
         <?php foreach ($invitations as $i):
           $student = UserDAO::getUserForId($i->getStudentId());
+          $hasBooking = SlotDAO::hasBookedSlot($event->getId(), $user->getId(), $i->getStudentId());
         ?>
           <tr>
             <td>
@@ -55,9 +57,13 @@ $isLimitReached = count($invitations) >= $invitationLimit;
               <?php echo date('d.m.Y H:i', (int)$i->getCreatedAt())  . " Uhr"; ?>
             </td>
             <td>
-              <button class="btn btn-danger withdraw-invitation"
-                data-student-id="<?php echo (int)$i->getStudentId(); ?>"
-                data-student-name="<?php echo htmlspecialchars($student->getFirstName() . ' ' . $student->getLastName()); ?>">Zurückziehen</button>
+              <?php if ($hasBooking): ?>
+                <span class="text-muted">Termin gebucht</span>
+              <?php else: ?>
+                <button class="btn btn-danger withdraw-invitation"
+                  data-student-id="<?php echo (int)$i->getStudentId(); ?>"
+                  data-student-name="<?php echo htmlspecialchars($student->getFirstName() . ' ' . $student->getLastName()); ?>">Zurückziehen</button>
+              <?php endif; ?>
             </td>
           </tr>
         <?php endforeach; ?>

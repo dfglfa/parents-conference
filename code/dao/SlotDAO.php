@@ -176,6 +176,15 @@ class SlotDAO extends AbstractDAO
     return $slots;
   }
 
+  public static function hasBookedSlot($eventId, $teacherId, $studentId)
+  {
+    $con = self::getConnection();
+    $res = self::query($con, 'SELECT 1 FROM slot WHERE eventId = ? AND teacherId = ? AND studentId = ?;', array($eventId, $teacherId, $studentId));
+    $found = self::fetchObject($res) !== false;
+    self::close($res);
+    return $found;
+  }
+
   public static function getNamesAndEmailAddressesForSlotId($slotId)
   {
     $con = self::getConnection();
