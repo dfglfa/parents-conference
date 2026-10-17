@@ -1,0 +1,4 @@
+{
+    "subject": "Einladung von {TEACHER_NAME} zurückgezogen",
+    "content": "Hallo {STUDENT_NAME},<br><br><strong>{TEACHER_NAME}</strong> hat die Einladung zur vorzeitigen Terminbuchung zurückgezogen. Du kannst bei dieser Lehrkraft wieder ab dem allgemeinen Buchungsstart einen Termin buchen.<br><br>Viele Grüße von den Admins"
+}

@@ -153,7 +153,7 @@ function getDataForJsonTemplate($templateId)
 {
     $template_filename = "uploads/" . $templateId . ".json";
     if (!file_exists($template_filename)) {
-        $template_filename = "templates/json/" . $templateId . ".json";
+        $template_filename = __DIR__ . "/../templates/json/" . $templateId . ".json";
 
         if (!file_exists($template_filename)) {
             echo "Cannot resolve file for template ID " . $templateId;
@@ -173,4 +173,4 @@ function printAlertForTemplate($templateId)
         print ($data["content"]);
         print ("</div></div>");
     }
-}
+}

@@ -67,7 +67,7 @@ $isLimitReached = count($invitations) >= $invitationLimit;
 
   <div>
     <?php if ($isLimitReached): ?>
-      <strong>Du hast Dein Kontingent für Einladungen bereits ausgeschöpft.</strong>
+      <strong>Dein Kontingent für Einladungen ist ausgeschöpft.</strong>
     <?php else: ?>
       <div>
         <h4>Neue Einladung erstellen</h4>

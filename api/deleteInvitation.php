@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/../code/AuthenticationManager.php');
 require_once(__DIR__ . '/../code/dao/InvitationDAO.php');
+require_once(__DIR__ . '/../code/Notification.php');
 
 $user = AuthenticationManager::getAuthenticatedUser();
 
@@ -16,9 +17,14 @@ if (!ctype_digit($studentId)) {
 }
 
 // Only deletes invitations belonging to the authenticated teacher
+$existed = InvitationDAO::hasInvitation($user->getId(), $studentId);
 if (InvitationDAO::deleteInvitationToParent($user->getId(), $studentId) != "OK") {
   http_response_code(500);
   exit("Error");
+}
+
+if ($existed) {
+  sendInvitationNotificationMails($user->getId(), $studentId, true);
 }
 
 echo "OK";

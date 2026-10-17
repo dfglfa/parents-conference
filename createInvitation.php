@@ -3,6 +3,7 @@ require_once('code/AuthenticationManager.php');
 require_once('code/dao/InvitationDAO.php');
 require_once('code/dao/EventDAO.php');
 require_once('code/dao/UserDAO.php');
+require_once('code/Notification.php');
 
 $user = AuthenticationManager::getAuthenticatedUser();
 
@@ -27,7 +28,10 @@ if (count($invitations) >= $event->getEarlyAccessLimit()) {
 }
 
 try {
-  InvitationDAO::createInvitationToStudent($user->getId(), $studentId);
+  if (!InvitationDAO::hasInvitation($user->getId(), $studentId)
+    && InvitationDAO::createInvitationToStudent($user->getId(), $studentId) == "OK") {
+    sendInvitationNotificationMails($user->getId(), $studentId, false);
+  }
 } catch (PDOException $e) {
   // Most likely a duplicate (unique key teacher/student): the invitation already exists
   error_log("Creating invitation failed: " . $e->getMessage());

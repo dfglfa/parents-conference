@@ -6,9 +6,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require 'inc/PHPMailer/Exception.php';
-require 'inc/PHPMailer/PHPMailer.php';
-require 'inc/PHPMailer/SMTP.php';
+require __DIR__ . '/../inc/PHPMailer/Exception.php';
+require __DIR__ . '/../inc/PHPMailer/PHPMailer.php';
+require __DIR__ . '/../inc/PHPMailer/SMTP.php';
 
 
 function sendCreationNotificationMail($slotId)
@@ -105,6 +105,33 @@ function _sendCancellationNotificationMail($slotId, $reasonText, $recipientIsStu
     }
 }
 
+function sendInvitationNotificationMails($teacherId, $studentId, $withdrawn)
+{
+    $teacher = UserDAO::getUserForId($teacherId);
+    $student = UserDAO::getUserForId($studentId);
+
+    if ($teacher == null || $student == null) {
+        error_log("Invitation mail: user not found (teacher " . $teacherId . ", student " . $studentId . ")");
+        return;
+    }
+
+    $trans = array(
+        '{STUDENT_NAME}' => trim($student->getTitle() . ' ' . $student->getFirstName() . ' ' . $student->getLastName()),
+        '{TEACHER_NAME}' => trim($teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName()),
+    );
+
+    $email = $student->getEmail();
+    if (empty($email)) {
+        return;
+    }
+
+    $mailData = getDataForJsonTemplate($withdrawn ? "invitationWithdrawnMailToStudent" : "invitationCreatedMailToStudent");
+    if ($mailData == null) {
+        return;
+    }
+    sendMail($email, strtr($mailData["subject"], $trans), strtr($mailData["content"], $trans));
+}
+
 function getSlotTimeReadable($date)
 {
     return toDate($date, "H:i");
@@ -117,6 +144,7 @@ function sendMail($to, $subject, $body)
 
     try {
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail->Debugoutput = 'error_log';
         $mail->isSMTP();
         $mail->Host = $SMTP_HOST;
         $mail->Username = $SMTP_LOGIN;

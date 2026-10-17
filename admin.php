@@ -399,6 +399,8 @@ include_once 'inc/header.php';
                   E-Mail
                   an
                   Lehrkraft</option>
+                <option value="invitationCreatedMailToStudent">Einladung erstellt, E-Mail an Schüler/in</option>
+                <option value="invitationWithdrawnMailToStudent">Einladung zurückgezogen, E-Mail an Schüler/in</option>
               </select>
             </div>
             <br><br>
@@ -562,4 +564,4 @@ include_once 'inc/header.php';
   </div>
 </div>
 
-<?php include_once 'inc/footer.php'; ?>
+<?php include_once 'inc/footer.php'; ?>

@@ -1,0 +1,4 @@
+{
+    "subject": "Einladung zur frühen Buchung bei {TEACHER_NAME}",
+    "content": "Hallo {STUDENT_NAME},<br><br><strong>{TEACHER_NAME}</strong> hat Dich zur vorzeitigen Terminbuchung für den Elternsprechtag eingeladen. Du kannst bei dieser Lehrkraft nun schon vor dem allgemeinen Buchungsstart einen Termin buchen.<br><br>Viele Grüße von den Admins"
+}

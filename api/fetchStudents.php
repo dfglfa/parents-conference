@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/../code/AuthenticationManager.php');
 require_once(__DIR__ . '/../code/dao/UserDAO.php');
+require_once(__DIR__ . '/../code/dao/InvitationDAO.php');
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -20,6 +21,18 @@ if (mb_strlen($term) < 3) {
   exit;
 }
 
+// Teachers should not be offered students they have already invited
+$invitedIds = array();
+if ($user->getRole() == "teacher") {
+  foreach (InvitationDAO::getInvitationsFromTeacher($user->getId()) as $invitation) {
+    $invitedIds[] = (string)$invitation->getStudentId();
+  }
+}
+
+$candidates = array_values(array_filter(UserDAO::searchStudents($term), function ($s) use ($invitedIds) {
+  return !in_array((string)$s->getId(), $invitedIds, true);
+}));
+
 $students = array_map(function ($s) {
   return array(
     'id' => $s->getId(),
@@ -27,6 +40,6 @@ $students = array_map(function ($s) {
     'lastName' => $s->getLastName(),
     'class' => $s->getClass(),
   );
-}, UserDAO::searchStudents($term));
+}, $candidates);
 
 echo json_encode($students);
