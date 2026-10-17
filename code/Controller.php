@@ -3,6 +3,7 @@ require_once('AuthenticationManager.php');
 require_once('dao/UserDAO.php');
 require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
+require_once('dao/InvitationDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
 require_once('dao/MessageDAO.php');
@@ -448,6 +449,20 @@ class Controller
         }
       }
       if (!$isSibling) {
+        echo "Unauthorized!";
+        return;
+      }
+    }
+
+    // Before the general booking start, only invited students may book, and only with the inviting teacher
+    $event = EventDAO::getActiveEvent();
+    if ($event == null || $event->getId() != $eventId) {
+      echo "error";
+      return;
+    }
+    if ($event->getStartPostDate() > time()) {
+      $slot = SlotDAO::getSlotForId($slotId);
+      if ($slot == null || !InvitationDAO::hasInvitation($slot->getTeacherId(), $userId)) {
         echo "Unauthorized!";
         return;
       }

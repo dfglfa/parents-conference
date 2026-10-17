@@ -76,7 +76,7 @@ function getTeacherOptions($filterTeacherIds)
 
     $options = '<option value="-1">Lehrkraft auswählen</option>';
     foreach ($teachers as $teacher) {
-        if ($filterTeacherIds != null && in_array($teacher->getId(), $filterTeacherIds)) {
+        if ($filterTeacherIds === null || in_array($teacher->getId(), $filterTeacherIds)) {
           $options .= sprintf('<option value="%s" %s>%s</option>', $teacher->getId(), ($teacher->isAbsent() == 1 ? 'disabled' : ''), $teacher->getLastName() . ' ' . $teacher->getTitle() . " " . $teacher->getFirstName() . ' ' . ($teacher->isAbsent() == 1 ? ' - abwesend' : ''));
         }
     }

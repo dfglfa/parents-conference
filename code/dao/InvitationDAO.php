@@ -28,6 +28,14 @@ class InvitationDAO extends AbstractDAO
     return $invitations;
   }
 
+  public static function hasInvitation($teacherId, $studentId) {
+    $con = self::getConnection();
+    $res = self::query($con, 'SELECT 1 FROM invitation WHERE teacherId = ? AND studentId = ?;', [(string)$teacherId, (string)$studentId]);
+    $found = self::fetchObject($res) !== false;
+    self::close($res);
+    return $found;
+  }
+
   public static function createInvitationToStudent(string $teacherId, string $studentId) {
     $con = self::getConnection();
     $res = self::query($con, 'INSERT INTO invitation (teacherId, studentId, createdAt) VALUES (?, ?, unix_timestamp())', [$teacherId, $studentId], true);

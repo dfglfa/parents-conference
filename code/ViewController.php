@@ -5,6 +5,7 @@ require_once('dao/Entities.php');
 require_once('dao/UserDAO.php');
 require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
+require_once('dao/InvitationDAO.php');
 
 class ViewController extends Controller
 {
@@ -103,16 +104,20 @@ class ViewController extends Controller
           $connectedUsers = UserDAO::getConnectedUsersForUserId($user->getId());
           $bookedSlotsForConnectedUser = [];
 
-          // TODO: Booking quota should be ignored if invitations exist.
           $bookingQuota = getMaximumNumberOfBookableSlotsUntilCurrentTime();
-          
-          // Mapping from userId to boolean, indicating whether individual quota is exceeded
-          $quotaExceededForUser = [$user->getId() => $bookingQuota != -1 && count($bookedSlots) >= $bookingQuota];
+          $bookingNotYetOpen = $activeEvent->getStartPostDate() > time();
+
+          // Invited students may book with the inviting teacher regardless of quota and booking start
+          $invitedByTeacher = [$user->getId() => InvitationDAO::hasInvitation($teacher->getId(), $user->getId())];
+
+          // Mapping from userId to boolean, indicating whether booking is blocked (quota exceeded or not yet open)
+          $quotaExceededForUser = [$user->getId() => !$invitedByTeacher[$user->getId()] && ($bookingNotYetOpen || ($bookingQuota != -1 && count($bookedSlots) >= $bookingQuota))];
 
           foreach ($connectedUsers as $cUser) {
             $bookedSlotsForConnectedUser[$cUser->getId()] = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $cUser->getId());
             $teacherBookedByUser[$cUser->getId()] = $this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlotsForConnectedUser[$cUser->getId()]);
-            $quotaExceededForUser[$cUser->getId()] = $bookingQuota != -1 && count($bookedSlotsForConnectedUser[$cUser->getId()]) >= $bookingQuota;
+            $invitedByTeacher[$cUser->getId()] = InvitationDAO::hasInvitation($teacher->getId(), $cUser->getId());
+            $quotaExceededForUser[$cUser->getId()] = !$invitedByTeacher[$cUser->getId()] && ($bookingNotYetOpen || ($bookingQuota != -1 && count($bookedSlotsForConnectedUser[$cUser->getId()]) >= $bookingQuota));
           }
 
           $teacherFullName = $teacher->getTitle() . ' ' . $teacher->getFirstName() . ' ' . $teacher->getLastName();

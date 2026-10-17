@@ -484,23 +484,4 @@ class UserDAO extends AbstractDAO
     $con = self::getConnection();
     return self::query($con, 'DELETE FROM userconnection', array(), true)['success'];
   }
-
-  public static function getTeachersWhoInvitedMe($userId) {
-    $con = self::getConnection();
-    $res = self::query(
-      $con,
-      'SELECT i.teacherId, u.lastName, u.firstName
-       FROM user u
-       INNER JOIN invitation i ON i.teacherId = u.id
-       WHERE i.userId = ?',
-      array($userId)
-    );
-
-    $teacherIds = [];
-    if ($u = self::fetchObject($res)) {
-      $teacherIds[] = $u->teacherId;
-    }
-    self::close($res);
-    return $teacherIds;
-  }
 }

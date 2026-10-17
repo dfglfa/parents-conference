@@ -1,5 +1,6 @@
 <?php
 require_once('code/dao/EventDAO.php');
+require_once('code/dao/InvitationDAO.php');
 include_once 'inc/header.php';
 ?>
 
@@ -32,10 +33,10 @@ $user = AuthenticationManager::getAuthenticatedUser();
                 $berlinTimezone = new DateTimeZone('Europe/Berlin');
                 $date->setTimezone($berlinTimezone);
                 $formattedDate = $date->format('d.m.Y H:i') . " Uhr";
-                $teacherIdsWithInvitations = UserDAO::getTeachersWhoInvitedMe($user->getId());
-                foreach ($teacherIdsWithInvitations as $t) {
-                  echo "Einladung von ID " . $t;
-                }
+                $teacherIdsWithInvitations = array_map(
+                  fn($invitation) => $invitation->getTeacherId(),
+                  InvitationDAO::getInvitationsToStudent($user->getId())
+                );
                 ?>
                 <h3>Buchungen sind erst ab dem <?php echo $formattedDate ?>
                     möglich </h3>
