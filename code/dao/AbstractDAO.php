@@ -11,7 +11,7 @@ abstract class AbstractDAO
     if (!isset(self::$connection)) {
       $dbSettings = parse_ini_file("settings.ini.php");
       $dsn = 'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'] . ';charset=utf8';
-      self::$connection = new PDO($dsn, $dbSettings["user"], $dbSettings["password"], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+      self::$connection = new PDO($dsn, $dbSettings["user"], $dbSettings["password"], array(Pdo\Mysql::ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
     }
     return self::$connection;
   }

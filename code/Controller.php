@@ -68,6 +68,7 @@ class Controller
     $throttleDays = $_REQUEST['throttleDays'];
     $breakType = $_REQUEST['breaktype'];
     $breaks = 0; // default: no breaks
+    $earlyAccessLimit = $_REQUEST['earlyAccessLimit'];
     if ($breakType == 'individual') {
       $breaks = (int) $_REQUEST['limit'];
     } else if ($breakType == 'common') {
@@ -90,7 +91,7 @@ class Controller
       return;
     }
 
-    $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota);
+    $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $startPostDate, $finalPostDate, $videoLink, $breaks, $throttleDays, $throttleQuota, $earlyAccessLimit);
     if ($eventId > 0) {
       echo 'success';
     }

@@ -4,13 +4,6 @@ require_once ('AbstractDAO.php');
 
 class MessageDAO extends AbstractDAO
 {
-
-    public static function initDB()
-    {
-        $con = self::getConnection();
-        // Hack to alter database ... do not use in prod :)
-    }
-
     public static function getAllMessages()
     {
         $messages = array();

@@ -185,7 +185,7 @@ include_once 'inc/header.php';
                                 sich erst später um Termine kümmern können, werden dadurch weniger benachteiligt.">
               </span>
             </label>
-            <div class="row">
+            <div class="row" style="padding-bottom: 15px">
               <div class="col-xs-12 col-sm-4">
                 <select name="throttleQuota" id="throttleQuotaSelect" class="form-control">
                   <option value="0">Keine Begrenzung</option>
@@ -203,6 +203,25 @@ include_once 'inc/header.php';
                   <option value="3">die ersten 3 Tage</option>
                   <option value="4">die ersten 4 Tage</option>
                   <option value="5">die ersten 5 Tage</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Vorab-Einladungen pro Lehrkraft
+              &nbsp;
+              <span class='glyphicon glyphicon-question-sign' data-toggle="tooltip" data-placement="top"
+                title="Anzahl der Einladungen, die eine Lehrkraft VOR Beginn der Buchungsphase an Eltern schicken kann.">
+              </span>
+            </label>
+            <div class="row">
+              <div class="col-xs-12 col-sm-4">
+                <select name="earlyAccessLimit" id="earlyAccessLimit" class="form-control">
+                  <option value="0">Keine</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </select>
               </div>
             </div>
