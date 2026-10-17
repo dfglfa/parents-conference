@@ -1,6 +1,6 @@
 <?php
-require_once('code/AuthenticationManager.php');
-require_once('code/dao/UserDAO.php');
+require_once(__DIR__ . '/../code/AuthenticationManager.php');
+require_once(__DIR__ . '/../code/dao/UserDAO.php');
 
 header('Content-Type: application/json; charset=utf-8');
 

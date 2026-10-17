@@ -1,6 +1,6 @@
 <?php
-require_once('code/AuthenticationManager.php');
-require_once('code/dao/InvitationDAO.php');
+require_once(__DIR__ . '/../code/AuthenticationManager.php');
+require_once(__DIR__ . '/../code/dao/InvitationDAO.php');
 
 $user = AuthenticationManager::getAuthenticatedUser();
 

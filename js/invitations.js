@@ -67,7 +67,7 @@ $(document).ready(function () {
 
   function searchStudents(term) {
     currentRequest = $.ajax({
-      url: "fetchStudents.php",
+      url: "api/fetchStudents.php",
       type: "GET",
       dataType: "json",
       data: { q: term },
@@ -151,7 +151,7 @@ $(document).on("click", ".withdraw-invitation", function () {
     content: "Möchtest Du die Einladung an <strong>" + studentName + "</strong> wirklich zurückziehen?",
     confirmationCaption: "Ja, zurückziehen",
     onConfirm: function () {
-      $.post("deleteInvitation.php", { studentId: studentId })
+      $.post("api/deleteInvitation.php", { studentId: studentId })
         .done(function () {
           location.reload();
         })
