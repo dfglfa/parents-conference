@@ -30,7 +30,9 @@
                 <?php endif ?>
                 <?php if ($user->getRole() == 'teacher') { ?>
                     <li id='navTabTeacher'><a href='teacher.php'>Übersicht</a></li>
-                    <li id='navTabInvitations'><a href='invitations.php'>Einladungen</a></li>
+                    <?php if (EventDAO::getActiveEvent()->getEarlyAccessLimit() > 0): ?>
+                      <li id='navTabInvitations'><a href='invitations.php'>Einladungen</a></li>
+                    <?php endif; ?>
                 <?php } ?>
                 <?php if ($user->getRole() == 'admin') { ?>
                     <li id='navTabAdmin'><a href='admin.php'>Administration</a></li>
