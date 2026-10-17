@@ -109,6 +109,33 @@ class UserDAO extends AbstractDAO
     return $users;
   }
 
+  public static function searchStudents(string $term, int $limit = 20)
+  {
+    $students = array();
+    $con = self::getConnection();
+
+    // Escape LIKE wildcards in user input
+    $escaped = addcslashes(mb_strtolower($term), '%_\\');
+    $like = '%' . $escaped . '%';
+
+    $res = self::query(
+      $con,
+      "SELECT id, userName, passwordHash, firstName, lastName, email, class, role, title
+         FROM user
+        WHERE role = 'student'
+          AND (LOWER(firstName) LIKE ? OR LOWER(lastName) LIKE ? OR LOWER(CONCAT(firstName, ' ', lastName)) LIKE ? OR LOWER(CONCAT(lastName, ' ', firstName)) LIKE ?)
+        ORDER BY LOWER(lastName), LOWER(firstName)
+        LIMIT " . (int)$limit,
+      array($like, $like, $like, $like)
+    );
+
+    while ($u = self::fetchObject($res)) {
+      $students[] = new User($u->id, $u->userName, "", $u->firstName, $u->lastName, $u->email, $u->class, $u->role, $u->title);
+    }
+    self::close($res);
+    return $students;
+  }
+
   public static function getPossibleSiblings($userId, $lastname)
   {
     $users = array();

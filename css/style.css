@@ -279,3 +279,25 @@ td.selectedTeacher {
     display: none;
   }
 }
+
+/* ------- Invitations ---------- */
+
+.invitation-table th {
+  text-align: center;
+}
+
+.invitation-table {
+  background-color: #fafafa;
+  border: 1px solid #e5e5e5;
+}
+
+.invitation-table th,
+.invitation-table td {
+  border: 1px solid #e5e5e5 !important;
+  vertical-align: middle !important;
+}
+
+.invitation-table td:nth-child(2),
+.invitation-table td:nth-child(3) {
+  text-align: center;
+}
