@@ -49,7 +49,8 @@ CREATE TABLE `event` (
   `videoLink` varchar(250) COLLATE utf8_bin DEFAULT NULL,
   `breaks` int(1),
   `throttleDays` int(11) DEFAULT '0',
-  `throttleQuota` int(11) DEFAULT '0'
+  `throttleQuota` int(11) DEFAULT '0',
+  `earlyAccessLimit` int(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -130,8 +131,9 @@ CREATE TABLE `userconnection` (
 -- Tabellenstruktur für Tabelle `invitation`
 --
 CREATE TABLE `invitation` (
+  `id` int(11) NOT NULL,
   `teacherId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
+  `studentId` int(11) NOT NULL,
   `createdAt` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -201,6 +203,14 @@ ALTER TABLE `user`
 ALTER TABLE `message`
   ADD PRIMARY KEY (`id`);
 
+
+--
+-- Indizes für die Tabelle `invitation`
+--
+ALTER TABLE `invitation`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `teacher_student` (`teacherId`, `studentId`);
+
 -- --------------------------------------------------------
 	
 --
@@ -242,6 +252,12 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `message`
 --
 ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `invitation`
+--
+ALTER TABLE `invitation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 	
 -- --------------------------------------------------------
