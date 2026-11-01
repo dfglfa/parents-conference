@@ -1,9 +1,12 @@
 <?php
 
+require_once('code/config.php');
 require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 
 SessionContext::create();
+
+require_once('auth/sso.php');
 
 ?>
 <!DOCTYPE html

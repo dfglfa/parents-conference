@@ -21,6 +21,13 @@ $LDAP_BIND_USER_PWD = "binduserpassword";
 $LDAP_USER_OBJECT_CLASS = "person";
 $LDAP_USERID_REF = "uid";
 
+// Keycloak settings
+$KEYCLOAK_ENABLED = false;
+$KEYCLOAK_CLIENT_ID = "";
+$KEYCLOAK_CLIENT_SECRET = "";
+$KEYCLOAK_REALM_BASE_URL = "";
+$KEYCLOAK_REDIRECT_URL = "";
+
 // Auth settings
 $AUTH_CASE_SENSITIVE = true; // username will be case-insensitive on login if set to false
 

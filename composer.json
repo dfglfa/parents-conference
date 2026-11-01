@@ -1,0 +1,7 @@
+{
+    "name": "jcharra/parents-conference",
+    "type": "project",
+    "require": {
+        "jumbojett/openid-connect-php": "^1.0"
+    }
+}

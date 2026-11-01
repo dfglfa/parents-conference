@@ -1,5 +1,6 @@
 <?php
 
+require_once(__DIR__ . '/../vendor/autoload.php');
 require_once('dao/EventDAO.php');
 
 function escape($string)
@@ -173,4 +174,4 @@ function printAlertForTemplate($templateId)
         print ($data["content"]);
         print ("</div></div>");
     }
-}
+}
